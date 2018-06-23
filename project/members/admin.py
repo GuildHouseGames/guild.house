@@ -20,6 +20,8 @@ class PaymentInline(admin.TabularInline):
 
 class MemberAdmin(admin.ModelAdmin):
 
+    list_display = ['number', 'name', 'sort_name', 'ref_name']
+    search_fields = ['number', 'name', 'sort_name', 'ref_name']
     model = Member
     inlines = [
         MembershipInline,
