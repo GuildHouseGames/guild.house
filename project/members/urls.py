@@ -2,6 +2,8 @@
 from __future__ import absolute_import, unicode_literals
 from django.conf.urls import include, url
 from django.contrib.auth.decorators import permission_required
+from django.urls import reverse_lazy
+from django.views.generic.base import RedirectView
 
 from . import views
 
@@ -10,7 +12,15 @@ MEMBERS_PERMISSION_REQUIRED = 'members.can_change_member'
 
 urls = [
 
-    url(r'^new/',
+    url(r'^$',
+        RedirectView.as_view(url=reverse_lazy('members:member_form')),
+        name='member_new_redirect'),
+
+    url(r'^add/$',
+        RedirectView.as_view(url=reverse_lazy('members:member_form')),
+        name='member_add_redirect'),
+
+    url(r'^new/$',
         views.member_create_view,
         name='member_form'),
 
@@ -39,7 +49,6 @@ urls = [
     url(r'^\+/(?P<number>\d+)$',
         views.member_detail_view,
         name='member_detail'),
-
 ]
 
 urlpatterns = [url(r'^', include(urls, namespace='members'))]
