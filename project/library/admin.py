@@ -34,14 +34,16 @@ class CategoryAdmin(admin.ModelAdmin):
 class GameAdmin(admin.ModelAdmin):
 
     fieldsets = [
-        (None, {'fields': ['name', 'categories', 'expansion_for',
-                           'publisher', 'boardgamegeek_id', 'boardgamegeek_rank',
-                           'year_published',
-                           ('minimum_players', 'maximum_players'),
-                           ('minimum_playtime', 'maximum_playtime'),
-                           ]}),
+        (None, {'fields': [
+            'name', 'categories', 'expansion_for',
+            'publisher', 'boardgamegeek_id', 'boardgamegeek_rank',
+            'boardgamegeek_img', 'year_published',
+            ('minimum_players', 'maximum_players'),
+            ('minimum_playtime', 'maximum_playtime'),
+        ]}),
         ('Content', {'fields': ['title', 'heading', 'featured_content',
-                                'content', 'meta_description']}),
+                                'featured_image', 'content',
+                                'meta_description']}),
         ('Publishing', {'fields': ['is_enabled', 'is_featured', 'site', 'slug',
                                    'tags', ('created_at', 'updated_at')],
                         'classes': ['collapse']}),
