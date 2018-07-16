@@ -5,9 +5,6 @@ name = "pypi"
 
 [dev-packages]
 
-[requires]
-python_version = "3.5"
-
 [packages]
 boto = "==2.38.0"
 dateparser = "==0.6.0"
