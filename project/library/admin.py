@@ -9,17 +9,17 @@ from django.contrib import admin
 class CategoryAdmin(admin.ModelAdmin):
 
     fieldsets = [
-        (None, {'fields': ['name']}),
-        ('Content', {'fields': ['title', 'heading', 'featured_content',
-                                'content', 'meta_description']}),
-        ('Publishing', {'fields': ['is_enabled', 'is_featured', 'site', 'slug',
-                                   ('created_at', 'updated_at')],
+        (None, {'fields': ['name', 'slug', 'featured_content',
+                           'content', 'meta_description']}),
+        ('Publishing', {'fields': ['title', 'heading',
+                                   'is_enabled', 'is_featured',
+                                   'site', ('created_at', 'updated_at')],
                         'classes': ['collapse']}),
     ]
 
     form = CategoryAdminForm
 
-    list_display = ['name', 'is_active', 'is_featured']
+    list_display = ['name', 'get_url', 'is_active', 'is_featured']
 
     list_filter = ['is_enabled', 'is_featured']
 
@@ -28,6 +28,13 @@ class CategoryAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at']
 
     search_fields = ['name']
+
+    def get_url(self, obj):
+        return "<a target='_blank'  href={}>{}</a>".format(
+            obj.get_absolute_url(),
+            obj.slug
+        )
+    get_url.allow_tags = True
 
 
 @admin.register(GameInLibrary)
@@ -108,9 +115,11 @@ class GameAdmin(admin.ModelAdmin):
     display_categories.short_description = 'Categories'
 
     def display_related(self, obj):
-        return ", ".join([x.name for x in obj.gamerelated_set.all()])
+        return ", ".join([x.related.name for x in obj.gamerelated_set.all()])
     display_related.short_description = 'Related'
 
     def display_copies(self, obj):
-        return GameInLibrary.objects.filter(game=obj).count()
+        return "{} <a href='/admin/library/gameinlibrary/add/'>+</a>".format(
+            GameInLibrary.objects.filter(game=obj).count())
     display_copies.short_description = 'Live Copies'
+    display_copies.allow_tags = True
