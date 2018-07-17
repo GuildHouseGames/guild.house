@@ -172,6 +172,19 @@ class Game(models.Model):
         if not self.slug:
             queryset = self.__class__.objects.filter(site=self.site)
             self.slug = utils.generate_unique_slug(self.name, queryset)
+
+        # Normalise playtime/players: ensure just single "minimum" if not both.
+
+        if self.maximum_playtime and not self.minimum_playtime \
+           or self.maximum_playtime == self.minimum_playtime:
+            self.minimum_playtime = self.maximum_playtime
+            self.maximum_playtime = None
+
+        if self.maximum_players and not self.minimum_players \
+           or self.maximum_players == self.minimum_players:
+            self.minimum_players = self.maximum_players
+            self.maximum_players = None
+
         return super(Game, self).save(*args, **kwargs)
 
     def autopopulate_bgg_complexity(self):
