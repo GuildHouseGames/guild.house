@@ -6,10 +6,13 @@
 
 {% block content %}
 
-  {% for game in game_list %}
-    {% if forloop.first %}<h2>Games</h2><ul>{% endif %}
-      <li><a href="{{ game.get_absolute_url }}">{{ game }}</a></li>
-    {% if forloop.last %}</ul>{% endif %}
-  {% endfor %}
+{% for game in game_list %}
+  {% if forloop.first %}<h2>Games</h2><ul>{% endif %}
+  <li>
+    {% if not user.anonymous %}<small>[<a href="/admin/library/game/{{ game.pk }}/change/">edit</a>]</small>{% endif %}
+    <a href="{{ game.get_absolute_url }}">{{ game }}</a>
+  </li>
+  {% if forloop.last %}</ul>{% endif %}
+{% endfor %}
 
 {% endblock %}
