@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from .models import Category, Game
 from django.shortcuts import get_object_or_404
 from django.views import generic
+
+from .models import Category, Game
+
 
 
 class CategoryListView(generic.ListView):
@@ -50,3 +52,9 @@ class GameDetailView(generic.DetailView):
     def get_queryset(self, *args, **kwargs):
         queryset = super(GameDetailView, self).get_queryset(*args, **kwargs)
         return queryset.current_site().active()
+
+
+class GameDetailMenuView(generic.DetailView):
+
+    model = Game
+    template_name = 'library/game_detail_menu.html'

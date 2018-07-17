@@ -21,6 +21,10 @@ urls = [
         login_required(views.GameDetailView.as_view()),
         name='game_detail'),
 
+    url(r'^menu/(?P<slug>[\w-]+)/$',
+        login_required(views.GameDetailMenuView.as_view()),
+        name='game_detail_menu'),
+
     url(r'^all/$',
         login_required(views.GameListView.as_view()),
         name='category_list'),
