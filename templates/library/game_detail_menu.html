@@ -1,0 +1,68 @@
+<html>
+  <head>
+<title></title>
+
+<style>
+td {
+  border: 1px solid grey;
+}
+</style>
+  </head>
+<body>
+
+<table style="width:14.5cm; height: 21cm;  text-align: center; border:1px solid grey;">
+  <tr>
+    <td colspan="4" style="background-color: grey; text-align: center; height: 300px;">
+      {% if game.featured_image %}
+      <img height="300" src="{{ game.featured_image }}">
+      {% else %}
+      {% if game.boardgamegeek_img %}
+      <img height="300" src="{{ game.boardgamegeek_img }}">
+      {% endif %}
+      {% endif %}
+    </td>
+  </tr>
+  <tr>
+    <td width="33%">
+      {% if not game.minimum_players == None %}{{ game.minimum_players }}{% endif %}
+      {% if not game.maximum_players == None %} - {{ game.maximum_players }}{% endif %}
+      <br>Player{{ game.maximum_players|pluralize }}
+    </td>
+    <td width="33%">
+      {% if not game.minimum_playtime == None %}{{ game.minimum_playtime }}{% endif %}
+      {% if not game.maximum_playtime == None %} - {{ game.maximum_playtime }}{% endif %}
+      min
+      <br>Play Time
+    </td>
+    <td width="33%">
+        {{ game.categories.current_site.active|join:", " }}
+    </td>
+  </tr>
+  <tr>
+    <td colspan="3">
+      {% if game.featured_content %}<div>{{ game.featured_content }}</div>{% endif %}
+      {% if game.content %}<div>{{ game.content|safe }}</div>{% endif %}
+    </td>
+  </tr>
+  <tr>
+    {% for related in game.gamerelated_set.all %}
+    <td>
+      <img height="100" src="{{ related.related.boardgamegeek_img }}">
+    </td>
+    {% endfor %}
+  </tr>
+</table>
+
+{% if game.publisher %}<p>{{ game.publisher }}</p>{% endif %}
+{% if game.boardgamegeek_link %}<p><a href="{{ game.boardgamegeek_link }}">{{ game }} on Board Game Geek</a></p>{% endif %}
+
+{% for expansion in game.expansions.current_site.active %}
+{% if forloop.first %}<h2>Expansions</h2><ul>{% endif %}
+  <li><a href="{{ expansion.get_absolute_url }}">{{ expansion }}</a></li>
+  {% if forloop.last %}</ul>{% endif %}
+{% endfor %}
+
+
+
+</body>
+</html>

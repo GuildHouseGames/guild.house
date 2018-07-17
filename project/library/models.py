@@ -21,6 +21,15 @@ def get_current_site():
 
 BGG_JSON_URL = 'https://bgg-json.azurewebsites.net/thing/{bgg_id}'
 
+CHOICE_LOCATIONS = [
+    ('main', 'Main Shelf'),
+    ('booth', 'Booth Shelves'),
+    ('free', 'Free to Play Shelf'),
+    ('infirmary', 'Infirmary'),
+    ('storage', 'Storage'),
+    ('unknown', 'Missing'),
+]
+
 
 @python_2_unicode_compatible
 class Category(models.Model):
@@ -127,13 +136,19 @@ class Game(models.Model):
 
     meta_description = models.CharField(max_length=200, blank=True, default='')
 
+    is_new = models.BooleanField('new', default=False)
+
+    is_free = models.BooleanField('free', default=False)
+
     is_enabled = models.BooleanField('enabled', db_index=True, default=True)
 
     is_featured = models.BooleanField('featured', db_index=True, default=False)
 
-    site = models.ForeignKey('sites.Site', default=get_current_site,
-                             related_name='library_games',
-                             on_delete=models.PROTECT)
+    site = models.ForeignKey(
+        'sites.Site', default=get_current_site,
+        related_name='library_games',
+        on_delete=models.PROTECT
+    )
 
     slug = models.SlugField()
 
@@ -167,6 +182,19 @@ class Game(models.Model):
         if not self.slug:
             queryset = self.__class__.objects.filter(site=self.site)
             self.slug = utils.generate_unique_slug(self.name, queryset)
+
+        # Normalise playtime/players: ensure just single "minimum" if not both.
+
+        if self.maximum_playtime and not self.minimum_playtime \
+           or self.maximum_playtime == self.minimum_playtime:
+            self.minimum_playtime = self.maximum_playtime
+            self.maximum_playtime = None
+
+        if self.maximum_players and not self.minimum_players \
+           or self.maximum_players == self.minimum_players:
+            self.minimum_players = self.maximum_players
+            self.maximum_players = None
+
         return super(Game, self).save(*args, **kwargs)
 
     def autopopulate_bgg_complexity(self):
@@ -222,8 +250,68 @@ class Game(models.Model):
     @classmethod
     def create_from_bgg_id(cls, bgg_id):
         "This method will create a `Game` object if provided with a bgg_id."
+        if cls.objects.filter(boardgamegeek_id=bgg_id):
+            return "This game is already in the database."
         new_game = cls()
         new_game.boardgamegeek_id = bgg_id
         new_game.autopopulate_bgg_json()
         new_game.autopopulate_bgg_complexity()
         return new_game
+
+
+class GameRelated(models.Model):
+
+    game = models.ForeignKey(
+        'library.Game', models.PROTECT,
+    )
+
+    related = models.ForeignKey(
+        'library.Game', models.PROTECT,
+        related_name='related_game'
+    )
+
+    ordering = models.IntegerField(blank=True, null=True)
+
+    notes = models.CharField(max_length=256, blank=True, default='')
+
+    class Meta(object):
+        ordering = ['ordering']
+        verbose_name_plural = 'Related games'
+
+
+class GameInLibrary(models.Model):
+
+    game = models.ForeignKey(
+        'library.Game', models.PROTECT,
+        related_name='copy'
+    )
+
+    location = models.CharField(
+        max_length=256,
+        choices=CHOICE_LOCATIONS,
+        null=True, blank=True, default=''
+    )
+
+    uid = models.CharField(
+        max_length=16,
+        null=True, blank=True, default=''
+    )
+
+    is_broken = models.BooleanField(default=False)
+
+    is_lost = models.BooleanField(default=False)
+
+    added_at = models.DateField(
+        auto_now_add=True,
+        editable=True
+    )
+
+    removed_at = models.DateField(
+        auto_now_add=True,
+        editable=True
+    )
+
+    notes = models.TextField(blank=True, default='')
+
+    class Meta(object):
+        verbose_name_plural = 'Copies of game in library'
