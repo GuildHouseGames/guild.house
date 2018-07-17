@@ -30,6 +30,12 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
 
+@admin.register(GameInLibrary)
+class GameInLibraryAdmin(admin.ModelAdmin):
+
+    model = GameInLibrary
+
+
 class GameInLibraryInline(admin.TabularInline):
 
     model = GameInLibrary
@@ -47,28 +53,40 @@ class GameAdmin(admin.ModelAdmin):
 
     fieldsets = [
         (None, {'fields': [
-            'name', 'categories', 'expansion_for',
-            'publisher', 'boardgamegeek_id', 'boardgamegeek_rank',
-            'boardgamegeek_img', 'year_published',
+            'name', 'categories', 'expansion_for', 'publisher',
             ('minimum_players', 'maximum_players'),
             ('minimum_playtime', 'maximum_playtime'),
-            'related',
+            # 'related',
         ]}),
-        ('Content', {'fields': ['title', 'heading', 'featured_content',
-                                'featured_image', 'content',
-                                'meta_description']}),
-        ('Publishing', {'fields': ['is_enabled', 'is_featured', 'site', 'slug',
-                                   'tags', ('created_at', 'updated_at')],
-                        'classes': ['collapse']}),
+        ('Scraped', {
+            'fields': [
+                'boardgamegeek_id', 'boardgamegeek_rank',
+                'boardgamegeek_img', 'publisher',
+                'year_published',
+            ],
+            'classes': ['collapse']
+        }),
+        ('Content', {'fields': [
+            'title', 'heading', 'featured_content',
+            'featured_image', 'content',
+            'meta_description'
+        ]}),
+        ('Publishing', {
+            'fields': [
+                'is_enabled', 'is_featured', 'site', 'slug',
+                'tags', ('created_at', 'updated_at')
+            ],
+            'classes': ['collapse']}
+         ),
     ]
 
     form = GameAdminForm
 
-    filter_horizontal = ('related',)
+    list_display = ['name', 'is_enabled', 'is_featured', 'is_expansion']
 
-    list_display = ['name', 'is_active', 'is_featured', 'is_expansion']
+    list_filter = ['is_enabled', 'is_featured', 'categories']
 
-    list_filter = ['is_enabled', 'is_featured']
+    list_editable = ['is_enabled', 'is_featured']
 
     prepopulated_fields = {'slug': ['name']}
 
@@ -76,4 +94,4 @@ class GameAdmin(admin.ModelAdmin):
 
     search_fields = ['name']
 
-    inlines = [GameRelatedInline, GameInLibraryInline]
+    inlines = [GameInLibraryInline, GameRelatedInline]
