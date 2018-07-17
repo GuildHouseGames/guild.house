@@ -1,0 +1,41 @@
+{% extends 'library/base.html' %}
+
+
+{% block content %}
+
+<div class="container">
+<div class="row">
+
+  <div class="col-md-4">
+    <table>
+      <tr>
+	<td align="center" colspan=2><h2>NEW</h2></td>
+      </tr>
+    {% for game in new_games %}
+        {% include "library/_game.html" %}
+    {% endfor %}
+    </table>
+  </div>
+
+  <div class="col-md-4">
+    <table>
+      <tr>
+	<td align="center" colspan=2><h2>POPULAR</h2></td>
+      </tr>
+      {% for game in popular_games %}
+        {% include "library/_game.html" %}
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="col-md-4">
+    <h2>CATEGORIES</h2>
+    {% for category in categories_list %}
+    <li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
+    {% endfor %}
+  </div>
+
+</div>
+</div>
+
+{% endblock %}

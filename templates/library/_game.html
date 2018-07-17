@@ -1,0 +1,10 @@
+<tr>
+  <td align="center">
+    {% if game.boardgamegeek_img %}
+    <a href="{{ game.get_absolute_url }}"><img height="80" src="{{ game.boardgamegeek_img }}"></a>
+    {% endif %}
+  </td>
+  <td>
+    <a href="{{ game.get_absolute_url }}">{{ game.name}}</a>
+  </td>
+</tr>

@@ -8,6 +8,9 @@ from . import views
 
 urls = [
 
+    url(r'^$',
+        login_required(views.GameHome.as_view()),
+        name='game_home'),
 
     url(r'^categories/$',
         login_required(views.CategoryListView.as_view()),
