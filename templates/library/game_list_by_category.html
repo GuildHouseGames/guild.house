@@ -17,9 +17,9 @@
   {% if category.content %}<div>{{ category.content|safe }}</div>{% endif %}
 
   {% for game in game_list %}
-    {% if forloop.first %}<h2>Games</h2><ul>{% endif %}
-      <li><a href="{{ game.get_absolute_url }}">{{ game }}</a></li>
-    {% if forloop.last %}</ul>{% endif %}
+    {% if forloop.first %}<table>{% endif %}
+      {% include "library/_game.html" %}
+    {% if forloop.last %}</table>{% endif %}
   {% endfor %}
 
 {% endblock %}

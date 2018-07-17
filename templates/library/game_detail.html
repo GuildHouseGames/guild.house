@@ -31,14 +31,15 @@
 
   {% if game.publisher %}<p>{{ game.publisher }}</p>{% endif %}
 
+  <br><br>
   <table>
     <tr>
-      <td align="center">{% if not game.minimum_players == None %}<p>Minimum players: <br>{{ game.minimum_players }}</p>{% endif %}</td>
-      <td align="center">{% if not game.maximum_players == None %}<p>Maximum players: <br>{{ game.maximum_players }}</p>{% endif %}</td>
+      <td align="center">{% if not game.minimum_players == None %}<p><b>Minimum players</b>: <br>{{ game.minimum_players }}</p>{% endif %}</td>
+      <td align="center">{% if not game.maximum_players == None %}<p><b>Maximum players</b>: <br>{{ game.maximum_players }}</p>{% endif %}</td>
     </tr>
     <tr>
-      <td align="center" {% if game.maximum_playtime == None %}colspan=2{% endif %}>{% if not game.minimum_playtime == None %}<p>Minimum playtime: <br>{{ game.minimum_playtime }} minutes</p>{% endif %}</td>
-      {% if game.maximum_playtime != None %}<td align="center"><p>Maximum playtime: <br>{{ game.maximum_playtime }} minutes</p></td>{% endif %}
+      <td align="center" {% if game.maximum_playtime == None %}colspan=2{% endif %}>{% if not game.minimum_playtime == None %}<p><b>Minimum playtime</b>: <br>{{ game.minimum_playtime }} minutes</p>{% endif %}</td>
+      {% if game.maximum_playtime != None %}<td align="center"><p><b>Maximum playtime</b>: <br>{{ game.maximum_playtime }} minutes</p></td>{% endif %}
     </tr>
   </table>
 
@@ -56,6 +57,19 @@
       <a href="{{ category.get_absolute_url }}">{{ category }}</a><br>
     {% if forloop.last %}{% endif %}
   {% endfor %}
+
+  {% if game.gamerelated_set.all %}<br>
+  <p><b>Related Games</b></p>
+      <table>
+	<tr>
+	  {% for related in game.gamerelated_set.all %}
+	  <td>
+	    <a href="{{ related.related.get_absolute_url }}"><img height="100" src="{{ related.related.boardgamegeek_img }}"></a>
+	  </td>
+	  {% endfor %}
+	</tr>
+      </table>
+  {% endif %}
 
     </td>
   </tr>
