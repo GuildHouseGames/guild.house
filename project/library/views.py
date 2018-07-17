@@ -45,13 +45,14 @@ class GameListViewByCategory(generic.ListView):
         return self._category
 
     def get_context_data(self, *args, **kwargs):
-        context_data = super(GameListView, self).get_context_data(*args,
-                                                                  **kwargs)
+        context_data = super(GameListViewByCategory,
+                             self).get_context_data(*args, **kwargs)
         context_data.update({'category': self.get_category()})
         return context_data
 
     def get_queryset(self, *args, **kwargs):
-        queryset = super(GameListView, self).get_queryset(*args, **kwargs)
+        queryset = super(GameListViewByCategory,
+                         self).get_queryset(*args, **kwargs)
         queryset = queryset.filter(categories=self.get_category())
         return queryset.current_site().active()
 

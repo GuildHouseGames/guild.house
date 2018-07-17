@@ -17,7 +17,7 @@ urls = [
         name='category_list'),
 
     url(r'^c/(?P<slug>[\w-]+)/$',
-        login_required(views.GameListView.as_view()),
+        login_required(views.GameListViewByCategory.as_view()),
         name='category_detail'),
 
     url(r'^g/(?P<slug>[\w-]+)/$',
