@@ -84,7 +84,7 @@ class GameAdmin(admin.ModelAdmin):
 
     list_display = [
         'name',
-        'is_enabled',
+        'is_new',
         'is_featured',
         'display_categories',
         'display_related',
@@ -93,7 +93,7 @@ class GameAdmin(admin.ModelAdmin):
 
     list_filter = ['is_enabled', 'is_featured', 'categories']
 
-    list_editable = ['is_enabled', 'is_featured']
+    list_editable = ['is_new', 'is_featured']
 
     prepopulated_fields = {'slug': ['name']}
 

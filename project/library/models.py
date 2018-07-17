@@ -136,6 +136,10 @@ class Game(models.Model):
 
     meta_description = models.CharField(max_length=200, blank=True, default='')
 
+    is_new = models.BooleanField('new', default=False)
+
+    is_free = models.BooleanField('free', default=False)
+
     is_enabled = models.BooleanField('enabled', db_index=True, default=True)
 
     is_featured = models.BooleanField('featured', db_index=True, default=False)
