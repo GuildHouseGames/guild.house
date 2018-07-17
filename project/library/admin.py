@@ -40,6 +40,7 @@ class GameAdmin(admin.ModelAdmin):
             'boardgamegeek_img', 'year_published',
             ('minimum_players', 'maximum_players'),
             ('minimum_playtime', 'maximum_playtime'),
+            'related',
         ]}),
         ('Content', {'fields': ['title', 'heading', 'featured_content',
                                 'featured_image', 'content',
@@ -50,6 +51,8 @@ class GameAdmin(admin.ModelAdmin):
     ]
 
     form = GameAdminForm
+
+    filter_horizontal = ('related',)
 
     list_display = ['name', 'is_active', 'is_featured', 'is_expansion']
 

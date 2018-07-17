@@ -123,6 +123,11 @@ class Game(models.Model):
 
     content = models.TextField(blank=True, default='')
 
+    related = models.ManyToManyField(
+        'library.Game',
+        blank=True,
+    )
+
     tags = TaggableManager(blank=True)
 
     meta_description = models.CharField(max_length=200, blank=True, default='')
