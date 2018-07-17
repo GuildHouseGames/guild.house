@@ -82,7 +82,14 @@ class GameAdmin(admin.ModelAdmin):
 
     form = GameAdminForm
 
-    list_display = ['name', 'is_enabled', 'is_featured', 'is_expansion']
+    list_display = [
+        'name',
+        'is_enabled',
+        'is_featured',
+        'display_categories',
+        'display_related',
+        'display_copies',
+    ]
 
     list_filter = ['is_enabled', 'is_featured', 'categories']
 
@@ -95,3 +102,15 @@ class GameAdmin(admin.ModelAdmin):
     search_fields = ['name']
 
     inlines = [GameInLibraryInline, GameRelatedInline]
+
+    def display_categories(self, obj):
+        return ", ".join([x.name for x in obj.categories.all()])
+    display_categories.short_description = 'Categories'
+
+    def display_related(self, obj):
+        return ", ".join([x.name for x in obj.gamerelated_set.all()])
+    display_related.short_description = 'Related'
+
+    def display_copies(self, obj):
+        return GameInLibrary.objects.filter(game=obj).count()
+    display_copies.short_description = 'Live Copies'
