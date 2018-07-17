@@ -246,6 +246,8 @@ class Game(models.Model):
     @classmethod
     def create_from_bgg_id(cls, bgg_id):
         "This method will create a `Game` object if provided with a bgg_id."
+        if cls.objects.filter(boardgamegeek_id=bgg_id):
+            return "This game is already in the database."
         new_game = cls()
         new_game.boardgamegeek_id = bgg_id
         new_game.autopopulate_bgg_json()
