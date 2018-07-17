@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from .forms import CategoryAdminForm, GameAdminForm
-from .models import Category, Game
+from .models import Category, Game, GameInLibrary, GameRelated
 from django.contrib import admin
 
 
@@ -28,6 +28,18 @@ class CategoryAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at']
 
     search_fields = ['name']
+
+
+class GameInLibraryInline(admin.TabularInline):
+
+    model = GameInLibrary
+
+
+class GameRelatedInline(admin.TabularInline):
+
+    model = GameRelated
+
+    fk_name = 'game'
 
 
 @admin.register(Game)
@@ -63,3 +75,5 @@ class GameAdmin(admin.ModelAdmin):
     readonly_fields = ['created_at', 'updated_at']
 
     search_fields = ['name']
+
+    inlines = [GameRelatedInline, GameInLibraryInline]

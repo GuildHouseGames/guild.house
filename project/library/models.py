@@ -21,6 +21,15 @@ def get_current_site():
 
 BGG_JSON_URL = 'https://bgg-json.azurewebsites.net/thing/{bgg_id}'
 
+CHOICE_LOCATIONS = [
+    ('main', 'Main Shelf'),
+    ('booth', 'Booth Shelves'),
+    ('free', 'Free to Play Shelf'),
+    ('infirmary', 'Infirmary'),
+    ('storage', 'Storage'),
+    ('unknown', 'Missing'),
+]
+
 
 @python_2_unicode_compatible
 class Category(models.Model):
@@ -123,11 +132,6 @@ class Game(models.Model):
 
     content = models.TextField(blank=True, default='')
 
-    related = models.ManyToManyField(
-        'library.Game',
-        blank=True,
-    )
-
     tags = TaggableManager(blank=True)
 
     meta_description = models.CharField(max_length=200, blank=True, default='')
@@ -136,9 +140,11 @@ class Game(models.Model):
 
     is_featured = models.BooleanField('featured', db_index=True, default=False)
 
-    site = models.ForeignKey('sites.Site', default=get_current_site,
-                             related_name='library_games',
-                             on_delete=models.PROTECT)
+    site = models.ForeignKey(
+        'sites.Site', default=get_current_site,
+        related_name='library_games',
+        on_delete=models.PROTECT
+    )
 
     slug = models.SlugField()
 
@@ -245,3 +251,61 @@ class Game(models.Model):
         new_game.autopopulate_bgg_json()
         new_game.autopopulate_bgg_complexity()
         return new_game
+
+
+class GameRelated(models.Model):
+
+    game = models.ForeignKey(
+        'library.Game', models.PROTECT,
+    )
+
+    related = models.ForeignKey(
+        'library.Game', models.PROTECT,
+        related_name='related_game'
+    )
+
+    ordering = models.IntegerField(blank=True, null=True)
+
+    notes = models.CharField(max_length=256, blank=True, default='')
+
+    class Meta(object):
+        ordering = ['ordering']
+        verbose_name_plural = 'Related games'
+
+
+class GameInLibrary(models.Model):
+
+    game = models.ForeignKey(
+        'library.Game', models.PROTECT,
+        related_name='copy'
+    )
+
+    location = models.CharField(
+        max_length=256,
+        choices=CHOICE_LOCATIONS,
+        null=True, blank=True, default=''
+    )
+
+    uid = models.CharField(
+        max_length=16,
+        null=True, blank=True, default=''
+    )
+
+    is_broken = models.BooleanField(default=False)
+
+    is_lost = models.BooleanField(default=False)
+
+    added_at = models.DateField(
+        auto_now_add=True,
+        editable=True
+    )
+
+    removed_at = models.DateField(
+        auto_now_add=True,
+        editable=True
+    )
+
+    notes = models.TextField(blank=True, default='')
+
+    class Meta(object):
+        verbose_name_plural = 'Copies of game in library'
