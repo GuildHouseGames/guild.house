@@ -1,0 +1,20 @@
+{% extends "library/base.html" %}
+
+
+{% block content %}
+
+<h1>Add to website from BGG ID</h1>
+
+<form action="." method="post">
+  {% csrf_token %}
+
+  {{ form.as_p }}
+
+  {% if user.is_authenticated %}
+  <b><input type="submit" value="Go"></b>
+  {% endif %}
+</form>
+
+
+
+{% endblock %}
