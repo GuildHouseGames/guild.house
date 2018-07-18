@@ -35,7 +35,7 @@ urls = [
 
     url(r'^all/$',
         login_required(views.GameListView.as_view()),
-        name='category_list'),
+        name='game_all'),
 ]
 
 
