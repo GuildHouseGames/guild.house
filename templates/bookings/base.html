@@ -3,7 +3,8 @@
 {% block box_above %}
 {% if user.is_authenticated %}
       <div style="opacity: 0.8;" class="hidden-print featured_text">
-      <ul class="hidden-print">
+        <i style="opacity: 0.5; float:right;">(secret staff navigation bar)</i>
+	<ul class="hidden-print">
         <li style="display: inline; list-style-type: none; padding-right: 20px">
           <a href="{% url "bookings:booking_today" %}">Today</a>
         </li>
@@ -19,8 +20,6 @@
         <li style="display: inline; list-style-type: none; padding-right: 20px">
           <a href="{% url "bookings:booking_default_post" %}">Add</a>
         </li>
-
-        <i style="opacity: 0.5; float:right;">(This menu only displayed while logged in)</i>
       </ul>
       </div>
 {% endif %}

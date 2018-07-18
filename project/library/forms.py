@@ -5,6 +5,14 @@ from django import forms
 from tinymce.widgets import TinyMCE
 
 
+class GameAddBGGForm(forms.Form):
+
+    BGGID = forms.IntegerField(
+        label='BGG ID',
+        widget=forms.TextInput(attrs={'placeholder': 'eg. 31260'})
+    )
+
+
 class CategoryAdminForm(forms.ModelForm):
 
     class Meta(object):

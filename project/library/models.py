@@ -103,7 +103,10 @@ class Game(models.Model):
 
     publisher = models.CharField(max_length=200, blank=True, default='')
 
-    boardgamegeek_id = models.PositiveIntegerField(blank=True, null=True)
+    boardgamegeek_id = models.PositiveIntegerField(
+        unique=True,
+        blank=True, null=True
+    )
 
     boardgamegeek_rank = models.PositiveIntegerField(blank=True, null=True)
 
@@ -241,7 +244,6 @@ class Game(models.Model):
             self.minimum_playtime = this_game.json()['playingTime']
             self.minimum_playtime = this_game.json()['playingTime']
             self.year_published = this_game.json()['yearPublished']
-            self.boardgamegeek_rank = this_game.json()['rank']
             self.boardgamegeek_img = this_game.json()['image']
             self.content = this_game.json()['description']
 
@@ -250,8 +252,9 @@ class Game(models.Model):
     @classmethod
     def create_from_bgg_id(cls, bgg_id):
         "This method will create a `Game` object if provided with a bgg_id."
-        if cls.objects.filter(boardgamegeek_id=bgg_id):
-            return "This game is already in the database."
+        existing_game = cls.objects.get(boardgamegeek_id=bgg_id)
+        if existing_game:
+            return existing_game
         new_game = cls()
         new_game.boardgamegeek_id = bgg_id
         new_game.autopopulate_bgg_json()
@@ -301,15 +304,9 @@ class GameInLibrary(models.Model):
 
     is_lost = models.BooleanField(default=False)
 
-    added_at = models.DateField(
-        auto_now_add=True,
-        editable=True
-    )
+    added_at = models.DateField(null=True, blank=True)
 
-    removed_at = models.DateField(
-        auto_now_add=True,
-        editable=True
-    )
+    removed_at = models.DateField(null=True, blank=True)
 
     notes = models.TextField(blank=True, default='')
 

@@ -28,9 +28,14 @@ urls = [
         login_required(views.GameDetailMenuView.as_view()),
         name='game_detail_menu'),
 
+    url(r'^add/bgg/$',
+        # LOGIN SHOULD ALWAYS BE REQUIRED HERE
+        login_required(views.GameAddBGGID.as_view()),
+        name='game_bgg_add'),
+
     url(r'^all/$',
         login_required(views.GameListView.as_view()),
-        name='category_list'),
+        name='game_all'),
 ]
 
 
