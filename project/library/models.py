@@ -244,7 +244,6 @@ class Game(models.Model):
             self.minimum_playtime = this_game.json()['playingTime']
             self.minimum_playtime = this_game.json()['playingTime']
             self.year_published = this_game.json()['yearPublished']
-            self.boardgamegeek_rank = this_game.json()['rank']
             self.boardgamegeek_img = this_game.json()['image']
             self.content = this_game.json()['description']
 
