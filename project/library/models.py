@@ -252,9 +252,9 @@ class Game(models.Model):
     @classmethod
     def create_from_bgg_id(cls, bgg_id):
         "This method will create a `Game` object if provided with a bgg_id."
-        existing_game = cls.objects.get(boardgamegeek_id=bgg_id)
+        existing_game = cls.objects.filter(boardgamegeek_id=bgg_id)
         if existing_game:
-            return existing_game
+            return existing_game.first()
         new_game = cls()
         new_game.boardgamegeek_id = bgg_id
         new_game.autopopulate_bgg_json()
