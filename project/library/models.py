@@ -301,15 +301,9 @@ class GameInLibrary(models.Model):
 
     is_lost = models.BooleanField(default=False)
 
-    added_at = models.DateField(
-        auto_now_add=True,
-        editable=True
-    )
+    added_at = models.DateField(null=True, blank=True)
 
-    removed_at = models.DateField(
-        auto_now_add=True,
-        editable=True
-    )
+    removed_at = models.DateField(null=True, blank=True)
 
     notes = models.TextField(blank=True, default='')
 

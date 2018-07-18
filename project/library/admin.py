@@ -47,6 +47,9 @@ class GameInLibraryInline(admin.TabularInline):
 
     model = GameInLibrary
 
+    fields = ['location', 'is_broken', 'is_lost',
+              'added_at', 'removed_at', 'uid', 'notes']
+
 
 class GameRelatedInline(admin.TabularInline):
 
