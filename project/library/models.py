@@ -103,7 +103,10 @@ class Game(models.Model):
 
     publisher = models.CharField(max_length=200, blank=True, default='')
 
-    boardgamegeek_id = models.PositiveIntegerField(blank=True, null=True)
+    boardgamegeek_id = models.PositiveIntegerField(
+        unique=True,
+        blank=True, null=True
+    )
 
     boardgamegeek_rank = models.PositiveIntegerField(blank=True, null=True)
 
