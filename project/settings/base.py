@@ -96,7 +96,6 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.tz',
                 'django.template.context_processors.media',
-                'project.debug_toolbar.context_processors.debug',
             ],
         },
     },

@@ -4,6 +4,8 @@ url = "https://pypi.org/simple"
 name = "pypi"
 
 [dev-packages]
+django-debug-toolbar = "*"
+ipython = "*"
 
 [packages]
 boto = "==2.38.0"

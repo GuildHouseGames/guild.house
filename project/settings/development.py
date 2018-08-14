@@ -41,13 +41,6 @@ EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
 
 
-# Debug toolbar
-
-DEBUG_TOOLBAR_CONFIG = {
-    'SHOW_TOOLBAR_CALLBACK': 'project.debug_toolbar.show_toolbar',
-}
-
-
 # Raven
 
 RAVEN_CONFIG = {

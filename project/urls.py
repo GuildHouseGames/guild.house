@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from debug_toolbar import urls as debug_toolbar_urls
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
@@ -49,11 +48,13 @@ urlpatterns = [
 
 if settings.DEBUG:
     # Only serve media files if in a development environment
+    import debug_toolbar
     from django.conf.urls.static import static
     from django.views.generic import TemplateView
 
     urlpatterns += [
         url(r'^errors/404$', TemplateView.as_view(template_name='404.html')),
         url(r'^errors/500$', TemplateView.as_view(template_name='500.html')),
-        url(r'^__debug__/', include(debug_toolbar_urls)),
-    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) \
+        + urlpatterns
