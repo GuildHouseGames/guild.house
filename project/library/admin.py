@@ -63,7 +63,7 @@ class GameAdmin(admin.ModelAdmin):
 
     fieldsets = [
         (None, {'fields': [
-            'name', 'categories', 'expansion_for', 'publisher',
+            'name', 'categories', 'expansion_for', 'publisher', 'complexity',
             ('minimum_players', 'maximum_players'),
             ('minimum_playtime', 'maximum_playtime'),
             # 'related',
@@ -100,6 +100,7 @@ class GameAdmin(admin.ModelAdmin):
         'display_copies',
         'display_minimum_players',
         'display_maximum_players',
+        'complexity'
     ]
 
     def display_minimum_players(self, obj):
