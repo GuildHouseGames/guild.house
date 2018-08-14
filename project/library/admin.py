@@ -97,11 +97,26 @@ class GameAdmin(admin.ModelAdmin):
         'is_new',
         'is_featured',
         'display_categories',
-        'display_related',
         'display_copies',
+        'display_minimum_players',
+        'display_maximum_players',
     ]
 
-    list_filter = ['is_enabled', 'is_featured', 'categories']
+    def display_minimum_players(self, obj):
+        return obj.minimum_players
+    display_minimum_players.short_description = "min"
+
+    def display_maximum_players(self, obj):
+        return obj.maximum_players
+    display_maximum_players.short_description = "max"
+
+    list_filter = [
+        'is_enabled',
+        'is_featured',
+        'categories',
+        'minimum_players',
+        'maximum_players',
+    ]
 
     list_editable = ['is_new', 'is_featured']
 
