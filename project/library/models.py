@@ -31,6 +31,44 @@ CHOICE_LOCATIONS = [
 ]
 
 
+class Series(models.Model):
+
+    name = models.CharField(max_length=200)
+
+    title = models.CharField(max_length=200, blank=True, default='')
+
+    featured_content = models.TextField(blank=True, default='')
+
+    content = models.TextField(blank=True, default='')
+
+    site = models.ForeignKey('sites.Site', default=get_current_site,
+                             related_name='library_series',
+                             on_delete=models.PROTECT)
+
+    slug = models.SlugField()
+
+    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+
+    updated_at = models.DateTimeField(auto_now=True, editable=False)
+
+    class Meta(object):
+        ordering = ['name']
+        unique_together = ['site', 'slug']
+        verbose_name_plural = 'series'
+
+    def __str__(self):
+        return self.name
+
+    def get_absolute_url(self):
+        return reverse('library:series_detail', kwargs={'slug': self.slug})
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            queryset = self.__class__.objects.filter(site=self.site)
+            self.slug = utils.generate_unique_slug(self.name, queryset)
+        return super(Series, self).save(*args, **kwargs)
+
+
 @python_2_unicode_compatible
 class Category(models.Model):
 
@@ -92,6 +130,10 @@ class Game(models.Model):
 
     categories = models.ManyToManyField(
         'library.Category', related_name='games', related_query_name='game')
+
+    series = models.ForeignKey(
+        'library.Series', related_name='series', related_query_name='series',
+        blank=True, null=True, on_delete=models.PROTECT)
 
     expansion_for = models.ForeignKey(
         'self', related_name='expansions', related_query_name='expansion',

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from .forms import CategoryAdminForm, GameAdminForm
-from .models import Category, Game, GameInLibrary, GameRelated
+from .models import Category, Game, GameInLibrary, GameRelated, Series
 from django.contrib import admin
 
 
@@ -37,6 +37,14 @@ class CategoryAdmin(admin.ModelAdmin):
     get_url.allow_tags = True
 
 
+@admin.register(Series)
+class SeriesAdmin(admin.ModelAdmin):
+
+    model = Series
+
+    prepopulated_fields = {'slug': ['name']}
+
+
 @admin.register(GameInLibrary)
 class GameInLibraryAdmin(admin.ModelAdmin):
 
@@ -63,7 +71,8 @@ class GameAdmin(admin.ModelAdmin):
 
     fieldsets = [
         (None, {'fields': [
-            'name', 'categories', 'expansion_for', 'publisher', 'complexity',
+            'name', 'categories', 'series', 'expansion_for',
+            'publisher', 'complexity',
             ('minimum_players', 'maximum_players'),
             ('minimum_playtime', 'maximum_playtime'),
             # 'related',
