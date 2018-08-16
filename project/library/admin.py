@@ -103,14 +103,26 @@ class GameAdmin(admin.ModelAdmin):
 
     list_display = [
         'name',
+        'id',
+        'boardgamegeek_id',
         'is_new',
         'is_featured',
         'display_categories',
         'display_copies',
         'display_minimum_players',
         'display_maximum_players',
+        'display_minimum_playtime',
+        'display_maximum_playtime',
         'complexity'
     ]
+
+    def display_minimum_playtime(self, obj):
+        return obj.minimum_playtime
+    display_minimum_playtime.short_description = "min"
+
+    def display_maximum_playtime(self, obj):
+        return obj.maximum_playtime
+    display_maximum_playtime.short_description = "max"
 
     def display_minimum_players(self, obj):
         return obj.minimum_players
