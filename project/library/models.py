@@ -303,6 +303,13 @@ class Game(models.Model):
         new_game.autopopulate_bgg_complexity()
         return new_game
 
+    @classmethod
+    def create_list_category(cls, list_of_bgg_ids, category_obj):
+        for bgg_id in list_of_bgg_ids:
+            new_game = cls.create_from_bgg_id(bgg_id)
+            new_game.categories.add(category_obj)
+            new_game.save()
+
 
 class GameRelated(models.Model):
 
