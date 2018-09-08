@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from .forms import CategoryAdminForm, GameAdminForm
-from .models import Category, Game, GameInLibrary, GameRelated, Series
+from .models import Category, Game, Copy, GameRelated, Series, CopyHistory
 from django.contrib import admin
 
 
@@ -9,17 +9,17 @@ from django.contrib import admin
 class CategoryAdmin(admin.ModelAdmin):
 
     fieldsets = [
-        (None, {'fields': ['name', 'slug', 'featured_content',
-                           'content', 'meta_description']}),
-        ('Publishing', {'fields': ['title', 'heading',
-                                   'is_enabled', 'is_featured',
-                                   'site', ('created_at', 'updated_at')],
+        (None, {'fields': ['name']}),
+        ('Content', {'fields': ['title', 'heading', 'featured_content',
+                                'content', 'meta_description']}),
+        ('Publishing', {'fields': ['is_enabled', 'is_featured', 'site', 'slug',
+                                   ('created_at', 'updated_at')],
                         'classes': ['collapse']}),
     ]
 
     form = CategoryAdminForm
 
-    list_display = ['name', 'get_url', 'is_active', 'is_featured']
+    list_display = ['name', 'is_active', 'is_featured']
 
     list_filter = ['is_enabled', 'is_featured']
 
@@ -45,17 +45,24 @@ class SeriesAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ['name']}
 
 
-@admin.register(GameInLibrary)
-class GameInLibraryAdmin(admin.ModelAdmin):
+class CopyHistoryInline(admin.TabularInline):
 
-    model = GameInLibrary
+    model = CopyHistory
 
 
-class GameInLibraryInline(admin.TabularInline):
+@admin.register(Copy)
+class CopyAdmin(admin.ModelAdmin):
 
-    model = GameInLibrary
+    model = Copy
 
-    fields = ['location', 'is_broken', 'is_lost',
+    inlines = [CopyHistoryInline]
+
+
+class CopyInline(admin.TabularInline):
+
+    model = Copy
+
+    fields = ['location', 'is_dead', 'is_lost',
               'added_at', 'removed_at', 'uid', 'notes']
 
 
@@ -70,77 +77,22 @@ class GameRelatedInline(admin.TabularInline):
 class GameAdmin(admin.ModelAdmin):
 
     fieldsets = [
-        (None, {'fields': [
-            'name', 'categories', 'series', 'expansion_for',
-            'publisher', 'complexity',
-            ('minimum_players', 'maximum_players'),
-            ('minimum_playtime', 'maximum_playtime'),
-            # 'related',
-        ]}),
-        ('Scraped', {
-            'fields': [
-                'boardgamegeek_id', 'boardgamegeek_rank',
-                'boardgamegeek_img', 'publisher',
-                'year_published',
-            ],
-            'classes': ['collapse']
-        }),
-        ('Content', {'fields': [
-            'title', 'heading', 'featured_content',
-            'featured_image', 'content',
-            'meta_description'
-        ]}),
-        ('Publishing', {
-            'fields': [
-                'is_enabled', 'is_featured', 'site', 'slug',
-                'tags', ('created_at', 'updated_at')
-            ],
-            'classes': ['collapse']}
-         ),
+        (None, {'fields': ['name', 'categories', 'expansion_for',
+                           'publisher', 'boardgamegeek_link',
+                           ('minimum_players', 'maximum_players'),
+                           ('minimum_playtime', 'maximum_playtime')]}),
+        ('Content', {'fields': ['title', 'heading', 'featured_content',
+                                'content', 'meta_description']}),
+        ('Publishing', {'fields': ['is_enabled', 'is_featured', 'site', 'slug',
+                                   'tags', ('created_at', 'updated_at')],
+                        'classes': ['collapse']}),
     ]
 
     form = GameAdminForm
 
-    list_display = [
-        'name',
-        'id',
-        'boardgamegeek_id',
-        'is_new',
-        'is_featured',
-        'display_categories',
-        'display_copies',
-        'display_minimum_players',
-        'display_maximum_players',
-        'display_minimum_playtime',
-        'display_maximum_playtime',
-        'complexity'
-    ]
+    list_display = ['name', 'is_active', 'is_featured', 'is_expansion']
 
-    def display_minimum_playtime(self, obj):
-        return obj.minimum_playtime
-    display_minimum_playtime.short_description = "min"
-
-    def display_maximum_playtime(self, obj):
-        return obj.maximum_playtime
-    display_maximum_playtime.short_description = "max"
-
-    def display_minimum_players(self, obj):
-        return obj.minimum_players
-    display_minimum_players.short_description = "min"
-
-    def display_maximum_players(self, obj):
-        return obj.maximum_players
-    display_maximum_players.short_description = "max"
-
-    list_filter = [
-        'is_enabled',
-        'is_featured',
-        'categories',
-        'minimum_players',
-        'maximum_players',
-    ]
-
-    list_editable = ['is_new', 'is_featured']
+    list_filter = ['is_enabled', 'is_featured']
 
     prepopulated_fields = {'slug': ['name']}
 
@@ -148,7 +100,7 @@ class GameAdmin(admin.ModelAdmin):
 
     search_fields = ['name']
 
-    inlines = [GameInLibraryInline, GameRelatedInline]
+    inlines = [CopyInline, GameRelatedInline]
 
     def display_categories(self, obj):
         return ", ".join([x.name for x in obj.categories.all()])
@@ -160,6 +112,6 @@ class GameAdmin(admin.ModelAdmin):
 
     def display_copies(self, obj):
         return "{} <a href='/admin/library/gameinlibrary/add/'>+</a>".format(
-            GameInLibrary.objects.filter(game=obj).count())
+            Copy.objects.filter(game=obj).count())
     display_copies.short_description = 'Live Copies'
     display_copies.allow_tags = True
