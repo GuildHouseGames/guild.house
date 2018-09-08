@@ -298,9 +298,6 @@ class Booking(models.Model):
 
             # Save the new values for the booking
             super(Booking, self).save(*args, **kwargs)
-            booking_date, is_created = BookingDate.objects.get_or_create(
-                date=self.reserved_date)
-            booking_date.set_values()
 
             # Check if there are no Booking objects relating to the previous
             # BookingDate object
