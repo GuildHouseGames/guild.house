@@ -41,12 +41,6 @@ EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
 
 
-# Raven
-
-RAVEN_CONFIG = {
-    'dsn': 'http://1a37c19524264de189eef68c5fec2955:32e2c50d5a614bbf94e144b0c477732e@sentry.mattaustin.me.uk/10',  # NOQA
-}
-
 
 # Timezone warnings
 
