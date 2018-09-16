@@ -41,9 +41,10 @@ EMAIL_HOST = 'localhost'
 EMAIL_PORT = 1025
 
 
-
 # Timezone warnings
 
 warnings.filterwarnings(
     'error', r'DateTimeField received a naive datetime',
     RuntimeWarning, r'django\.db\.models\.fields')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "public/media")  # noqa

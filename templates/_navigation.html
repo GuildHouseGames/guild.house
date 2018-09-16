@@ -1,6 +1,30 @@
-{% load static from staticfiles %}
+{% load static %}
+
 <!-- Navigation -->
-<nav class="navbar navbar-custom navbar-fixed-top" role="navigation" style="background: rgba(255,0,0,0.8)">
+<nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
+  <div class="container">
+    <a class="navbar-brand js-scroll-trigger" href="{% url "site:home" %}"><img src="{% static "sheild-.png" %}" height=24></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+	    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Sign Up</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Log In</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+{% comment %}
+<!-- Navigation -->
+<nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
@@ -14,7 +38,6 @@
     <div class="navbar-collapse navbar-center navbar-main-collapse collapse" aria-expanded="false" style="height: 1px;">
 
       <ul class="nav navbar-nav">
-
         <li class="active">
           <a class="home-link" href="{% url "site:homepage_detail" %}">
             <img src="{% static "sheild-.png" %}" height=24>
@@ -51,5 +74,6 @@
     <!-- /.navbar-collapse -->
   </div>
   <!-- /.container -->
-<h4 style="display: block; text-align: center;">DEV/TESTING ... NOT REAL: MAY BE BUGGY</h4>
 </nav>
+
+{% endcomment %}

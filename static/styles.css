@@ -105,10 +105,12 @@ header.masthead .bg-circle {
 }
 
 header.masthead .bg-circle-1 {
-  height: 90rem;
-  width: 90rem;
-  bottom: -55rem;
-  left: -55rem;
+  opacity: 0.3;
+  height: 100rem;
+  width: 100rem;
+  bottom: -50rem;
+  left: -85rem;
+  background: linear-gradient(25deg, #00 0%, #030303 100%);
 }
 
 header.masthead .bg-circle-2 {
@@ -192,8 +194,15 @@ header.masthead .bg-circle-4 {
 .projects-section .hover-text {
     float: relative;
     padding: 2rem;
-
+    margin-top: 0;
 }
+
+.projects-section .text-lg-left {
+    float: relative;
+    padding: 2rem;
+    margin-top: 180px;
+}
+
 
 @media (min-width: 992px) {
   .projects-section .featured-text {
@@ -221,7 +230,7 @@ header.masthead .bg-circle-4 {
 .address-bar {
     display: inherit;
     margin: 0;
-    padding: 0 0 40px;
+    padding: 10px 0 40px;
     text-align: center;
     font-size: 1.25em;
     font-weight: 400;
@@ -262,7 +271,6 @@ header.masthead .bg-circle-4 {
     max-width: 75%;
     border: 1px solid #999;
     background-color: rgba(255, 255, 255, .9);
-
     -webkit-border-radius: 0;
     -moz-border-radius: 0;
     -o-border-radius: 0;

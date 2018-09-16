@@ -26,10 +26,12 @@ class Entry(models.Model):
 
     summary = models.TextField(blank=True, default='')
 
-    featured_image = models.ImageField(max_length=1024,
-                                       upload_to='entry_featured',
-                                       help_text='Ensure bigger than 790x377 if going to be featured in carousel.',
-                                       blank=True, default='')
+    featured_image = models.ImageField(
+        max_length=1024,
+        upload_to='entry_featured',
+        help_text='Ensure bigger than 790x377 if going to be featured in carousel.',  # noqa
+        blank=True, default=''
+    )
 
     featured_order = models.IntegerField(default=0)
 
@@ -47,9 +49,11 @@ class Entry(models.Model):
 
     is_featured = models.BooleanField('featured', db_index=True, default=False)
 
-    site = models.ForeignKey('sites.Site', default=get_current_site,
-                             related_name='blog_entries',
-                             on_delete=models.PROTECT)
+    site = models.ForeignKey(
+        'sites.Site', default=get_current_site,
+        related_name='blog_entries',
+        on_delete=models.PROTECT
+    )
 
     slug = models.SlugField(unique_for_date='publish_at')
 
@@ -85,13 +89,13 @@ class Entry(models.Model):
     def get_next(self):
         queryset = self.__class__.objects.exclude(pk=self.pk).filter(
             site=self.site, publish_at__gte=self.publish_at
-            ).active().order_by('publish_at')
+        ).active().order_by('publish_at')
         return queryset.first()
 
     def get_previous(self):
         queryset = self.__class__.objects.exclude(pk=self.pk).filter(
             site=self.site, publish_at__lte=self.publish_at
-            ).active().order_by('-publish_at')
+        ).active().order_by('-publish_at')
         return queryset.first()
 
     def is_active(self):

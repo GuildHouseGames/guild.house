@@ -6,6 +6,11 @@ from django.http import Http404
 from django.views import generic
 
 
+class HomeView(generic.TemplateView):
+
+    pass
+
+
 class HomepageDetailView(generic.DetailView):
 
     model = Homepage

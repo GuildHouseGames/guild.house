@@ -6,7 +6,12 @@ from django.conf.urls import include, url
 
 urls = [
 
-    url(r'^$', views.HomepageDetailView.as_view(), name='homepage_detail'),
+    url(r'^$',
+        views.HomepageDetailView.as_view(),
+        name='home'),
+
+    url(r'^detail/$', views.HomepageDetailView.as_view(),
+        name='homepage_detail'),
 
 ]
 
