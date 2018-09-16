@@ -9,6 +9,7 @@ from django.views import generic
 class HomepageDetailView(generic.DetailView):
 
     model = Homepage
+    template_name = "index.html"
 
     def get_categories(self):
         return self.object.site.library_categories.featured().active()[
