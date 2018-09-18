@@ -30,6 +30,19 @@ CHOICE_LOCATIONS = [
     ('unknown', 'Missing'),
 ]
 
+CHOICE_GAME_STATE = [
+    ('unknown', 'unknown'),
+    ('great', 'Great'),
+    ('fine', 'Fine'),
+    ('poor', 'Poor'),
+    ('refill', 'Replenish consumables'),
+    ('empty', 'Completely out of consumables'),
+    ('missing', 'Parts missing'),
+    ('fixable', 'Broken, maybe fixable'),
+    ('broken', 'Broken, might be dead'),
+    ('unplayable', "It's dead, Jim"),
+]
+
 
 class Series(models.Model):
 
@@ -181,6 +194,9 @@ class Game(models.Model):
 
     meta_description = models.CharField(max_length=200, blank=True, default='')
 
+    has_consumables = models.BooleanField(
+        'requires consumables', default=False)
+
     is_new = models.BooleanField('new', default=False)
 
     is_free = models.BooleanField('free', default=False)
@@ -331,7 +347,7 @@ class GameRelated(models.Model):
         verbose_name_plural = 'Related games'
 
 
-class GameInLibrary(models.Model):
+class Copy(models.Model):
 
     game = models.ForeignKey(
         'library.Game', models.PROTECT,
@@ -349,7 +365,7 @@ class GameInLibrary(models.Model):
         null=True, blank=True, default=''
     )
 
-    is_broken = models.BooleanField(default=False)
+    is_dead = models.BooleanField(default=False)
 
     is_lost = models.BooleanField(default=False)
 
@@ -361,3 +377,25 @@ class GameInLibrary(models.Model):
 
     class Meta(object):
         verbose_name_plural = 'Copies of game in library'
+
+
+class CopyHistory(models.Model):
+
+    copy = models.ForeignKey('library.Copy', models.PROTECT)
+
+    person = models.CharField(
+        max_length=64,
+        null=True, blank=True, default=''
+    )
+
+    time_stamp = models.DateTimeField(auto_now_add=True, editable=False)
+
+    is_play = models.BooleanField(default=False)
+
+    notes = models.TextField(default='', blank=True)
+
+    state = models.CharField(
+        max_length=256,
+        choices=CHOICE_GAME_STATE,
+        null=True, blank=True, default=''
+    )
