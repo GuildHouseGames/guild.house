@@ -51,3 +51,20 @@ class Homepage(models.Model):
         return self in self.__class__.objects.filter(pk=self.pk).active()
     is_active.boolean = True
     is_active.short_description = 'active'
+
+
+class Navigation(models.Model):
+
+    is_active = models.BooleanField(default=True)
+
+    title = models.CharField(max_length=200)
+
+    url = models.CharField(max_length=200)
+
+    order = models.IntegerField(default=0)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title

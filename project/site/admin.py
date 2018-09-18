@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from .forms import HomepageAdminForm
-from .models import Homepage
+from .models import Homepage, Navigation
 from django.contrib import admin
 
 
@@ -21,3 +21,11 @@ class HomepageAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'is_active']
 
     readonly_fields = ['created_at', 'updated_at']
+
+
+@admin.register(Navigation)
+class NavigationAdmin(admin.ModelAdmin):
+
+    list_display = ['title', 'url', 'is_active', 'order']
+
+    list_editable = ['order']
