@@ -2,22 +2,24 @@
 
 {% block box_above %}
 {% if user.is_authenticated %}
-      <div style="opacity: 0.8;" class="hidden-print featured_text">
-        <i style="opacity: 0.5; float:right;">(secret staff navigation bar)</i>
-	<ul class="hidden-print">
-          <li style="display: inline; list-style-type: none; padding-right: 20px">
-            <a href="{% url "library:game_home" %}">Home</a>
-          </li>
-          <li style="display: inline; list-style-type: none; padding-right: 20px">
-            <a href="{% url "library:category_list" %}">Categories</a>
-          </li>
-          <li style="display: inline; list-style-type: none; padding-right: 20px">
-            <a href="{% url "library:game_all" %}">All Games</a>
-          </li>
-          <li style="display: inline; list-style-type: none; padding-right: 20px">
-            <a href="{% url "library:game_bgg_add" %}">Add from BGG</a>
-          </li>
-	</ul>
-      </div>
+<nav class="navbar navbar-custom navbar-expand-lg" style="padding-top: 0; ">
+  <div class="container">
+    <i style="opacity: 0.5;">(secret staff navigation bar)</i>
+    <ul class="navbar-nav  ml-auto text-white">
+      <li class="nav-item" style="display: inline; list-style-type: none; padding-right: 20px">
+	Games: <a href="{% url "library:game_home" %}">Home</a>
+      </li>
+      <li class="nav-item" style="display: inline; list-style-type: none; padding-right: 20px">
+	<a href="{% url "library:category_list" %}">Categories</a>
+      </li>
+      <li class="nav-item" style="display: inline; list-style-type: none; padding-right: 20px">
+	<a href="{% url "library:game_all" %}">All Games</a>
+      </li>
+      <li class="nav-item" style="display: inline; list-style-type: none; padding-right: 20px">
+	<a href="{% url "library:game_bgg_add" %}">Add from BGG</a>
+      </li>
+    </ul>
+  </div>
+</nav>
 {% endif %}
 {% endblock %}

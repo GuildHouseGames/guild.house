@@ -2,11 +2,8 @@
 
 
 {% block content %}
-
-<div class="container">
 <div class="row">
-
-  <div class="col-md-4">
+  <div class="col-md-5">
     <table>
       <tr>
 	<td align="center" colspan=2><h2>NEW</h2></td>
@@ -34,8 +31,6 @@
     <li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
     {% endfor %}
   </div>
-
-</div>
 </div>
 
 {% endblock %}

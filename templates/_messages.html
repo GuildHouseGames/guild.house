@@ -1,0 +1,16 @@
+<section id="messages" class="my-4">
+  <div class="container">
+    <div class="row">
+      <div class="box">
+        <div class="col-lg-12">
+	  <ul class="messages">
+	    {% for message in messages %}
+	    <li{% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+	      {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}{{ message }}</li>
+	    {% endfor %}
+	  </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

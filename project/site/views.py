@@ -14,7 +14,7 @@ class HomeView(generic.TemplateView):
 class HomepageDetailView(generic.DetailView):
 
     model = Homepage
-    template_name = "index.html"
+    template_name = "site/home.html"
 
     def get_categories(self):
         return self.object.site.library_categories.featured().active()[

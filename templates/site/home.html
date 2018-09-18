@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block main %}
+{% load static %}
+{% load thumbnail %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jssor-slider/27.5.0/jssor.slider.min.js"
+	integrity="sha256-I6cF3fG3SkCsFWISv0FVllzVmZmDDLuiUcw60+n1Q3I=" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+         var jssor_1_SlideshowTransitions = [
+          {$Duration:800,$Opacity:2}
+        ];
+         var jssor_1_options = {
+          $AutoPlay: 1,
+          $SlideshowOptions: {
+            $Class: $JssorSlideshowRunner$,
+            $Transitions: jssor_1_SlideshowTransitions,
+            $TransitionsOrder: 1
+          },
+          $BulletNavigatorOptions: {
+            $Class: $JssorBulletNavigator$
+          }
+        };
+        var jssor_1_slider = new $JssorSlider$("jssor_1", jssor_1_options);
+
+        /*#region responsive code begin*/
+        var MAX_WIDTH = 1110;
+        function ScaleSlider() {
+            var containerElement = jssor_1_slider.$Elmt.parentNode;
+            var containerWidth = containerElement.clientWidth;
+            if (containerWidth) {
+                var expectedWidth = Math.min(MAX_WIDTH || containerWidth, containerWidth);
+                jssor_1_slider.$ScaleWidth(expectedWidth);
+            }
+            else {
+                window.setTimeout(ScaleSlider, 30);
+            }
+        }
+        ScaleSlider();
+        $(window).bind("load", ScaleSlider);
+        $(window).bind("resize", ScaleSlider);
+        $(window).bind("orientationchange", ScaleSlider);
+        /*#endregion responsive code end*/
+    });
+    </script>
+    <style>
+    /*jssor slider bullet skin 051 css*/
+    .jssorb051 .i {position:absolute;cursor:pointer;}
+    .jssorb051 .i .b {fill:#fff;fill-opacity:0.5;}
+    .jssorb051 .i:hover .b {fill-opacity:.7;}
+    .jssorb051 .iav .b {fill-opacity: 1;}
+    .jssorb051 .i.idn {opacity:.3;}
+     /*jssor slider arrow skin 051 css*/
+    .jssora051 {display:block;position:absolute;cursor:pointer;}
+    .jssora051 .a {fill:none;stroke:#fff;stroke-width:360;stroke-miterlimit:10;}
+    .jssora051:hover {opacity:.8;}
+    .jssora051.jssora051dn {opacity:.5;}
+    .jssora051.jssora051ds {opacity:.3;pointer-events:none;}
+    </style>
+
+<section class="mb-5">
+  <center>
+    <div id="jssor_1"  class="col-lg-12" style="position:relative;top:100px;left:0px;width:1200px;height:444px;overflow:hidden;">
+      <div data-u="slides" style="position:absolute;top:0px;left:0px;width:1200px;height:444px;overflow:hidden;">
+        {% for entry in entry_list %}
+        {% if forloop.first  %}
+        {% endif %}
+        <div>
+          <div class="row justify-content-center no-gutters mb-5 mb-lg-0" style="height:444px">
+
+            <div data-u="caption" class="col-lg-6">
+              <div class="bg-black text-center h-100 project">
+		<div class="d-flex h-100">
+		  <a href="#modalE{{ entry.pk }}" rel="modal:open">
+		    <div class="hover-text text-lg-right">
+		      <h4 class="">{{ entry.title }}</h4>
+		      <p class="mb-0">{{ entry.featured_content|safe }}</p>
+		    </div>
+		  </a>
+		</div>
+              </div>
+            </div>
+
+            <div data-u="caption" class="col-lg-6" style="width: 555px; height:444px">
+              <div class="bg-black text-center h-100 project">
+		<div class="d-flex h-100">
+		  <a href="#modalE{{ entry.pk }}" rel="modal:open">
+		    {% thumbnail entry.featured_image "555x444" crop="center" as im %}
+		    <img class="img-fluid" src="{{ im.url }}" alt="{{ entry.title }}" style="height:444px; width:555px;">
+		    {% endthumbnail %}
+		  </a>
+		</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div data-u="navigator" class="jssorb051" style="position:absolute;bottom:40px;right:50%;" data-autocenter="1" data-scale="0.5" data-scale-bottom="0.75">
+        <div data-u="prototype" class="i" style="width:16px;height:16px;">
+          <svg viewbox="0 0 16000 16000" style="position:absolute;top:0;left:0;width:100%;height:100%;">
+            <circle class="b" cx="8000" cy="8000" r="5800"></circle>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+  </center>
+</section>
+
+<section id="projects" class="projects-section bg-light">
+  <div class="container">
+
+    {% for entry in entry_list %}
+
+    {% if forloop.first %}
+    <div class="row justify-content-center no-gutters mb-5 mb-lg-0">
+      {% endif %}
+
+      {% if forloop.counter|divisibleby:2 %}
+      <div class="col-lg-6">
+        <div class="bg-black text-center h-100 project">
+          <div class="d-flex h-100">
+	    <a href="#modalE{{ entry.pk }}" rel="modal:open">
+              <div class="hover-text text-lg-right">
+		<h4 class="">{{ entry.title }}</h4>
+		<p class="mb-0">{{ entry.featured_content|safe }}</p>
+	      </div>
+	    </a>
+	  </div>
+	</div>
+      </div>
+      {% endif %}
+
+
+      <div class="col-lg-6">
+        <div class="bg-black text-center h-100 project">
+          <div class="d-flex h-100">
+	    <a href="#modalE{{ entry.pk }}" rel="modal:open">
+	      {% thumbnail entry.featured_image "555x444" crop="center" as im %}
+	      <img class="img-fluid" src="{{ im.url }}" alt="{{ entry.title }}">
+	      {% endthumbnail %}
+	    </a>
+	  </div>
+	</div>
+      </div>
+
+      {% if not forloop.counter|divisibleby:2 %}
+      <div class="col-lg-6">
+        <div class="bg-black text-center h-100 project">
+          <div class="d-flex h-100">
+	    <a href="#modalE{{ entry.pk }}" rel="modal:open">
+              <div class="hover-text text-lg-left">
+		<h4 class="">{{ entry.title }}</h4>
+		<p class="mb-0">{{ entry.featured_content|safe }}</p>
+	      </div>
+	    </a>
+	  </div>
+	</div>
+      </div>
+      {% endif %}
+
+      <div class="portfolio-modal modal" id="modalE{{ entry.pk }}" tabindex="-1" role="dialog" aria-hidden="true">
+	<div class="modal-body">
+          <!-- Project Details Go Here -->
+          <h2 class="text-uppercase">{{ entry.title }}</h2>
+          <p class="item-intro text-muted">{{ entry.summary|safe }}</p>
+          <p>{{ entry.content|safe}}</p>
+	</div>
+      </div>
+
+
+      {% if forloop.last %}
+    </div>
+    {% endif %}
+
+    {% endfor %}
+  </div>
+</section>
+
+
+
+<section>
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 order-lg-2">
+        <div class="p-5">
+          <img class="img-fluid rounded-circle" src="img/01.jpg" alt="">
+        </div>
+      </div>
+      <div class="col-lg-6 order-lg-1">
+        <div class="p-5">
+          <h2 class="display-4">For those about to rock...</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod aliquid, mollitia odio veniam sit iste esse assumenda amet aperiam exercitationem, ea animi blanditiis recusandae! Ratione voluptatum molestiae adipisci, beatae obcaecati.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <div class="p-5">
+          <img class="img-fluid rounded-circle" src="img/02.jpg" alt="">
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="p-5">
+          <h2 class="display-4">We salute you!</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod aliquid, mollitia odio veniam sit iste esse assumenda amet aperiam exercitationem, ea animi blanditiis recusandae! Ratione voluptatum molestiae adipisci, beatae obcaecati.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6 order-lg-2">
+        <div class="p-5">
+          <img class="img-fluid rounded-circle" src="img/03.jpg" alt="">
+        </div>
+      </div>
+      <div class="col-lg-6 order-lg-1">
+        <div class="p-5">
+          <h2 class="display-4">Let there be rock!</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quod aliquid, mollitia odio veniam sit iste esse assumenda amet aperiam exercitationem, ea animi blanditiis recusandae! Ratione voluptatum molestiae adipisci, beatae obcaecati.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

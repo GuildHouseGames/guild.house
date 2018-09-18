@@ -4,76 +4,25 @@
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
   <div class="container">
     <a class="navbar-brand js-scroll-trigger" href="{% url "site:home" %}"><img src="{% static "sheild-.png" %}" height=24></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-	    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarResponsive">
-      <ul class="navbar-nav ml-auto">
+      <ul class="navbar-nav  ml-auto">
+	{% load navigation %}
+	{% nav_menu %}
+	{% for item in nav_items %}
         <li class="nav-item">
-          <a class="nav-link" href="#">Sign Up</a>
+          <a class="nav-link" href="{{ item.url }}">{{ item.title }}</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Log In</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-</nav>
-
-
-{% comment %}
-<!-- Navigation -->
-<nav class="navbar navbar-custom navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
-        <i class="fa fa-bars"></i>
-      </button>
-      <a class="navbar-brand page-scroll" href="{% url "site:homepage_detail" %}">
-        <img src="{% static "sheild-.png" %}" height=24>
-      </a>
-    </div>
-
-    <div class="navbar-collapse navbar-center navbar-main-collapse collapse" aria-expanded="false" style="height: 1px;">
-
-      <ul class="nav navbar-nav">
-        <li class="active">
-          <a class="home-link" href="{% url "site:homepage_detail" %}">
-            <img src="{% static "sheild-.png" %}" height=24>
-          </a>
-        </li>
-
-        {% load sitetree %}
-        {% sitetree_menu from "MainNavigation" include "trunk"  template "sitetree/custom_menu_bootstrap3.html" %}
-
-        <li>
-          <a href="#location" class="page-scroll">
+	{% endfor %}
+	<li class="nav-item">
+          <a class="nav-link" href="#location" class="page-scroll">
             Find Us <i class="fa fa-map-marker"></i>
           </a>
         </li>
-        <li>
-          <a href="https://facebook.com/guildhouse.canberra" target="_blank"><i class="fa fa-facebook-square fa-fw"></i></a>
+        <li class="nav-item">
+          <a class="nav-link" href="https://facebook.com/guildhouse.canberra" target="_blank">
+	    <i class="fa fa-facebook-square fa-fw"></i>
+	  </a>
         </li>
       </ul>
 
-  {% if user.is_authenticated %}
-  <div class="hidden-print featured_text" style="text-align: center;">
-    Logged in: <a href="/admin/">{{ user }}</a> |
-    <a href="/admin/">Admin</a> |
-    <a href="{% url 'bookings:booking_list' %}">Bookings</a> |
-    <a href="{% url 'members:member_approval' %}">Members</a> |
-    <a href="{% url 'library:game_home' %}">Games</a> |
-    <a href="/admin/logout/">Log out</a>
   </div>
-  {% endif %}
-
-
-    </div>
-
-    <!-- /.navbar-collapse -->
-  </div>
-  <!-- /.container -->
 </nav>
-
-{% endcomment %}
