@@ -5,21 +5,26 @@
 
 
 {% block meta %}
-  {{ block.super }}
-  {% if category.meta_description %}<meta name="description" content="{{ category.meta_description }}" />{% endif %}
+{{ block.super }}
+{% if category.meta_description %}<meta name="description" content="{{ category.meta_description }}" />{% endif %}
 {% endblock %}
 
 
 {% block content %}
+<div class="row">
+  <h1 style="display: block;">{{ category.heading|default:category.name }}</h1>
+</div>
 
-  <h1>{{ category.heading|default:category.name }}</h1>
+<div class="row">
   {% if category.featured_content %}<div>{{ category.featured_content }}</div>{% endif %}
   {% if category.content %}<div>{{ category.content|safe }}</div>{% endif %}
 
-  {% for game in game_list %}
-    {% if forloop.first %}<table>{% endif %}
+  <table>
+    <tr>
+      {% for game in game_list %}
       {% include "library/_game.html" %}
-    {% if forloop.last %}</table>{% endif %}
-  {% endfor %}
-
+      {% endfor %}
+    </tr>
+  </table>
+</div>
 {% endblock %}

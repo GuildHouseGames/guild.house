@@ -3,14 +3,14 @@
 
 {% block content %}
 <div class="row">
-  <div class="col-md-5">
+  <div class="col-md-4">
     <table>
       <tr>
 	<td align="center" colspan=2><h2>NEW</h2></td>
       </tr>
-    {% for game in new_games %}
-        {% include "library/_game.html" %}
-    {% endfor %}
+      {% for game in new_games %}
+      {% include "library/_game.html" %}
+      {% endfor %}
     </table>
   </div>
 
@@ -20,7 +20,7 @@
 	<td align="center" colspan=2><h2>POPULAR</h2></td>
       </tr>
       {% for game in popular_games %}
-        {% include "library/_game.html" %}
+      {% include "library/_game.html" %}
       {% endfor %}
     </table>
   </div>
@@ -32,5 +32,4 @@
     {% endfor %}
   </div>
 </div>
-
 {% endblock %}

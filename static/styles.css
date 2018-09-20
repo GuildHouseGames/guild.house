@@ -416,14 +416,14 @@ button[type=submit] {
 .date, .time, .pax {
     text-align: center;
     border: 1px solid #337ab7;
-    height: 25px;
+    height: 30px;
     margin: 4px;
     padding: 2px 4px;
     cursor: pointer;
 }
 
 .date {
-    height: 40px;
+    height: 46px;
     padding-top: 3px;
     margin: 2px;
 }
@@ -477,6 +477,28 @@ button[type=submit] {
 .time:active {
     background-color: white
 }
+
+input, select, textarea {
+    color: whitesmoke;
+    border: 0;
+    padding: 5px 10px;
+    margin: 2px;
+}
+
+select, input {
+    background: rgba(175, 151, 100, 0.55); /*rgba(216, 181, 120, 0.55); /*rgba(220, 175, 120, 0.64); /*rgba(220, 220, 120, 0.64); /*rgba(12,12,12,0.8);*/
+}
+
+option {
+     background: rgba(10,10,10,0.5);
+}
+
+textarea {
+    background: rgba(105, 98, 98, 0.57);
+    height: 4em;
+}
+
+
 
 /* ./bookings */
 
@@ -564,3 +586,11 @@ button[type=submit] {
 }
 
 /* ./banner */
+
+.game .complex {
+    width: 1rem;
+    height: 1rem;
+    border: 1px solid grey;
+    display: inline-block;
+
+}

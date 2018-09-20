@@ -2,25 +2,26 @@
 
 {% block box_above %}
 {% if user.is_authenticated %}
-      <div style="opacity: 0.8;" class="hidden-print featured_text">
-        <i style="opacity: 0.5; float:right;">(secret staff navigation bar)</i>
-	<ul class="hidden-print">
-        <li style="display: inline; list-style-type: none; padding-right: 20px">
-          <a href="{% url "bookings:booking_today" %}">Today</a>
-        </li>
-        <li style="display: inline; list-style-type: none; padding-right: 20px">
-          <a href="{% url "bookings:booking_list" %}">Upcoming</a> (<a href="{% url "bookings:booking_list_num" %}">Numbers</a>)
-        </li>
-        <li style="display: inline; list-style-type: none; padding-right: 20px">
-          <a href="{% url "bookings:booking_list_cancelled" %}">Cancelled</a>
-        </li>
-        <li style="display: inline; list-style-type: none; padding-right: 20px">
-          <a href="{% url "bookings:booking_add" %}">New</a>
-        </li>
-        <li style="display: inline; list-style-type: none; padding-right: 20px">
-          <a href="{% url "bookings:booking_default_post" %}">Add</a>
-        </li>
-      </ul>
-      </div>
+<nav class="hidden-print navbar navbar-custom navbar-expand-lg" style="padding-top: 0; ">
+  <div class="container">
+    <ul class="navbar-nav  ml-auto text-white">
+      <li style="display: inline; list-style-type: none; padding-right: 20px">
+	<a href="{% url "bookings:booking_today" %}">Today</a>
+      </li>
+      <li style="display: inline; list-style-type: none; padding-right: 20px">
+	<a href="{% url "bookings:booking_list" %}">Upcoming</a> (<a href="{% url "bookings:booking_list_num" %}">Numbers</a>)
+      </li>
+      <li style="display: inline; list-style-type: none; padding-right: 20px">
+	<a href="{% url "bookings:booking_list_cancelled" %}">Cancelled</a>
+      </li>
+      <li style="display: inline; list-style-type: none; padding-right: 20px">
+	<a href="{% url "bookings:booking_add" %}">New</a>
+      </li>
+      <li style="display: inline; list-style-type: none; padding-right: 20px">
+	<a href="{% url "bookings:booking_default_post" %}">Add</a>
+      </li>
+    </ul>
+  </div>
+</nav>
 {% endif %}
 {% endblock %}

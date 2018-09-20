@@ -2,20 +2,19 @@
 
 {% block box_above %}
 {% if user.is_authenticated %}
-<nav class="navbar navbar-custom navbar-expand-lg" style="padding-top: 0; ">
+<nav class="hidden-print navbar navbar-custom navbar-expand-lg" style="padding-top: 0; ">
   <div class="container">
-    <i style="opacity: 0.5;">(secret staff navigation bar)</i>
     <ul class="navbar-nav  ml-auto text-white">
-      <li class="nav-item" style="display: inline; list-style-type: none; padding-right: 20px">
+      <li style="display: inline; list-style-type: none; padding-right: 20px">
 	Games: <a href="{% url "library:game_home" %}">Home</a>
       </li>
-      <li class="nav-item" style="display: inline; list-style-type: none; padding-right: 20px">
+      <li style="display: inline; list-style-type: none; padding-right: 20px">
 	<a href="{% url "library:category_list" %}">Categories</a>
       </li>
-      <li class="nav-item" style="display: inline; list-style-type: none; padding-right: 20px">
+      <li style="display: inline; list-style-type: none; padding-right: 20px">
 	<a href="{% url "library:game_all" %}">All Games</a>
       </li>
-      <li class="nav-item" style="display: inline; list-style-type: none; padding-right: 20px">
+      <li style="display: inline; list-style-type: none; padding-right: 20px">
 	<a href="{% url "library:game_bgg_add" %}">Add from BGG</a>
       </li>
     </ul>

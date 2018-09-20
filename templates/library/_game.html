@@ -1,12 +1,21 @@
-<tr class="my-3">{% load thumbnail %}
+<tr class="game">{% load thumbnail %}{% load games %}
   <td align="center">
     {% if game.boardgamegeek_img %}
     {% thumbnail game.boardgamegeek_img "85x85" crop="center" as im %}
-    <a class="my-4" href="{{ game.get_absolute_url }}"><img height="80" src="{{ im.url }}"></a>
+    <a href="{{ game.get_absolute_url }}"><img class="p-2" height="110" src="{{ im.url }}" style="1px solid #ccc;"></a>
     {% endthumbnail %}
     {% endif %}
   </td>
   <td>
-    <a href="{{ game.get_absolute_url }}">{{ game.name}}</a>
+    <h6 class="p-0 m-0"><a href="{{ game.get_absolute_url }}">{{ game.name}}</a></h6>
+    {{ game.minimum_players }}{% if not game.maximum_players == 0 %} - {{ game.maximum_players }}{% endif %} player{{ game.minimum_players|pluralize:",s" }}
+    {% if not game.minimum_playtime == 0 %}({{ game.minimum_playtime }}{% if not game.maximum_playtime == None %} - {{ game.maximum_playtime }} mins){% else %} mins){% endif %}<br>{% endif %}
+    {% if game.complexity %}
+    <div>
+      <span class="complex" style="background-color: hsl({{ game.complexity|complexity_hue }}, 100%, 25%)"></span>
+      <span>{{ game.complexity|floatformat:2 }}</span>
+    </div>
+    {% endif %}
+
   </td>
 </tr>

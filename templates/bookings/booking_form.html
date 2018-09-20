@@ -12,11 +12,13 @@
 </h2>
 {% endif %}
 
+{% if not object.code %}
 <div class="row">
-    {% if not object.code %}
-      <h2 class="hidden-print">New Booking</h2>
-    {% endif %}
+  <h2 class="hidden-print">New Booking</h2>
+</div>
+{% endif %}
 
+<div class="row">
 {% if form.errors %}
 <div class="btn btn-danger">
 Woah! Your booking wasn't saved.</div><br>
