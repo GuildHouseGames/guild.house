@@ -4,7 +4,8 @@ from django import forms
 from tinymce.widgets import TinyMCE
 from phonenumber_field.formfields import PhoneNumberField
 from .models import Booking
-from .settings import DURATION_SELECTION, BOOKING_TIMES_CHOICES
+from .settings import (
+    DURATION_SELECTION, BOOKING_TIMES_CHOICES, DEFAULT_BOOKING_DURATION)
 
 
 class BookingAdminForm(forms.ModelForm):
@@ -51,6 +52,8 @@ class BookingForm(forms.ModelForm):
         if not cleaned_data.get('email') and not cleaned_data.get('phone'):
             raise forms.ValidationError(
                 'Both a phone number and an email address are necessary for online bookings.')  # noqa
+        if not cleaned_data.get('booking_duration'):
+            cleaned_data['booking_duration'] = DEFAULT_BOOKING_DURATION
         return super(BookingForm, self).clean(*args, **kwargs)
 
 
