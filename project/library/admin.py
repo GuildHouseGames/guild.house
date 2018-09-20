@@ -78,7 +78,8 @@ class GameAdmin(admin.ModelAdmin):
 
     fieldsets = [
         (None, {'fields': ['name', 'categories', 'expansion_for',
-                           'publisher', 'boardgamegeek_link',
+                           'publisher', 'complexity',
+                           'boardgamegeek_rank', 'year_published',
                            ('minimum_players', 'maximum_players'),
                            ('minimum_playtime', 'maximum_playtime')]}),
         ('Content', {'fields': ['title', 'heading', 'featured_content',
@@ -90,7 +91,8 @@ class GameAdmin(admin.ModelAdmin):
 
     form = GameAdminForm
 
-    list_display = ['name', 'is_active', 'is_featured', 'is_expansion']
+    list_display = ['name', 'complexity',
+                    'is_active', 'is_featured', 'is_expansion']
 
     list_filter = ['is_enabled', 'is_featured']
 
