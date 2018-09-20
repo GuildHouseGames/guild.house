@@ -102,15 +102,15 @@ urls = [
         views.BookingTimeView.as_view(),
         name='booking_times_reversed'),
 
-    url(r'^(?P<code>[\w-]+)/run/$',
+    url(r'^b/(?P<code>[\w-]+)/run/$',
         views.BookingRunView.as_view(),
         name="booking_run"),
 
-    url(r'^(?P<code>[\w-]+)/success/$',
+    url(r'^b/(?P<code>[\w-]+)/success/$',
         views.BookingSuccessView.as_view(),
         name="booking_success"),
 
-    url(r'^(?P<code>[\w-]+)/$',
+    url(r'^b/(?P<code>[\w-]+)/$',
         views.BookingUpdateView.as_view(),
         name="booking_update"),
 

@@ -6,23 +6,33 @@ from datetime import time, timedelta, date
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.core.urlresolvers import reverse
 from django.db.models import Count, Sum
 from django.http import Http404
 from django.shortcuts import redirect, get_object_or_404, render
 from django.utils.timezone import localtime, now
 from django.views import generic
-from django.conf import settings
 
 from . import settings
 from .forms import BookingForm, NewBookingForm, BlankForm
-from .models import Booking, BookingDate
+from .models import Booking
 from .utils import import_revel_bookings, get_future_services_set
 
 
+MSG_WARNING_BUSY = """Beware! This booking made during a busy time. May conflict. Please check ASAP and contact to discuss options if necessary.
+
+The customer has been warned that this is the case and may be expecting confirmation.
+"""
+
+MSG_WARNING_BUSY_CUSTOMER = """Beware! As warned at time of booking: you have booked during a busy time it is possible that your booking may have conflicted with another.
+
+We will contact you ASAP if this is the case. Alternatively you can contact us to double-check.
+"""
+
+
 class CalendarMixin(object):
-    """ @TD: Fri Jun 24 11:46:48 AEST 2016: This is overkill, but was useful in a past
-    time. Needs major clean up."""
+    """ @TD: Fri Jun 24 11:46:48 AEST 2016: This is overkill, but was
+    useful in a past time. Needs major clean up."""
 
     def get_calendar(self, context, yr=None, mth=None, day=None):
 
@@ -50,8 +60,6 @@ class CalendarMixin(object):
         return context
 
     def make_range(self, y, m):
-        c = calendar.monthrange(y, m)
-        a = datetime.timedelta(days=c[0])
         b = datetime.timedelta(days=settings.DEFAULT_CALENDAR_LENGTH)
 
         # e = Booking.objects.filter(date__year=y, date__month=m)
@@ -86,8 +94,10 @@ class TimeMixin(object):
         busy_night = False
         open_bookings, time_list = [], []
         interval = settings.BOOKING_INTERVAL
-        this_time = datetime.datetime.combine(this_date,
-                                              settings.BOOKING_TIMES[0]) - interval
+        this_time = datetime.datetime.combine(
+            this_date,
+            settings.BOOKING_TIMES[0]
+        ) - interval
 
         """Construct bookings
         Ensure times are constructed first, then iterate through bookings
@@ -101,7 +111,7 @@ class TimeMixin(object):
             if booking.booking_duration:
                 end_time = start_time + booking.booking_duration
             else:
-                h, m = settings.DEFAULT_BOOKING_DURATION.split(":")[0]
+                h, m, s = settings.DEFAULT_BOOKING_DURATION.split(":")
                 end_time = datetime.datetime.combine(
                     this_date,
                     time(hour=int(h), minute=int(m))
@@ -124,7 +134,8 @@ class TimeMixin(object):
             select_time = select_time + interval
             for start, end, pax in open_bookings:
                 # Add an hour for good luck.
-                if start <= this_time and this_time < end + timedelta(minutes=60):
+                if start <= this_time \
+                   and this_time < end + timedelta(minutes=60):
                     this_dict['pax'] = this_dict['pax'] + pax
 
             for tmp in settings.HEAT.keys():
@@ -166,11 +177,7 @@ class BookingFormMixin(object):
     def send_booking_notice_internal(self, obj, form, change="added"):
         warning = ""
         if "full" in form.cleaned_data.get('private_notes'):
-            warning = """Beware! This booking made during a busy time. May conflict. Please check ASAP and contact to discuss options if necessary.
-
-The customer has been warned that this is the case and may be expecting confirmation.
-
-        """
+            warning = MSG_WARNING_BUSY
 
         message = u"""Booking {change} in to system.
 
@@ -213,11 +220,7 @@ Link to day: http://guild.house/bookings/{url_day}
     def send_booking_notice_customer(self, obj, form):
         warning = ""
         if "full" in form.cleaned_data.get('private_notes'):
-            warning = """
-Beware! As warned at time of booking: you have booked during a busy time it is possible that your booking may have conflicted with another.
-
-We will contact you ASAP if this is the case. Alternatively you can contact us to double-check.
-        """
+            warning = MSG_WARNING_BUSY_CUSTOMER
 
         message = u"""Thank you for making a reservation at Guild!
 
@@ -400,11 +403,9 @@ class BookingUpdateView(LoginRequiredMixin, BookingFormMixin, CalendarMixin,
             return get_object_or_404(Booking, code=self.kwargs.get('code'))
 
     def get_context_data(self, *args, **kwargs):
-        context_data = super(BookingUpdateView, self).get_context_data(*args,
-                                                                       **kwargs)
-        obj = self.get_object()
-        unique = self.get_queryset().filter(reserved_date=obj.reserved_date,
-                                            phone=obj.phone)
+        context_data = super(
+            BookingUpdateView, self).get_context_data(*args, **kwargs)
+
         context_data['update_view'] = True
         return context_data
 
@@ -421,7 +422,6 @@ class BookingListView(BookingQueryset, generic.ListView):
         context_data = super(BookingListView, self).get_context_data(*args,
                                                                      **kwargs)
         context_data['show_all'] = True
-        context_data['future_days_list'] = BookingDate.objects.future()
         return context_data
 
 
@@ -432,7 +432,7 @@ class BookingListNumView(LoginRequiredMixin, BookingListView):
 
 class BookingFutureView(LoginRequiredMixin, generic.ListView):
 
-    model = BookingDate
+    model = Booking
     template_name = 'bookings/bookings_table.html'
 
     def get_queryset(self, *args, **kwargs):

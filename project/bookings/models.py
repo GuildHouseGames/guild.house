@@ -209,50 +209,11 @@ class Booking(models.Model):
     is_active.boolean = True
     is_active.short_description = 'active'
 
-    def clean(self, *args, **kwargs):
-        booking_date, is_created = BookingDate.objects.get_or_create(
-            date=self.reserved_date)
 
-        booking_list = Booking.objects.filter(reserved_date=self.reserved_date)
 
-        # Check each 30min window to see which other bookings that window
-        # conflicts with. If the total pax for that window exceeds the max
-        # a validation error is thrown and the booking is not created.
-        minutes = self.booking_duration.total_seconds() / 60
-        # Potentially add an hour to match the safety hour often added
-        blocks = int(minutes/30)
-        for i in range(0, blocks):
-            total_pax = 0
-            dt_this = datetime.combine(
-                self.reserved_date, self.reserved_time)
-            dt_this = dt_this + timedelta(minutes=30*i)
-            this_end = dt_this + timedelta(minutes=30)
-            for booking in booking_list:
-                dt_other = datetime.combine(
-                    booking.reserved_date, booking.reserved_time)
-                if (timesince(dt_other, dt_this).encode(
-                        'ascii', 'ignore').decode('ascii') == '0minutes'):
-                    # If not the same start (which shouldn't be skipped)
-                    if not dt_this == dt_other:
-                        # As it's just a half hour window if the window is
-                        # before the other booking they can't overlap
-                        continue
-                # An hour is manually added on in views.TimeMixin for good
-                # luck, so this needs to be accounted for
-                booking_end = dt_other + \
-                    booking.booking_duration + timedelta(minutes=60)
-                # Essentially if the window starts after the booking starts
-                # but ends before the booking ends
-                if (timesince(booking_end, this_end).encode(
-                        'ascii', 'ignore').decode('ascii') == '0minutes'):
-                    total_pax = total_pax + booking.party_size
-                    continue
-            combined = self.party_size + total_pax
 
-        super(Booking, self).clean(*args, **kwargs)
 
     def save(self, *args, **kwargs):
-        self.clean()
 
         # Automatically make code if doesn't already have one.
         if not self.code:
