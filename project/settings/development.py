@@ -9,6 +9,13 @@ THUMBNAIL_DEBUG = DEBUG
 THUMBNAIL_DUMMY = False
 
 
+ALLOWED_HOSTS = INTERNAL_IPS
+
+
+INSTALLED_APPS = INSTALLED_APPS + [
+    'debug_toolbar',
+]
+
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
