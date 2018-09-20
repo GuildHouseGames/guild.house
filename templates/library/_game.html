@@ -1,7 +1,9 @@
-<tr>
+<tr class="my-3">{% load thumbnail %}
   <td align="center">
     {% if game.boardgamegeek_img %}
-    <a href="{{ game.get_absolute_url }}"><img height="80" src="{{ game.boardgamegeek_img }}"></a>
+    {% thumbnail game.boardgamegeek_img "85x85" crop="center" as im %}
+    <a class="my-4" href="{{ game.get_absolute_url }}"><img height="80" src="{{ im.url }}"></a>
+    {% endthumbnail %}
     {% endif %}
   </td>
   <td>
