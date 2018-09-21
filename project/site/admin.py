@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from .forms import HomepageAdminForm
-from .models import Homepage, Navigation
+from .models import Homepage, Navigation, OpeningHours
 from django.contrib import admin
 
 
@@ -29,3 +29,13 @@ class NavigationAdmin(admin.ModelAdmin):
     list_display = ['title', 'url', 'is_active', 'order']
 
     list_editable = ['order']
+
+
+@admin.register(OpeningHours)
+class OpeningHoursAdmin(admin.ModelAdmin):
+
+    list_display = ['date', 'named_day',
+                    'open_time', 'close_time', 'open', 'is_closed', 'note']
+
+    list_editable = ['named_day', 'open_time',
+                     'close_time', 'open', 'is_closed', 'note']

@@ -64,6 +64,17 @@ body {
     width: 100%;
 }
 
+/* opening hours */
+
+tr.open {
+    color: rgba(7, 107, 7, 1);
+}
+tr.closed {
+    color: rgba(167, 7, 27, 1);
+}
+
+/* ./opening hours */
+
 .rounded-pill {
     border-radius: 5rem;
 }

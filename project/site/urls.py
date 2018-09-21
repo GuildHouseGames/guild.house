@@ -10,6 +10,10 @@ urls = [
         views.HomepageDetailView.as_view(),
         name='home'),
 
+    url(r'^opening-hours$',
+        views.HoursView.as_view(),
+        name='opening_hours'),
+
     url(r'^detail/$', views.HomepageDetailView.as_view(),
         name='homepage_detail'),
 

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<center>
+  <h2>Normal Opening Hours</h2>
+  <br>
+  <p>
+    <h5>Monday</h5>
+    Dinner<br>
+    5pm until Late
+  </p>
+  <br>
+  <p>
+    <h5>Tuesday to Sunday</h5>
+    Lunch, Afternoon and Dinner<br>
+    <i>Kitchen open all day!</i><br>
+    <b>12pm until Late</b>
+  </p>
+  <br>
+
+  <p>
+    Come and make the most of our weekday <b>Lunch $9.50 Pizza</b> Special</b>!
+  </p>
+
+  <br>
+  <br>
+
+  <h2>Special Opening Hours</h2>
+
+  <br>
+
+  <style>
+  </style>
+
+  <table cellpadding="4px">
+
+    {% for list in hours_list %}
+    {% for day in list %}
+    <tr class="{{ day.open }}">
+      <td>{{ day.open|upper }}</td>
+      <th> &nbsp; {{ day.named_day }}</th>
+      <td> &nbsp; {{ day.date }}</td>
+      <td> &nbsp; {{ day.date|date:"D" }}</td>
+      <td> &nbsp; &nbsp; <i>{{ day.note }}</i></td>
+    </tr>
+    {% endfor %}
+    <tr><td colspan="5"><hr></td></tr>
+    {% endfor %}
+
+  </table>
+
+</center>
+
+{% endblock  %}

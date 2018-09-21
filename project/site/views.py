@@ -1,14 +1,38 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from . import settings
-from .models import Homepage
+from datetime import date, timedelta
+
 from django.http import Http404
 from django.views import generic
+
+from . import settings
+from .models import Homepage, OpeningHours
 
 
 class HomeView(generic.TemplateView):
 
     pass
+
+
+class HoursView(generic.TemplateView):
+
+    template_name = "site/opening_hours.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(HoursView, self).get_context_data(*args, **kwargs)
+
+        hours_list, this_list = [], []
+        td = timedelta(days=1)
+        for day in OpeningHours.objects.filter(
+                date__gte=date.today()-td):
+            if this_list and day.date-td != this_list[-1].date:
+                hours_list.append(this_list)
+                this_list = [day]
+            else:
+                this_list.append(day)
+        hours_list.append(this_list)
+        context['hours_list'] = hours_list
+        return context
 
 
 class HomepageDetailView(generic.DetailView):

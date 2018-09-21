@@ -68,3 +68,35 @@ class Navigation(models.Model):
 
     def __str__(self):
         return self.title
+
+
+OPEN_CHOICES = [
+    ('open', 'open'),
+    ('half', 'half day'),
+    ('closed', 'closed'),
+]
+
+
+class OpeningHours(models.Model):
+    """ Define any unusual opening hours."""
+
+    date = models.DateField()
+
+    named_day = models.CharField(max_length=128, blank=True, default='')
+
+    open_time = models.TimeField(blank=True, null=True)
+
+    close_time = models.TimeField(blank=True, null=True)
+
+    open = models.CharField(max_length=64, choices=OPEN_CHOICES)
+
+    is_closed = models.BooleanField(default=False)
+
+    note = models.CharField(max_length=256, blank=True, default='')
+
+    class Meta:
+        ordering = ['date']
+        verbose_name_plural = 'Opening hours'
+
+    def __str__(self):
+        return "{}".format(self.date)
