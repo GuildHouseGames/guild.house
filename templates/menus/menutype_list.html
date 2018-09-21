@@ -6,22 +6,11 @@
 
 {% block content %}
 
-  <h1>Menus</h1>
-
-
-  <ul class="list-inline menus">
   {% for object in object_list %}
-      <li>
-        <h2><a href="{{MEDIA_URL}}{{ object.menu_file }}">{{ object.title }}</a></h2>
-        <p><a href="{{MEDIA_URL}}{{ object.menu_file }}">{{ object.summary|safe }}</a></p>
-        <a href="{{MEDIA_URL}}{{ object.menu_file }}">{{ object.menu_file.size|filesizeformat }} PDF</a>
-        <br>
-      </li>
+  <h1 class="text-center">{{ object.title }}</h1>
+  <p class="text-center"><a href="{{MEDIA_URL}}{{ object.menu_file }}">PDF {{ object.menu_file.size|filesizeformat }} PDF</a></p>
+  {% for img in object.menuimage_set.all %}
+  <p class="text-center"><a href="{{MEDIA_URL}}{{ object.menu_file }}" target="_blank"><img src="{{ img.image.url }}" width="{{ img.width }}"></a></p>
   {% endfor %}
-      <li>
-        <h2><a href="http://menu.guild.house/Guild_Games-Menu_Jan17.pdf" target="_blank">Games</a></h2>
-        <p><a href="https://boardgamegeek.com/collection/user/elequ?own=1" target="_blank">Link to our<br>BoardGameGeek<br>profile</a></p>
-      </li>
-  </ul>
-
+  {% endfor %}
 {% endblock %}
