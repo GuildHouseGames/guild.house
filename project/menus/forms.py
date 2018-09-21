@@ -17,6 +17,9 @@ from tinymce.widgets import TinyMCE
 class MenuTypeAdminForm(forms.ModelForm):
 
     class Meta(object):
-        fields = ['is_enabled', 'order',  'title', 'summary', 'menu_file', ]
+        fields = [
+            'is_enabled', 'type', 'order',  'title', 'summary',
+            'publish_at', 'menu_file'
+        ]
         model = MenuType
         widgets = {'summary': TinyMCE()}

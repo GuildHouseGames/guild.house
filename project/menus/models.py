@@ -13,9 +13,19 @@ def get_current_site():
         pass
 
 
+MENU_CHOICES = [
+    ('food', 'food'),
+    ('drinks', 'drinks'),
+    ('banquet', 'banquet'),
+    ('games', 'games'),
+]
+
 
 @python_2_unicode_compatible
 class MenuType(models.Model):
+
+    type = models.CharField(
+        max_length=32, choices=MENU_CHOICES, blank=True, default='')
 
     title = models.CharField(max_length=200, blank=True, default='')
 
@@ -38,9 +48,33 @@ class MenuType(models.Model):
                                  blank=True, default='')
 
     class Meta(object):
-        ordering = ['-publish_at', 'title']
+        ordering = ['order', 'pk']
         verbose_name_plural = 'menus'
-
 
     def __str__(self):
         return self.title
+
+
+class MenuImage(models.Model):
+
+    menu = models.ForeignKey('menus.MenuType')
+
+    image = models.ImageField(max_length=1024,
+                              upload_to='menu_image',
+                              blank=True, default='')
+
+    width = models.CharField(max_length=32, default="100%")
+
+
+class ItemType(models.Model):
+
+    title = models.CharField(max_length=200, blank=True, default='')
+
+
+class Item(models.Model):
+
+    title = models.CharField(max_length=200, blank=True, default='')
+
+    description = models.CharField(max_length=2056, blank=True, default='')
+
+    price = models.DecimalField(max_digits=16, decimal_places=2)
