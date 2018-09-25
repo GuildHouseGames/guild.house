@@ -3,8 +3,9 @@ from __future__ import absolute_import, unicode_literals
 from . import querysets
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
-from django.utils.encoding import python_2_unicode_compatible
 from django.db import models
+from django.utils import timezone
+from django.utils.encoding import python_2_unicode_compatible
 
 
 def get_current_site():
@@ -12,6 +13,41 @@ def get_current_site():
         return Site.objects.get_current().pk
     except Site.DoesNotExist:
         pass
+
+
+class Slide(models.Model):
+
+    title = models.CharField(max_length=200)
+
+    url = models.CharField(max_length=300)
+
+    featured_image = models.ImageField(
+        max_length=1024,
+        upload_to='slide',
+        help_text='Recommended 900x500',
+        blank=True, default=''
+    )
+
+    featured_order = models.IntegerField(default=0)
+
+    publish_at = models.DateTimeField(db_index=True, default=timezone.now)
+
+    unpublish_at = models.DateTimeField(db_index=True, null=True, blank=True)
+
+    content = models.TextField(blank=True, default='')
+
+    flatpage = models.ForeignKey('flatpages.FlatPage', null=True, blank=True)
+
+    entry = models.ForeignKey('blog.Entry', null=True, blank=True)
+
+
+class SlideBanner(models.Model):
+
+    slide = models.ForeignKey(Slide, models.CASCADE)
+
+    text = models.CharField(max_length=200)
+
+    url = models.CharField(max_length=300)
 
 
 @python_2_unicode_compatible

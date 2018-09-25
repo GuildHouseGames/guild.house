@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from .forms import HomepageAdminForm
-from .models import Homepage, Navigation, OpeningHours
+from .models import (Homepage, Navigation, OpeningHours, Slide, SlideBanner)
 from django.contrib import admin
 
 
@@ -39,3 +39,18 @@ class OpeningHoursAdmin(admin.ModelAdmin):
 
     list_editable = ['named_day', 'open_time',
                      'close_time', 'open', 'is_closed', 'note']
+
+
+class SlideBannerInline(admin.TabularInline):
+
+    model = SlideBanner
+
+    extra = 0
+
+
+@admin.register(Slide)
+class SlideAdmin(admin.ModelAdmin):
+
+    model = Slide
+
+    inlines = [SlideBannerInline]
