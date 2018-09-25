@@ -39,7 +39,7 @@ class Entry(models.Model):
 
     content = models.TextField(blank=True, default='')
 
-    summary = models.TextField(default='', blank=True)
+    summary = models.TextField(blank=True, default='')
 
     tags = TaggableManager(blank=True)
 
