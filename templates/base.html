@@ -36,7 +36,6 @@
     <link href="https://fonts.googleapis.com/css?family=Alegreya:400,700" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    {# link href="{% static "guild.css" %}" rel="stylesheet"> #}
     <link href="{% static "styles.css" %}" rel="stylesheet">
 
     {% block extrahead %}{% endblock %}
@@ -56,9 +55,6 @@
 	    <a href="mailto:hello@guild.house">hello@guild.house</a>
 	    &middot; <a href="tel:+61262572727">02 6257 2727</a>
 	  </div>
-	  <a href="#" class="btn btn-primary btn-l rounded-pill mt-5">Provide Feedback!</a>
-          <a href="#" class="btn btn-primary btn-xl rounded-pill mt-5">Make a Booking</a>
-          <a href="{% url 'site:opening_hours' %}" class="btn btn-primary btn-l rounded-pill mt-5">Opening Hours</a>
         </div>
       </div>
     </header>
