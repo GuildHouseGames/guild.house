@@ -15,11 +15,26 @@ def get_current_site():
         pass
 
 
+SLIDER_CHOICE = [
+    ('home', 'home'),
+    ('games', 'games'),
+]
+
+SLIDE_CONTENT_CHOICE = [
+    ('url', 'url'),
+    ('content', 'content'),
+    ('flatpage', 'flatpage'),
+    ('entry', 'entry'),
+]
+
+
 class Slide(models.Model):
 
-    title = models.CharField(max_length=200)
+    is_active = models.BooleanField(default=True)
 
-    url = models.CharField(max_length=300)
+    slider = models.CharField(max_length=32, choices=SLIDER_CHOICE)
+
+    title = models.CharField(max_length=200)
 
     featured_image = models.ImageField(
         max_length=1024,
@@ -34,11 +49,20 @@ class Slide(models.Model):
 
     unpublish_at = models.DateTimeField(db_index=True, null=True, blank=True)
 
-    content = models.TextField(blank=True, default='')
+    what_to_show = models.CharField(
+        max_length=32, choices=SLIDE_CONTENT_CHOICE)
+
+    url = models.CharField(max_length=300, null=True, blank=True)
 
     flatpage = models.ForeignKey('flatpages.FlatPage', null=True, blank=True)
 
-    entry = models.ForeignKey('blog.Entry', null=True, blank=True)
+    content = models.TextField(blank=True, default='')
+
+    class Meta:
+        ordering = ['-is_active', 'featured_order']
+
+    def __str__(self):
+        return "{} [{}]".format(self.title, self.publish_at)
 
 
 class SlideBanner(models.Model):
@@ -47,7 +71,7 @@ class SlideBanner(models.Model):
 
     text = models.CharField(max_length=200)
 
-    url = models.CharField(max_length=300)
+    url = models.CharField(max_length=300, null=True, blank=True)
 
 
 @python_2_unicode_compatible

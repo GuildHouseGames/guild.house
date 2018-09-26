@@ -504,7 +504,7 @@ select, input {
 }
 
 option {
-     background: rgba(10,10,10,0.5);
+    background: rgba(10,10,10,0.5);
 }
 
 textarea {
@@ -523,7 +523,8 @@ textarea {
 .banner {
     font-family: 'Alegreya', serif;
     list-style: none;
-    margin: 15px 0 0 0; padding: 25px 10px;
+    margin: -10px 0 0 -6px;
+    padding: 25px 10px;
     text-align: center;
     position: relative;
     top: -650px;
@@ -532,7 +533,7 @@ textarea {
     width: 223px;
     margin: 10px;
     position: relative;
-    -webkit-transform: skewy(-3deg);
+    -webkit-transform: skewy(-4deg);
     -webkit-backface-visibility: hidden;
     -webkit-transition: 200ms all;
 }
@@ -574,7 +575,7 @@ textarea {
 .banner li:before {
     content: '';
     position: absolute;
-    width: 50px;
+    width: 35px;
     height: 100%;
     background: #BBB;
     -webkit-transform: skewY(8deg);
@@ -608,3 +609,74 @@ textarea {
     display: inline-block;
 
 }
+
+/* Slider */
+
+
+/* Dots */
+.slick-dotted.slick-slider {
+    margin-bottom: 0;
+}
+
+.slick-dots {
+    position: absolute;
+    bottom: -50px;
+    display: block;
+    width: 90%;
+    padding: 0;
+    margin: 0 auto;
+    list-style: none;
+    text-align: center;
+}
+.slick-dots li {
+    position: relative;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin: 0 5px;
+    padding: 0;
+
+    cursor: pointer;
+}
+.slick-dots li button {
+    font-size: 0;
+    line-height: 0;
+    display: block;
+    width: 20px;
+    height: 20px;
+    padding: 5px;
+    cursor: pointer;
+    color: transparent;
+    border: 0;
+    outline: none;
+    background: transparent;
+}
+.slick-dots li button:hover,
+.slick-dots li button:focus{
+    outline: none;
+}
+.slick-dots li button:hover:before,
+.slick-dots li button:focus:before {
+    opacity: 1;
+}
+.slick-dots li button:before {
+    font-size: 1.5rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    content: '•';
+    text-align: center;
+    opacity: .25;
+    color: black;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.slick-dots li.slick-active button:before {
+    opacity: .75;
+    color: black;
+}
+/* /.slick */
+
+/* /.slider */

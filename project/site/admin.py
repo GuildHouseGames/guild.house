@@ -53,4 +53,18 @@ class SlideAdmin(admin.ModelAdmin):
 
     model = Slide
 
+    list_display = [
+        'title',
+        'is_active',
+        'featured_order',
+        'featured_image',
+        'publish_at',
+        'flatpage',
+    ]
+
+    list_editable = [
+        'is_active',
+        'featured_order',
+    ]
+
     inlines = [SlideBannerInline]

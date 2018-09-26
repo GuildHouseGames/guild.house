@@ -7,7 +7,7 @@ from django.conf.urls import include, url
 urls = [
 
     url(r'^$',
-        views.HomepageDetailView.as_view(),
+        views.HomeView.as_view(),
         name='home'),
 
     url(r'^opening-hours$',

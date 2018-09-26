@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block main %}
+{% load static %}
+{% load thumbnail %}
+
+
+<style>
+  .slider{
+  max-height: 620px;
+  padding-top: 0;
+  }
+</style>
+
+
+<section class="mx-auto slider container">
+  {% for slide in slide_list %}
+
+  <div>
+
+    <div class="post">
+      <div class="text-center py-3"  style="font-size: 1.5rem; background-color: white;">
+      	{% if slide.what_to_show == 'url' %}
+          <a href="{{ slide.url }}" target="_blank">
+	{% elif slide.what_to_show == 'flatpage' %}  {# no target=blank #}
+          <a href="{{ slide.flatpage.url }}">
+	{% elif slide.what_to_show == 'content' %} {# modal #}
+          <a href="#slide{{ slide.pk }}" rel="modal:open">
+	{% endif %}
+	    {{ slide.title }}
+	  </a>
+      </div>
+      	{% if slide.what_to_show == 'url' %}
+          <a href="{{ slide.url }}" target="_blank">
+	{% elif slide.what_to_show == 'flatpage' %}  {# no target=blank #}
+          <a href="{{ slide.flatpage.url }}">
+	{% elif slide.what_to_show == 'content' %} {# modal #}
+          <a href="#slide{{ slide.pk }}" rel="modal:open">
+	{% endif %}
+        {% thumbnail slide.featured_image "900x500" crop="center" as im %}<img class="img-fluid" src="{{ im.url }}" >{% endthumbnail %}
+	  </a>
+    </div>
+
+    {% if slide.slidebanner_set.all %}
+    <ul class="banner" style="z-index:5;">
+      {% for banner in slide.slidebanner_set.all %}
+      <li>{% if banner.url %}<a href="{{ banner.url }}">{% endif %}<span>{{ banner.text|safe }}</span>{% if banner.url %}</a>{% endif %}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+
+  </div>
+  {% endfor %}
+</section>
+
+{% endblock %}
+
+
+{% block box_below %}
+
+{% for slide in slide_list %}
+<div id="slide{{ slide.pk }}" class="modal">
+  {{ slide.content|safe}}
+</div>
+{% endfor %}
+
+{% endblock %}
+
+
+{% block extrahead %}
+<script>
+$(document).ready(function(){
+  $(".slider").slick({
+    dots: true,
+    centerMode: true,
+    fade: true,
+    autoplay: true,
+    autoplaySpeed: 3000
+  });
+});
+</script>
+{% endblock %}

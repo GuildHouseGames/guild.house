@@ -1,15 +1,24 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from datetime import date, timedelta
-
 from django.http import Http404
+from django.utils import timezone
 from django.views import generic
-
 from . import settings
-from .models import Homepage, OpeningHours
+from .models import Homepage, OpeningHours, Slide
 
 
 class HomeView(generic.TemplateView):
+
+    template_name = "site/home.html"
+
+    def get_context_data(self, *args, **kwargs):
+        context_data = super(HomeView, self).get_context_data(
+            *args, **kwargs)
+        context_data['slide_list'] = Slide.objects.filter(
+            is_active=True,
+            publish_at__lte=timezone.now(),
+        return context_data
 
     pass
 
