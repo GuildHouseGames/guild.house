@@ -18,6 +18,7 @@ class HomeView(generic.TemplateView):
         context_data['slide_list'] = Slide.objects.filter(
             is_active=True,
             publish_at__lte=timezone.now(),
+        )
         return context_data
 
     pass
