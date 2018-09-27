@@ -3,28 +3,34 @@
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark navbar-custom fixed-top">
   <a class="navbar-brand js-scroll-trigger" href="{% url "site:home" %}"><img src="{% static "sheild-.png" %}" height=24></a>
-  <ul class="navbar-nav  ml-auto">
-    {% load navigation %}
-    {% nav_menu %}
-    {% for item in nav_items %}
-    <li class="nav-item">
-      <a class="nav-link" href="{{ item.url }}">{{ item.title }}</a>
-    </li>
-    {% endfor %}
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'site:opening_hours' %}">
-        Opening Hours <i class="fas fa-clock"></i>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="#location" class="page-scroll">
-        Find Us <i class="fa fa-map-marker"></i>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="https://facebook.com/guildhouse.canberra" target="_blank">
-	<i class="fab fa-facebook fa-fw"></i>
-      </a>
-    </li>
-  </ul>
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-bars"></i>
+    &nbsp; Menu
+  </button>
+  <div class="collapse navbar-collapse" id="navbarResponsive">
+    <ul class="navbar-nav  ml-auto">
+      {% load navigation %}
+      {% nav_menu %}
+      {% for item in nav_items %}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ item.url }}">{{ item.title }}</a>
+      </li>
+      {% endfor %}
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'site:opening_hours' %}">
+          Opening Hours <i class="fas fa-clock"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="#location" class="page-scroll">
+          Find Us <i class="fa fa-map-marker"></i>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://facebook.com/guildhouse.canberra" target="_blank">
+	  <i class="fab fa-facebook fa-fw"></i>
+        </a>
+      </li>
+    </ul>
+  </div>
 </nav>

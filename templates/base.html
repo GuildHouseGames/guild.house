@@ -4,7 +4,7 @@
   <head>
 
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -39,6 +39,7 @@
     <link href="{% static "styles.css" %}" rel="stylesheet">
 
     {% block extrahead %}{% endblock %}
+    <meta name="viewport" content="width=device-width,initial-scale=1">
 
   </head>
 
@@ -49,7 +50,9 @@
     <header class="masthead text-center text-white">
       <div class="masthead-content">
         <div class="container">
-	  <a href="{% url "site:home" %}"><img src="{% static "img/guild_white.png" %}" alt="Guild, Canberra's Board games beer restaurant cafe"></a>
+	  <a href="{% url "site:home" %}">
+            <img class="img-fluid" src="{% static "img/guild_white.png" %}" alt="Guild, Canberra's Board games beer restaurant cafe">
+          </a>
 	  <div class="address-bar">
 	    <span class="light">Board Games &middot; Restaurant &middot; Canberra</span><br>
 	    <a href="mailto:hello@guild.house">hello@guild.house</a>

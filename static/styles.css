@@ -35,28 +35,38 @@ body {
     padding: 3rem 3rem;
 }
 
-@media (min-width: 1200px)
-.container {
-    width: 900px;
-    max-width: 900px;
+
+@media (min-width: 993px) {
+    .container {
+        width: 900px;
+        max-width: 900px;
+        padding: 3rem 3rem;
+    }
 }
 
-@media (min-width: 992px)
-.container {
-    width:  900px;
-    max-width: 900px;
-}
-@media (min-width: 768px)
-.container {
-    width: 740px;
-    max-width: 740px;
-}
-@media (min-width: 576px)
-.container {
-    width: 570px;
-    max-width: 570px;
+@media (max-width: 992px) {
+    .container {
+        width:  900px;
+        max-width: 900px;
+        padding: 1rem 1rem;
+    }
 }
 
+@media (max-width: 768px) {
+    .container {
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+    }
+}
+
+@media (max-width: 576px) {
+    .container {
+        width: 100%;
+        max-width: 100%;
+        padding: 0;
+    }
+}
 
 .text-white a {
     color: rgba(255,255,255,.5);
@@ -306,28 +316,8 @@ header.masthead .bg-circle-4 {
 }
 
 
-.hover-text
-
-@media (min-width: 1200px)
-.modal {
-    width: 75%;
-    max-width: 90%;
-}
-
-@media (min-width: 992px)
-.modal {
-    width: 980px;
-    max-width: 980px;
-}
-@media (min-width: 768px)
-.modal {
-    width: 740px;
-    max-width: 740px;
-}
-@media (min-width: 576px)
-.modal {
-    width: 570px;
-    max-width: 570px;
+.hover-text {
+    color: inherit;
 }
 
 .modal {
@@ -347,6 +337,32 @@ header.masthead .bg-circle-4 {
     -ms-box-shadow: 0 0 0 #000;
     box-shadow: 0 0 0 #000;
     text-align: left;
+}
+
+@media (min-width: 1200px) {
+    .modal {
+        width: 75%;
+        max-width: 90%;
+    }
+}
+
+@media (min-width: 992px) {
+    .modal {
+        width: 95%;
+        max-width: 95%;
+    }
+}
+@media (min-width: 768px) {
+    .modal {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+@media (min-width: 576px) {
+    .modal {
+        width: 100%;
+        max-width: 100%;
+    }
 }
 
 .blocker {
@@ -617,11 +633,37 @@ textarea {
 }
 
 .post {
-    width: 900px;
-    margin: 50px;
     position: relative;
     z-index: -1;
 }
+
+
+@media (min-width: 993px) {
+    .post {
+        width: 900px;
+        margin: auto;
+    }
+}
+
+@media (max-width: 992px) {
+    .post {
+        width: 95%;
+        margin: 3.5%;
+    }
+}
+@media (max-width: 768px) {
+    .post {
+        width: 95%;
+        margin: 3.5%;
+    }
+}
+@media (max-width: 576px) {
+    .post {
+        width: 100%;
+        margin: 0;
+    }
+}
+
 
 /* ./banner */
 
@@ -633,7 +675,101 @@ textarea {
 
 }
 
+
 /* Slider */
+
+@media (min-width: 1200px) {
+    .slider {
+    }
+}
+
+@media (max-width: 992px) {
+    .slider {
+        max-height: 95%;
+    }
+}
+@media (max-width: 768px) {
+    .slider {
+        max-height: 100%;
+    }
+}
+@media (max-width: 576px) {
+    .slider {
+        max-height: 350px;
+    }
+}
+
+
+/* Arrows */
+.slick-prev, .slick-next {
+    font-size: 0;
+    line-height: 0;
+
+    position: absolute;
+    top: 50%;
+    display: block;
+    width: 20px;
+    height: 300px;
+    padding: 0;
+    -webkit-transform: translate(0, -50%);
+    -ms-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+
+    cursor: pointer;
+    color: rgba(255, 255, 255, .65);
+    border: 1px solid red;
+    /* outline: none;*/
+    background: transparent;
+}
+
+.slick-prev:hover, .slick-prev:focus,
+.slick-next:hover, .slick-next:focus {
+    color: white;
+    /*    color: transparent;
+    outline: none; */
+    background: transparent;
+}
+.slick-prev:hover:before, .slick-prev:focus:before,
+.slick-next:hover:before, .slick-next:focus:before {
+    opacity: 1;
+}
+.slick-prev.slick-disabled:before,
+.slick-next.slick-disabled:before {
+    opacity: .25;
+}
+
+.slick-prev:before, .slick-next:before {
+    font-size: 20px;
+    line-height: 1;
+    opacity: .75;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale  ;
+}
+
+.slick-next,
+.slick-prev {
+    z-index: 1;
+}
+
+[dir='rtl'] .slick-prev {
+    left: auto;
+}
+.slick-prev:before {
+    content: '<';
+}
+[dir='rtl'] .slick-prev:before {
+    content: '>';
+}
+
+[dir='rtl'] .slick-next {
+    right: auto;
+}
+.slick-next:before {
+    content: '>';
+}
+[dir='rtl'] .slick-next:before {
+    content: '<';
+}
 
 
 /* Dots */
