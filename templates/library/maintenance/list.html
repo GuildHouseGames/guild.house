@@ -12,7 +12,7 @@
 <script>
 $(document).ready(function() {
 $('#maintTable').DataTable( {
-        "lengthMenu": [[100, 250, 500, -1], [100, 250, 500, "All"]]
+        "lengthMenu": [[-1, 100, 250, 500, -1], ["All", 100, 250, 500]]
     });
 } );
 
@@ -42,10 +42,10 @@ $('#maintTable').DataTable( {
   <tbody>
   {% for obj in object_list %}
   <tr>
-    <td><a href="{% url 'library:maintain_game' obj.pk %}" target="_blank">{{ obj.title }}</a></td>
-    <td>{{ obj.boardgamegeek_id }}</td>
-    <td></td>
-    <td></td>
+    <td><i><a href="/admin/library/game/{{ obj.pk }}/" target="_blank" style="color: rgba(0, 0, 0, .25)">{{ obj.name }}</a></i></td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
     <td>
       <form method="post" action="/games/m/copy/add">{% csrf_token %}
         <input type="submit" value="Add Copy">
@@ -56,17 +56,14 @@ $('#maintTable').DataTable( {
         </select>
       </form>
     </td>
-    <td>
-    </td>
   </tr>
   {% for copy in obj.copy.all %}
   <tr>
-    <td></td>
+    <td>{{ obj.name }} [{{ copy.num }}]</td>
     <td><a href="/admin/library/copy/{{ copy.pk }}/" target="_blank">{{ obj.boardgamegeek_id }}-{{ copy.num }}</a></td>
     <td>{{ copy.location }}</td>
     <td>{{ obj.checked_at }}</td>
     <td>{{ obj.state }}</td>
-    <td></td>
   </tr>
 
   {% endfor %}
