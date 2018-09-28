@@ -1,20 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from django.shortcuts import redirect, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.views import generic
-
-from .forms import GameAddBGGForm
 from .models import Category, Game
-
-
-class GameAddBGGID(generic.FormView):
-
-    template_name = "library/game_bgg_add.html"
-    form_class = GameAddBGGForm
-
-    def form_valid(self, form):
-        this_game = Game.create_from_bgg_id(form.cleaned_data['BGGID'])
-        return redirect("/admin/library/game/{}/change/".format(this_game.pk))
 
 
 class GameHome(generic.base.TemplateView):

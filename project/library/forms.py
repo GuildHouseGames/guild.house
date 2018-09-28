@@ -3,14 +3,7 @@ from __future__ import absolute_import, unicode_literals
 from .models import Category, Game
 from django import forms
 from tinymce.widgets import TinyMCE
-
-
-class GameAddBGGForm(forms.Form):
-
-    BGGID = forms.IntegerField(
-        label='BGG ID',
-        widget=forms.TextInput(attrs={'placeholder': 'eg. 31260'})
-    )
+from . import models
 
 
 class CategoryAdminForm(forms.ModelForm):
@@ -29,3 +22,18 @@ class GameAdminForm(forms.ModelForm):
                   'meta_description', 'site', 'is_enabled']
         model = Game
         widgets = {'content': TinyMCE()}
+
+
+# Maintenance Forms
+
+
+class GameAddBGGForm(forms.Form):
+
+    BGGID = forms.IntegerField(
+        label='BGG ID',
+        widget=forms.TextInput(attrs={'placeholder': 'eg. 31260'})
+    )
+
+    shelf = forms.ChoiceField(choices=models.CHOICE_LOCATIONS)
+
+    priority = forms.ChoiceField(choices=models.CHOICE_PRIORITY)

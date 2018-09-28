@@ -4,6 +4,7 @@ from django.conf.urls import include, url
 from django.contrib.auth.decorators import login_required
 
 from . import views
+from . import views_maintenance
 
 
 urls = [
@@ -28,14 +29,37 @@ urls = [
         login_required(views.GameDetailMenuView.as_view()),
         name='game_detail_menu'),
 
-    url(r'^add/bgg/$',
-        # LOGIN SHOULD ALWAYS BE REQUIRED HERE
-        login_required(views.GameAddBGGID.as_view()),
-        name='game_bgg_add'),
-
     url(r'^all/$',
         login_required(views.GameListView.as_view()),
         name='game_all'),
+
+    # Maintenance Views
+
+    url(r'^add/bgg/$',
+        # LOGIN SHOULD ALWAYS BE REQUIRED HERE
+        login_required(views_maintenance.GameAddBGGID.as_view()),
+        name='game_bgg_add'),
+
+    url(r'^m/$',
+        # LOGIN SHOULD ALWAYS BE REQUIRED HERE
+        login_required(views_maintenance.MaintenanceRegister.as_view()),
+        name='maintenance_register'),
+
+    url(r'^m/(?P<pk>[\d]+)',
+        # LOGIN SHOULD ALWAYS BE REQUIRED HERE
+        login_required(views_maintenance.MaintainGame.as_view()),
+        name='maintain_game'),
+
+    url(r'^m/(?P<pk>[\d]+)/(?P<num>[\d]+)/',
+        # LOGIN SHOULD ALWAYS BE REQUIRED HERE
+        login_required(views_maintenance.MaintainCopy.as_view()),
+        name='maintain_copy'),
+
+    url(r'^m/copy/add',
+        # LOGIN SHOULD ALWAYS BE REQUIRED HERE
+        login_required(views_maintenance.AddCopy.as_view()),
+        name='add_copy'),
+
 ]
 
 

@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from .forms import CategoryAdminForm, GameAdminForm
-from .models import Category, Game, Copy, GameRelated, Series, CopyHistory
 from django.contrib import admin
+
+from .forms import CategoryAdminForm, GameAdminForm
+from .models import (Category, Game, Copy, GameRelated,
+                     Series, CopyHistory, Consumable, Issue)
 
 
 @admin.register(Category)
@@ -117,3 +119,7 @@ class GameAdmin(admin.ModelAdmin):
             Copy.objects.filter(game=obj).count())
     display_copies.short_description = 'Live Copies'
     display_copies.allow_tags = True
+
+
+admin.site.register(Consumable)
+admin.site.register(Issue)

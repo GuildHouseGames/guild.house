@@ -5,6 +5,7 @@ from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from project import utils
 from taggit.managers import TaggableManager
@@ -24,6 +25,7 @@ BGG_JSON_URL = 'https://bgg-json.azurewebsites.net/thing/{bgg_id}'
 CHOICE_LOCATIONS = [
     ('main', 'Main Shelf'),
     ('booth', 'Booth Shelves'),
+    ('strategy', 'Strategy Section'),
     ('free', 'Free to Play Shelf'),
     ('infirmary', 'Infirmary'),
     ('storage', 'Storage'),
@@ -41,6 +43,23 @@ CHOICE_GAME_STATE = [
     ('fixable', 'Broken, maybe fixable'),
     ('broken', 'Broken, might be dead'),
     ('unplayable', "It's dead, Jim"),
+]
+
+CHOICE_PRIORITY = [
+    ('high', 'High'),
+    ('', 'Normal'),
+    ('low', 'Low'),
+]
+
+CHOICE_CONSUMABLE = [
+    ('', 'Custom'),
+    ('aa batteries', 'AA Batteries (double)'),
+    ('aaa batteries', 'AAA Batteries (triple)'),
+    ('blank paper', 'Blank Paper'),
+    ('score pad', 'Custom Score Pad'),
+    ('pencils', 'Pencils'),
+    ('pens', 'Pens'),
+    ('whiteboard markers', 'Whiteboard Markers'),
 ]
 
 
@@ -197,6 +216,10 @@ class Game(models.Model):
     has_consumables = models.BooleanField(
         'requires consumables', default=False)
 
+    priority = models.CharField(
+        max_length=16, choices=CHOICE_PRIORITY,
+        blank=True, default='')
+
     is_new = models.BooleanField('new', default=False)
 
     is_free = models.BooleanField('free', default=False)
@@ -213,9 +236,11 @@ class Game(models.Model):
 
     slug = models.SlugField()
 
-    created_at = models.DateTimeField(auto_now_add=True, editable=False)
+    checked_at = models.DateTimeField(blank=True, null=True)
 
-    updated_at = models.DateTimeField(auto_now=True, editable=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    updated_at = models.DateTimeField(auto_now=True)
 
     objects = querysets.QuerySet.as_manager()
 
@@ -354,6 +379,8 @@ class Copy(models.Model):
         related_name='copy'
     )
 
+    num = models.IntegerField()
+
     location = models.CharField(
         max_length=256,
         choices=CHOICE_LOCATIONS,
@@ -362,6 +389,7 @@ class Copy(models.Model):
 
     uid = models.CharField(
         max_length=16,
+        unique=True,
         null=True, blank=True, default=''
     )
 
@@ -378,6 +406,20 @@ class Copy(models.Model):
     class Meta(object):
         verbose_name_plural = 'Copies of game in library'
 
+    def save(self, *args, **kwargs):
+        # small hack to get an idea of when last checked
+        self.game.checked_at = timezone.now()
+
+        if not self.num:
+            if self.game.copy.all():
+                self.num = self.game.copy.all().aggregate(
+                    models.Max('num'))['num__max']+1
+            else:
+                self.num = 1
+        if self.game.boardgamegeek_id:
+            self.uid = "{}-{}".format(self.game.boardgamegeek_id, self.num)
+        super(Copy, self).save(*args, **kwargs)
+
 
 class CopyHistory(models.Model):
 
@@ -390,6 +432,10 @@ class CopyHistory(models.Model):
 
     time_stamp = models.DateTimeField(auto_now_add=True, editable=False)
 
+    needs_consumable = models.BooleanField(default=False)
+
+    is_stocked = models.BooleanField(default=False)
+
     is_play = models.BooleanField(default=False)
 
     notes = models.TextField(default='', blank=True)
@@ -399,3 +445,19 @@ class CopyHistory(models.Model):
         choices=CHOICE_GAME_STATE,
         null=True, blank=True, default=''
     )
+
+
+class Consumable(models.Model):
+
+    games = models.ForeignKey(Game, models.CASCADE)
+
+    type = models.CharField(
+        max_length=32, choices=CHOICE_CONSUMABLE,  blank=True, default='')
+
+    description = models.CharField(max_length=64)
+
+
+class Issue(models.Model):
+    """Common maintenance issues """
+
+    description = models.CharField(max_length=64)
