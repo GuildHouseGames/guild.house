@@ -182,7 +182,7 @@ class Game(models.Model):
         blank=True, null=True
     )
 
-    boardgamegeek_rank = models.PositiveIntegerField(blank=True, null=True)
+    boardgamegeek_rank = models.IntegerField(blank=True, null=True)
 
     boardgamegeek_img = models.CharField(
         max_length=512, blank=True, default='')
@@ -199,7 +199,7 @@ class Game(models.Model):
     maximum_playtime = models.PositiveIntegerField(
         blank=True, null=True, help_text='Duration in minutes')
 
-    year_published = models.PositiveIntegerField(blank=True, null=True)
+    year_published = models.IntegerField(blank=True, null=True)
 
     title = models.CharField(max_length=200, blank=True, default='')
 
