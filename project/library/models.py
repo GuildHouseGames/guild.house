@@ -254,15 +254,36 @@ class Game(models.Model):
     def get_absolute_url(self):
         return reverse('library:game_detail', kwargs={'slug': self.slug})
 
+    @property
     def is_active(self):
         return self in self.__class__.objects.filter(pk=self.pk).active()
     is_active.boolean = True
     is_active.short_description = 'active'
 
+    @property
     def is_expansion(self):
         return bool(self.expansion_for)
     is_expansion.boolean = True
     is_expansion.short_description = 'expansion'
+
+    @classmethod
+    def create_from_bgg_id(cls, bgg_id):
+        "This method will create a `Game` object if provided with a bgg_id."
+        existing_game = cls.objects.filter(boardgamegeek_id=bgg_id)
+        if existing_game:
+            return existing_game.first()
+        new_game = cls()
+        new_game.boardgamegeek_id = bgg_id
+        new_game.autopopulate_bgg_json()
+        new_game.autopopulate_bgg_complexity()
+        return new_game
+
+    @classmethod
+    def create_list_category(cls, list_of_bgg_ids, category_obj):
+        for bgg_id in list_of_bgg_ids:
+            new_game = cls.create_from_bgg_id(bgg_id)
+            new_game.categories.add(category_obj)
+            new_game.save()
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -331,25 +352,6 @@ class Game(models.Model):
             self.content = this_game.json()['description']
 
             self.save()
-
-    @classmethod
-    def create_from_bgg_id(cls, bgg_id):
-        "This method will create a `Game` object if provided with a bgg_id."
-        existing_game = cls.objects.filter(boardgamegeek_id=bgg_id)
-        if existing_game:
-            return existing_game.first()
-        new_game = cls()
-        new_game.boardgamegeek_id = bgg_id
-        new_game.autopopulate_bgg_json()
-        new_game.autopopulate_bgg_complexity()
-        return new_game
-
-    @classmethod
-    def create_list_category(cls, list_of_bgg_ids, category_obj):
-        for bgg_id in list_of_bgg_ids:
-            new_game = cls.create_from_bgg_id(bgg_id)
-            new_game.categories.add(category_obj)
-            new_game.save()
 
 
 class GameRelated(models.Model):
