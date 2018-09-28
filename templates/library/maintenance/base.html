@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block box_above %}
+{% if user.is_authenticated %}
+<nav class="hidden-print navbar navbar-custom navbar-expand-lg" style="padding-top: 0; ">
+  <div class="container">
+    <ul class="navbar-nav  ml-auto text-white">
+      <li style="display: inline; list-style-type: none; padding-right: 20px">
+	Games: <a href="{% url "library:game_home" %}">Home</a>
+      </li>
+      <li style="display: inline; list-style-type: none; padding-right: 20px">
+	<a href="{% url "library:category_list" %}">Categories</a>
+      </li>
+      <li style="display: inline; list-style-type: none; padding-right: 20px">
+	<a href="{% url "library:game_all" %}">All Games</a>
+      </li>
+      <li style="display: inline; list-style-type: none; padding-right: 20px">
+	<a href="{% url "library:game_bgg_add" %}">Add from BGG</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+{% endif %}
+{% endblock %}

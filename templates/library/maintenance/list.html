@@ -1,0 +1,78 @@
+{% extends 'library/maintenance/base.html' %}
+
+
+{% block extra_static %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+{% endblock %}
+
+
+{% block content %}
+
+<script>
+$(document).ready(function() {
+$('#maintTable').DataTable( {
+        "lengthMenu": [[100, 250, 500, -1], [100, 250, 500, "All"]]
+    });
+} );
+
+
+
+
+</script>
+
+
+<style>
+  #maintTable td {
+  padding: 0 4px;
+
+  }
+</style>
+
+<table id="maintTable" class="display dataTable" style="width: 1200px;">
+  <thead>
+  <tr>
+    <th>Game</th>
+    <th>BGG ID</th>
+    <th>Location</th>
+    <th>Last Checked</th>
+    <th>State</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for obj in object_list %}
+  <tr>
+    <td><a href="{% url 'library:maintain_game' obj.pk %}" target="_blank">{{ obj.title }}</a></td>
+    <td>{{ obj.boardgamegeek_id }}</td>
+    <td></td>
+    <td></td>
+    <td>
+      <form method="post" action="/games/m/copy/add">{% csrf_token %}
+        <input type="submit" value="Add Copy">
+        <input type="hidden" name="game" id="id_game" value="{{ obj.pk }}">
+        <select name="id_location">
+          <option value="main">Main</option>
+          <option value="booth">Booth</option>
+        </select>
+      </form>
+    </td>
+    <td>
+    </td>
+  </tr>
+  {% for copy in obj.copy.all %}
+  <tr>
+    <td></td>
+    <td><a href="/admin/library/copy/{{ copy.pk }}/" target="_blank">{{ obj.boardgamegeek_id }}-{{ copy.num }}</a></td>
+    <td>{{ copy.location }}</td>
+    <td>{{ obj.checked_at }}</td>
+    <td>{{ obj.state }}</td>
+    <td></td>
+  </tr>
+
+  {% endfor %}
+
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}
