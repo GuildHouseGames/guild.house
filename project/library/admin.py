@@ -57,6 +57,10 @@ class CopyAdmin(admin.ModelAdmin):
 
     model = Copy
 
+    list_display = [
+        'game', 'num', 'location'
+    ]
+
     inlines = [CopyHistoryInline]
 
 
@@ -79,14 +83,19 @@ class GameRelatedInline(admin.TabularInline):
 class GameAdmin(admin.ModelAdmin):
 
     fieldsets = [
-        (None, {'fields': ['name', 'categories', 'expansion_for',
-                           'publisher', 'complexity',
-                           'boardgamegeek_rank', 'year_published',
+        (None, {'fields': [('is_new', 'is_featured', 'is_enabled'),
+                           'name', 'title', 'categories',
+                           'is_free', 'priority',
+                           'series', 'expansion_for',
+                           ('boardgamegeek_rank', 'complexity'),
+                           ('publisher', 'year_published'),
                            ('minimum_players', 'maximum_players'),
                            ('minimum_playtime', 'maximum_playtime')]}),
-        ('Content', {'fields': ['title', 'heading', 'featured_content',
+        ('Content', {'fields': ['slug', 'heading',
+                                'featured_content',
+                                'featured_image',
                                 'content', 'meta_description']}),
-        ('Publishing', {'fields': ['is_enabled', 'is_featured', 'site', 'slug',
+        ('Publishing', {'fields': ['site',
                                    'tags', ('created_at', 'updated_at')],
                         'classes': ['collapse']}),
     ]
