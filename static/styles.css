@@ -14,7 +14,6 @@ h6 {
 }
 
 a {
-    color: #369956;
 }
 
 a:active, a:focus, a:hover {
@@ -562,7 +561,7 @@ textarea {
 .banner {
     font-family: 'Alegreya', serif;
     list-style: none;
-    margin: -10px 0 0 -6px;
+    margin: 41px 0 0 -4px;
     padding: 25px 10px;
     text-align: center;
     position: relative;
@@ -678,8 +677,31 @@ textarea {
 
 /* Slider */
 
-@media (min-width: 1200px) {
+#slide-container {
+    width: 1000px !important;
+    max-width: 1000px !important;
+    padding: 0;
+}
+
+.slick-track {
+    margin-top: 48px;
+}
+
+.slick-dots {
+    left: calc(50% - 500px);
+    margin-left: auto!important;
+    margin-right: auto!important;
+}
+
+
+
+@media (min-width: 993px) {
+    .slick-dots {
+        width: 1000px;
+    }
     .slider {
+        height: 620px;
+        width: 1000px;
     }
 }
 
@@ -717,7 +739,6 @@ textarea {
 
     cursor: pointer;
     color: rgba(255, 255, 255, .65);
-    border: 1px solid red;
     /* outline: none;*/
     background: transparent;
 }
@@ -746,11 +767,6 @@ textarea {
     -moz-osx-font-smoothing: grayscale  ;
 }
 
-.slick-next,
-.slick-prev {
-    z-index: 1;
-}
-
 [dir='rtl'] .slick-prev {
     left: auto;
 }
@@ -771,6 +787,19 @@ textarea {
     content: '<';
 }
 
+.slick-next,
+.slick-prev {
+    z-index: 1;
+    color: #666;
+    margin: 10px 10px !important;
+    width: 40px;
+    height: 590px;
+    border: 0;
+}
+
+.slick-next {
+    right: 0;
+}
 
 /* Dots */
 .slick-dotted.slick-slider {
@@ -781,7 +810,6 @@ textarea {
     position: absolute;
     bottom: -50px;
     display: block;
-    width: 90%;
     padding: 0;
     margin: 0 auto;
     list-style: none;

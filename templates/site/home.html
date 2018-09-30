@@ -4,14 +4,15 @@
 {% load static %}
 {% load thumbnail %}
 
-
-<section class="mx-auto slider container">
+<div id="slide-container" class="container">
+<section class="mx-auto slider">
   {% for slide in slide_list %}
 
   <div>
 
     <div class="post">
-      <div class="text-center py-3"  style="font-size: 1.5rem; background-color: white;">
+      <div class="text-center py-3"  style="background-color: white;">
+        <h4>
       	{% if slide.what_to_show == 'url' %}
           <a href="{{ slide.url }}" target="_blank">
 	{% elif slide.what_to_show == 'flatpage' %}  {# no target=blank #}
@@ -21,6 +22,7 @@
 	{% endif %}
 	    {{ slide.title }}
 	  </a>
+          </h4>
       </div>
       	{% if slide.what_to_show == 'url' %}
           <a href="{{ slide.url }}" target="_blank">
@@ -44,6 +46,7 @@
   </div>
   {% endfor %}
 </section>
+</div>
 
 {% endblock %}
 
