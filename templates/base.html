@@ -47,6 +47,20 @@
 
     {% include "_navigation.html" %}
 
+    {% if user.is_authenticated %}
+    <nav class="navbar navbar-custom navbar-expand-lg" style="margin-top: 71px;">
+      <i style="color: white; opacity: 0.3;">(secret staff navigation bar)</i>
+      <ul class="navbar-nav  ml-auto text-white">
+	<li class="nav-item"><a>Logged in: <a href="/admin/">{{ user }}</a> |</a></li>
+	<li class="nav-item"><a href="/admin/">Admin</a> |</li>
+	<li class="nav-item"><a href="{% url 'bookings:booking_list' %}">Bookings</a> |</li>
+	<li class="nav-item"><a href="{% url 'members:member_approval' %}">Members</a> |</li>
+	<li class="nav-item"><a href="{% url 'library:game_home' %}">Games</a> |</li>
+	<li class="nav-item"><a href="/admin/logout/">Log out</a></li>
+      </ul>
+    </nav>
+    {% endif %}
+
     <header class="masthead text-center text-white">
       <div class="masthead-content">
         <div class="container">
@@ -62,27 +76,12 @@
       </div>
     </header>
 
-    {% if messages %}
-    {% include "_messages.html" %}
-    {% endif %}
-
     {% block sub_nav %}
     {% endblock %}
 
-    {% if user.is_authenticated %}
-    <nav class="navbar navbar-custom navbar-expand-lg">
-      <i style="color: white; opacity: 0.3;">(secret staff navigation bar)</i>
-      <ul class="navbar-nav  ml-auto text-white">
-	<li class="nav-item"><a>Logged in: <a href="/admin/">{{ user }}</a> |</a></li>
-	<li class="nav-item"><a href="/admin/">Admin</a> |</li>
-	<li class="nav-item"><a href="{% url 'bookings:booking_list' %}">Bookings</a> |</li>
-	<li class="nav-item"><a href="{% url 'members:member_approval' %}">Members</a> |</li>
-	<li class="nav-item"><a href="{% url 'library:game_home' %}">Games</a> |</li>
-	<li class="nav-item"><a href="/admin/logout/">Log out</a></li>
-      </ul>
-    </nav>
+    {% if messages %}
+    {% include "_messages.html" %}
     {% endif %}
-
 
     {% block box_above %}
     {% endblock %}
