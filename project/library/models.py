@@ -236,8 +236,6 @@ class Game(models.Model):
 
     slug = models.SlugField()
 
-    checked_at = models.DateTimeField(blank=True, null=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     updated_at = models.DateTimeField(auto_now=True)
@@ -254,13 +252,11 @@ class Game(models.Model):
     def get_absolute_url(self):
         return reverse('library:game_detail', kwargs={'slug': self.slug})
 
-    @property
     def is_active(self):
         return self in self.__class__.objects.filter(pk=self.pk).active()
     is_active.boolean = True
     is_active.short_description = 'active'
 
-    @property
     def is_expansion(self):
         return bool(self.expansion_for)
     is_expansion.boolean = True
@@ -303,6 +299,15 @@ class Game(models.Model):
             self.maximum_players = None
 
         return super(Game, self).save(*args, **kwargs)
+
+    def create_copy(self, added_at=None, location=None):
+        copy = Copy(
+            game=self,
+            location=location,
+            added_at=added_at,
+        )
+        copy.save()
+        return copy
 
     def autopopulate_bgg_complexity(self):
         bgg_get = requests.get('https://boardgamegeek.com/boardgame/{}'.format(
@@ -399,19 +404,31 @@ class Copy(models.Model):
 
     is_lost = models.BooleanField(default=False)
 
+    checked_at = models.DateField(null=True, blank=True)
+
     added_at = models.DateField(null=True, blank=True)
 
     removed_at = models.DateField(null=True, blank=True)
 
     notes = models.TextField(blank=True, default='')
 
+    state = models.CharField(
+        max_length=256,
+        choices=CHOICE_GAME_STATE,
+        null=True, blank=True, default=''
+    )
+
     class Meta(object):
         verbose_name_plural = 'Copies of game in library'
 
-    def save(self, *args, **kwargs):
-        # small hack to get an idea of when last checked
-        self.game.checked_at = timezone.now()
+    @classmethod
+    def create(cls, game_pk, location=None):
+        new = cls(game__pk=game_pk)
+        if location:
+            new.location = location
+        return new.save()
 
+    def save(self, *args, **kwargs):
         if not self.num:
             if self.game.copy.all():
                 self.num = self.game.copy.all().aggregate(
@@ -447,6 +464,12 @@ class CopyHistory(models.Model):
         choices=CHOICE_GAME_STATE,
         null=True, blank=True, default=''
     )
+
+    def save(self, *args, **kwargs):
+        self.copy.state = self.state
+        self.copy.checked_at = timezone.now()
+        self.copy.save()
+        return super(CopyHistory, self).save(*args, **kwargs)
 
 
 class Consumable(models.Model):
