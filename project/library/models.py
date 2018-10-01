@@ -23,16 +23,18 @@ def get_current_site():
 BGG_JSON_URL = 'https://bgg-json.azurewebsites.net/thing/{bgg_id}'
 
 CHOICE_LOCATIONS = [
-    ('main', 'Main Shelf'),
-    ('booth', 'Booth Shelves'),
-    ('strategy', 'Strategy Section'),
-    ('free', 'Free to Play Shelf'),
+    ('main', 'Main shelf'),
+    ('booth', 'Booth shelves'),
+    ('strategy', 'Strategy section'),
+    ('free', 'Free to play shelf'),
+    ('out', 'Taken away for some reason'),
     ('infirmary', 'Infirmary'),
     ('storage', 'Storage'),
     ('unknown', 'Missing'),
 ]
 
 CHOICE_GAME_STATE = [
+    ('', 'n/a'),
     ('unknown', 'unknown'),
     ('great', 'Great'),
     ('fine', 'Fine'),
@@ -46,9 +48,11 @@ CHOICE_GAME_STATE = [
 ]
 
 CHOICE_PRIORITY = [
-    ('high', 'High'),
-    ('', 'Normal'),
-    ('low', 'Low'),
+    ('1', 'High'),
+    ('30', 'Care'),
+    ('50', 'Normal'),
+    ('40', 'Popular'),
+    ('99', 'Low'),
 ]
 
 CHOICE_CONSUMABLE = [
