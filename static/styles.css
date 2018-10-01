@@ -14,11 +14,11 @@ h6 {
 }
 
 a {
+    color: #444;
 }
 
 a:active, a:focus, a:hover {
-    /* color: #369956; /*rgb(54, 153, 86); /* #369956 */
-    /* text-decoration: underline; */
+    color: black;
 }
 
 body {
