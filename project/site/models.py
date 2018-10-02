@@ -38,6 +38,8 @@ class Slide(models.Model):
 
     title = models.CharField(max_length=200)
 
+    subtitle = models.CharField(max_length=200, default='', blank=True)
+
     featured_image = models.ImageField(
         max_length=1024,
         upload_to='slide',

@@ -55,6 +55,9 @@
     <div class="row">
       {% for special in special_list %}
       <div class="col-sm">
+        <p><center><h5 style="margin-bottom: 0">{{ special.title|safe }}</h5>
+            {% if special.subtitle %}<div>{{ special.subtitle }}</div>{% endif %}
+        </center></p>
         {% thumbnail special.featured_image "900x500" crop="center" as im %}<img class="img-fluid" src="{{ im.url }}" >{% endthumbnail %}
         </h5>
       </div>
@@ -66,6 +69,7 @@
     </div>
   </section>
 </div>
+
 {% endblock %}
 
 
