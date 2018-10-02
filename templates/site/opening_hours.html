@@ -6,13 +6,7 @@
   <h2>Normal Opening Hours</h2>
   <br>
   <p>
-    <h5>Monday</h5>
-    Dinner<br>
-    5pm until Late
-  </p>
-  <br>
-  <p>
-    <h5>Tuesday to Sunday</h5>
+    <h5>Everyday!</h5>
     Lunch, Afternoon and Dinner<br>
     <i>Kitchen open all day!</i><br>
     <b>12pm until Late</b>
@@ -49,6 +43,10 @@
     {% endfor %}
 
   </table>
+
+  <br>
+  <i>Today: {{ today|date:"l" }}, {{ today }}</i>
+
 
 </center>
 

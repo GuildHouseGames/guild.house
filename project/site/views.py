@@ -36,8 +36,9 @@ class HoursView(generic.TemplateView):
 
         hours_list, this_list = [], []
         td = timedelta(days=1)
+        context['today'] = timezone.now().date()
         for day in OpeningHours.objects.filter(
-                date__gte=date.today()-td):
+                date__gte=timezone.now().date()):
             if this_list and day.date-td != this_list[-1].date:
                 hours_list.append(this_list)
                 this_list = [day]
