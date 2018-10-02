@@ -4,10 +4,25 @@
 {% block title %}Menus - {{ block.super }}{% endblock %}
 
 
-{% block content %}
+{% block content %}{% load static %}
 
   {% for object in object_list %}
   <h1 class="text-center">{{ object.title }}</h1>
+  {% if forloop.first %}
+  <p>
+    <div class="row">
+      <div class="col-sm"><img class="img-fluid" src="{% static 'img/food/angry-chicken.jpg' %}"></div>
+      <div class="col-sm"><a href="{% static 'img/food/calzone.jpg' %}"><img class="img-fluid" src="{% static 'img/food/calzone.jpg' %}"></a></div>
+      <div class="col-sm"><img class="img-fluid" src="{% static 'img/food/guild-master.jpg' %}"></div>
+      <div class="col-sm"><img class="img-fluid" src="{% static 'img/food/prawn-risotto.jpg' %}"></div>
+      <div class="col-sm"><img class="img-fluid" src="{% static 'img/food/cabonara.jpg' %}"></div>
+      <div class="col-sm"><img class="img-fluid" src="{% static 'img/food/eggplant-chips.jpg' %}"></div>
+      <div class="col-sm"><img class="img-fluid" src="{% static 'img/food/gustosa.jpg' %}"></div>
+      <div class="col-sm"><img class="img-fluid" src="{% static 'img/food/rocket-salad.jpg' %}"></div>
+    </div>
+  </p>
+  {% endif %}
+
   <p class="text-center"><a href="{{MEDIA_URL}}{{ object.menu_file }}">PDF {{ object.menu_file.size|filesizeformat }} PDF</a></p>
   {% for img in object.menuimage_set.all %}
   <p class="text-center"><a href="{{MEDIA_URL}}{{ object.menu_file }}" target="_blank"><img src="{{ img.image.url }}" width="{{ img.width }}"></a></p>
