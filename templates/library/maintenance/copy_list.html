@@ -1,0 +1,58 @@
+{% extends 'library/maintenance/base.html' %}
+
+
+{% block extra_static %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+  <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+{% endblock %}
+
+
+{% block content %}
+
+<script>
+$(document).ready(function() {
+$('#maintTable').DataTable( {
+    "lengthMenu": [[-1, 100, 250, 500, -1], ["All", 100, 250, 500]],
+    "order": [[ 2, "asc" ], [3, "asc"]]
+  });
+} );
+</script>
+
+
+<style>
+#maintTable td {
+  padding: 0 4px;
+
+}
+</style>
+
+<table id="maintTable" class="display dataTable" >
+  <thead>
+  <tr>
+    <th>Game</th>
+    <th>BGG ID</th>
+    <th>Priority</th>
+    <th>Location</th>
+    <th>Last Checked</th>
+    <th>State</th>
+  </tr>
+  </thead>
+  <tbody>
+  {% for obj in object_list %}
+  {% for copy in obj.copy.all %}
+  <tr>
+    <td><a href="/admin/library/game/{{ obj.pk }}/" target="_blank">{{ obj.name }}</a></td>
+    <td><a href="/admin/library/copy/{{ copy.pk }}/" target="_blank" style="white-space: nowrap">{{ obj.boardgamegeek_id }}-{{ copy.num }}</a></td>
+    <td style="white-space: nowrap">[{{ obj.priority }}] {{ obj.get_priority_display }}</td>
+    <td>{{ copy.location }}</td>
+    <td>{% if copy.checked %}{{ copy.checked_at }}{% else %}-{% endif %}</td>
+    <td>{% if copy.state %}{{ copy.state }}{% else %}-{% endif %}</td>
+  </tr>
+
+  {% endfor %}
+
+  {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

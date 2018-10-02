@@ -45,6 +45,11 @@ urls = [
         login_required(views_maintenance.MaintenanceRegister.as_view()),
         name='maintenance_register'),
 
+    url(r'^m/c/$',
+        # LOGIN SHOULD ALWAYS BE REQUIRED HERE
+        login_required(views_maintenance.CopyRegister.as_view()),
+        name='copy_register'),
+
     url(r'^m/(?P<pk>[\d]+)',
         # LOGIN SHOULD ALWAYS BE REQUIRED HERE
         login_required(views_maintenance.MaintainGame.as_view()),

@@ -14,15 +14,36 @@ class GameAddBGGID(generic.FormView):
 
     def form_valid(self, form):
         this_game = Game.create_from_bgg_id(form.cleaned_data['BGGID'])
-        return redirect("/admin/library/game/{}/change/".format(this_game.pk))
-
-    # Add game, shelf, priority
+        this_game.priority = form.cleaned_data['priority']
+        this_game.save()
+        this_game.create_copy(location=form.cleaned_data['shelf'])
+        return redirect(F"/admin/library/game/{this_game.pk}/change/")
 
 
 class MaintenanceRegister(generic.ListView):
 
     model = Game
-    template_name = "library/maintenance/list.html"
+    template_name = "library/maintenance/game_list.html"
+
+    def get_context_object(self, *args, **kwargs):
+        context = super(MaintenanceRegister,
+                        self).get_context_object(*args, **kwargs)
+        context['shelves'] = CHOICE_LOCATIONS
+        return context
+
+
+class CopyRegister(generic.ListView):
+
+    model = Game
+    template_name = "library/maintenance/copy_list.html"
+
+    def get_context_object(self, *args, **kwargs):
+        context = super(MaintenanceRegister,
+                        self).get_context_object(*args, **kwargs)
+        context['shelves'] = CHOICE_LOCATIONS
+        return context
+
+
 
     def get_context_object(self, *args, **kwargs):
         context = super(MaintenanceRegister,

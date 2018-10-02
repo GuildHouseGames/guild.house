@@ -43,7 +43,7 @@ $('#maintTable').DataTable( {
   {% for obj in object_list %}
   <tr>
     <td><i><a href="/admin/library/game/{{ obj.pk }}/" target="_blank" style="color: rgba(0, 0, 0, .25)">{{ obj.name }}</a></i></td>
-    <td>
+    <td style="white-space: nowrap">
       [{{ obj.pk }}]
       <form method="post" action="/games/m/copy/add">{% csrf_token %}
         <input type="submit" value="Add Copy">
