@@ -9,7 +9,6 @@
   {% for slide in slide_list %}
 
   <div>
-
     <div class="post">
       <div class="text-center py-3"  style="background-color: white;">
         <h4>
@@ -20,7 +19,7 @@
 	{% elif slide.what_to_show == 'content' %} {# modal #}
           <a href="#slide{{ slide.pk }}" rel="modal:open">
 	{% endif %}
-	    {{ slide.title }}
+	    {{ slide.title|safe }}
 	  </a>
           </h4>
       </div>
@@ -38,7 +37,7 @@
     {% if slide.slidebanner_set.all %}
     <ul class="banner" style="z-index:5;">
       {% for banner in slide.slidebanner_set.all %}
-      <li>{% if banner.url %}<a href="{{ banner.url }}">{% endif %}<span>{{ banner.text|safe }}</span>{% if banner.url %}</a>{% endif %}</li>
+      <li><a href="{% if banner.url %}{{ banner.url }}{% else %}#{% endif %}"><span>{{ banner.text|safe }}</span></a></li>
       {% endfor %}
     </ul>
     {% endif %}
@@ -48,6 +47,25 @@
 </section>
 </div>
 
+<br>
+<br>
+<div class="container" style="background-color: white; padding-top: 20px;">
+  <section>
+    <h3 class="text-center">CURRENT SPECIALS</h3>
+    <div class="row">
+      {% for special in special_list %}
+      <div class="col-sm">
+        {% thumbnail special.featured_image "900x500" crop="center" as im %}<img class="img-fluid" src="{{ im.url }}" >{% endthumbnail %}
+        </h5>
+      </div>
+      {% if forloop.counter0|divisibleby:3 %}
+    </div>
+    <div class="row">
+      {% endif %}
+    {% endfor %}
+    </div>
+  </section>
+</div>
 {% endblock %}
 
 

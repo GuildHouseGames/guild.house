@@ -18,9 +18,11 @@ def get_current_site():
 SLIDER_CHOICE = [
     ('home', 'home'),
     ('games', 'games'),
+    ('special', 'specials'),
 ]
 
 SLIDE_CONTENT_CHOICE = [
+    ('', ''),
     ('url', 'url'),
     ('content', 'content'),
     ('flatpage', 'flatpage'),
@@ -50,7 +52,7 @@ class Slide(models.Model):
     unpublish_at = models.DateTimeField(db_index=True, null=True, blank=True)
 
     what_to_show = models.CharField(
-        max_length=32, choices=SLIDE_CONTENT_CHOICE)
+        max_length=32, choices=SLIDE_CONTENT_CHOICE, blank=True, default='')
 
     url = models.CharField(max_length=300, null=True, blank=True)
 
@@ -59,7 +61,7 @@ class Slide(models.Model):
     content = models.TextField(blank=True, default='')
 
     class Meta:
-        ordering = ['-is_active', 'featured_order']
+        ordering = ['-is_active', 'slider', 'featured_order', 'publish_at']
 
     def __str__(self):
         return "{} [{}]".format(self.title, self.publish_at)

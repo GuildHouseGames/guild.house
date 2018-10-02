@@ -15,10 +15,13 @@ class HomeView(generic.TemplateView):
     def get_context_data(self, *args, **kwargs):
         context_data = super(HomeView, self).get_context_data(
             *args, **kwargs)
-        context_data['slide_list'] = Slide.objects.filter(
+        slide_range = Slide.objects.filter(
             is_active=True,
             publish_at__lte=timezone.now(),
         )
+        context_data['slide_list'] = slide_range.filter(slider='home')
+        context_data['special_list'] = slide_range.filter(slider='special')
+
         return context_data
 
     pass
