@@ -59,11 +59,16 @@ class MenuImage(models.Model):
 
     menu = models.ForeignKey('menus.MenuType')
 
+    order = models.IntegerField(default=0)
+
     image = models.ImageField(max_length=1024,
                               upload_to='menu_image',
                               blank=True, default='')
 
     width = models.CharField(max_length=32, default="100%")
+
+    class Meta:
+        ordering = ['order']
 
 
 class ItemType(models.Model):
