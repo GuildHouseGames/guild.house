@@ -46,11 +46,13 @@
   {% endfor %}
 </section>
 </div>
+<br>
+<br>
+<br>
 
 {% if special_list %}
-<br>
-<br>
-<div class="container" style="background-color: white; padding-top: 20px;">
+
+<div class="container" style="background-color: white; padding-top: 30px;">
   <section>
     <h3 class="text-center">CURRENT SPECIALS</h3>
     <div class="row">
@@ -90,8 +92,8 @@
 <script>
 $(document).ready(function(){
   $(".slider").slick({
-    dots: true,
-    centerMode: true,
+{% if slide_list|length > 1 %}    dots: true,
+{% endif %}    centerMode: true,
     fade: true,
     autoplay: true,
     autoplaySpeed: 3000
