@@ -11,7 +11,7 @@
 {% endif %}
 {% endif %}
 
-<div><b>{{ time.service|title }}</b><br>
+<div> &nbsp; <b>{{ time.service|title }}</b><br>
 {% endif %}
   <span data-time="{{ time.select_time|time:"H:i" }}:00"
         data-full="{% if time.pax > 105 %}full{% endif %}"

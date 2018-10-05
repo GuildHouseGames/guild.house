@@ -1,0 +1,90 @@
+<div class="details col-sm-6">
+  {% if object.code %}
+  <h3>{% include "bookings/_booking_list.html" with obj=object %}</h3>
+  {% endif %}
+
+  <div style="display: none;" class="booking-warning">
+    <div class="btn btn-warning">
+      Beware: Heavily booked on this day.</div><br><br>
+    <div class="featured_text">
+      It is possible that the booking you make through the
+      automated booking system may occur at a time where
+      we are already booked out.<br><br>
+      This probably won't happen, but is technically possible (for example if someone else is making a booking for the same time <i>right now</i>)
+      so we want to warn you about it.
+      If this is the case we will contact you ASAP to discuss options.
+    </div>
+  </div>
+  <br>
+  <div style="display: none;" class="full-warning btn btn-danger">
+    Online booking is not available<br>
+    as we're getting quite full at this time<br>
+    PLEASE EMAIL: <a href="mailto:reservations@guild.house" style="color:white">reservations@guild.house</a>
+    <br>to check availability.
+  </div>
+  <br>
+  <br>
+
+  <form action="" method="post" class="bookings">
+    {% csrf_token %}
+    <table>
+      {{ form }}
+
+      {% if update_view %}
+      <tr>
+        <th>Added by: </th>
+        <td>
+          {% if object.user.is_staff %}
+          <i>[added at: {{ object.created_at }}]</i><br>
+          <b>Staff</b>: {{ object.user.first_name }} "{{ object.user.username}}" {{ object.user.last_name }}
+          {% else %}
+          <i>[online self-service]</i>
+          <br>{{ object.user }}
+          <br><a href="/admin/bookings/booking/?q={{ object.user }}">(see all bookings)</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% else %}
+
+      <tr>
+        <th>
+          <label for="id_hear_choices">How did you<br>hear about<br>us?</label>
+        </th>
+        <td>
+          <select id="id_hear_choices" name="hear_choices">
+            <option value="" selected="selected">---------</option>
+            <option value="event">event</option>
+            <option value="facebook">facebook</option>
+            <option value="friends">friends</option>
+            <option value="newspaper">newspaper</option>
+            <option value="search">search</option>
+            <option value="other">other</option>
+          </select>
+      </td></tr>
+
+      <tr>
+        <th>
+          <label for="id_hear_other">&nbsp;</label>
+        </th>
+        <td>
+          <span class="helptext">Tell us a story about how you heard about us ...</span><br>
+          <textarea cols="0" id="id_hear_other" name="hear_other" rows="4" width="185"></textarea>
+        </td>
+      </tr>
+
+      {% endif %}
+
+      <tr class="hidden-print submit-buttons">
+        <th></th>
+        <td>
+          <br>
+          <button type="submit" class="hidden-print btn btn-default btn-lg">
+            <span class="network-name">Make Boooking</span> &nbsp;
+            <i class="fa fa-clock fa-fw"></i>
+          </button>
+          <br><br>
+        </td>
+      </tr>
+    </table>
+  </form>
+</div>
