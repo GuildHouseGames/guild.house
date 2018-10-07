@@ -531,7 +531,7 @@ button[type=submit] {
 }
 
 input, select, textarea {
-    color: whitesmoke;
+    color: #212529;
     border: 0;
     padding: 5px 10px;
     margin: 2px;
