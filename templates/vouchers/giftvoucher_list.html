@@ -1,0 +1,34 @@
+{% extends 'vouchers/base.html' %}
+
+{% block content %}
+
+<table>
+{% for object in object_list %}
+{% if not object.is_expired %}
+<tr>
+  <td><b>#{{ object.number }}</b></td>
+  <td>{{object.issued_to}}</td>
+  <td>{{object.issued_date}}</td>
+  <td>{{object.added_by}}</td>
+  <td>{{object.notes}}</td>
+</tr>
+{% endif %}
+{% endfor %}
+</table>
+
+<table>
+{% for object in object_list %}
+{% if object.is_expired %}
+<tr>
+  <td><b>#{{ object.number }}</b></td>
+  <td>{{object.issued_to}}</td>
+  <td>{{object.issued_date}}</td>
+  <td>{{object.added_by}}</td>
+  <td>{{object.notes}}</td>
+</tr>
+{% endif %}
+{% endfor %}
+
+</table>
+
+{% endblock %}

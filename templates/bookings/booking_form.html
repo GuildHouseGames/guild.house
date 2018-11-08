@@ -6,6 +6,30 @@
 
 {% block content %}
 
+<style>
+
+  form.bookings textarea,
+  form.bookings input {
+  width: 90%;
+  }
+
+  h2, h5 {
+    padding-left: 10px;
+  }
+
+  div.times, div.calendar {
+    padding-left: 10px;
+  }
+  div.paxs {
+    padding-left: 15px;
+  }
+
+  .details {
+    padding-left: 25px;
+  }
+
+</style>
+
 {% if user.is_authenticated %}
 <h2 style="opacity: 0.7; text-align: right;" class="hidden-print">
   Logged in as: {{user}}
@@ -14,221 +38,145 @@
 
 {% if not object.code %}
 <div class="row">
-  <h2 class="hidden-print">New Booking</h2>
+  <div class="col-sm-12">
+    <h2 class="hidden-print">New Booking</h2>
+  </div>
 </div>
 {% endif %}
 
 <div class="row">
-{% if form.errors %}
-<div class="btn btn-danger">
-Woah! Your booking wasn't saved.</div><br>
-<br>
-<div class="featured_text">At a minimum we need: Name, Date/Time, Party size and some contact details.<br> Check below, one of these is incomplete or incorrect.</div>
-<br>
-<div class="featured_text">
-If you would like to contact us:
-<ul>
-<li>call us on 02 6257 2727</li> <i>or</i>
-<li>email <a href="mailto:hello@guild.house">hello@guild.house</a></li>
-</ul>
+  {% if form.errors %}
+  <div class="btn btn-danger">
+    Woah! Your booking wasn't saved.</div><br>
+  <br>
+  <div class="featured_text">At a minimum we need: Name, Date/Time, Party size and some contact details.<br> Check below, one of these is incomplete or incorrect.</div>
+  <br>
+  <div class="featured_text">
+    If you would like to contact us:
+    <ul>
+      <li>call us on 02 6257 2727</li> <i>or</i>
+      <li>email <a href="mailto:hello@guild.house">hello@guild.house</a></li>
+    </ul>
 
-</div>
-<br>
-
-<div>
-{% for k, v in form.errors.items %}
-<div class="btn btn-warning">
-{% if k == '__all__' %}
-Please supply both email address and phone number.
-{% else %}
-{{ k }} is incomplete.
-{% endif %}
-</div>
-<br>
-
-
-{% endfor %}
-{% endif %}
-
-  {% if not update_view %}
-  <div class="col-sm-5">
-    <div class="hidden-print">{% include "bookings/_calendar.html" %}</div>
-    <hr class="hidden-print">
-    <div id="time"></div>
   </div>
+  <br>
 
-  <div class="col-sm-1 hidden-print">
-    {% include "bookings/_pax.html" %}
-  </div>
-  {% endif %}
+  <div>
+    {% for k, v in form.errors.items %}
+    <div class="btn btn-warning">
+      {% if k == '__all__' %}
+      Please supply both email address and phone number.
+      {% else %}
+      {{ k }} is incomplete.
+      {% endif %}
+    </div>
+    <br>
 
-  <div class="col-sm-6">
-    {% if object.code %}
-      <h3>{% include "bookings/_booking_list.html" with obj=object %}</h3>
+
+    {% endfor %}
     {% endif %}
 
-<div style="display: none;" class="booking-warning">
-<div class="btn btn-warning">
-  Beware: Heavily booked on this day.</div><br><br>
-<div class="featured_text">
-It is possible that the booking you make through the
-automated booking system may occur at a time where
-we are already booked out.<br><br>
-This probably won't happen, but is technically possible (for example if someone else is making a booking for the same time <i>right now</i>)
-so we want to warn you about it.
-If this is the case we will contact you ASAP to discuss options.
-</div>
-</div>
-<br>
-<div style="display: none;" class="full-warning btn btn-danger">
-Online booking is not available<br>
-as we're getting quite full at this time<br>
-PLEASE EMAIL: <a href="mailto:reservations@guild.house" style="color:white">reservations@guild.house</a>
-<br>to check availability.
-</div>
-<br>
-<br>
+    {% if not update_view %}
 
-    <form action="" method="post">
-      {% csrf_token %}
-      <table>
-        {{ form }}
 
-  {% if update_view %}
-        <tr>
-          <th>Added by: </th>
-          <td>
-            {% if object.user.is_staff %}
-            <i>[added at: {{ object.created_at }}]</i><br>
-            <b>Staff</b>: {{ object.user.first_name }} "{{ object.user.username}}" {{ object.user.last_name }}
-            {% else %}
-            <i>[online self-service]</i>
-            <br>{{ object.user }}
-            <br><a href="/admin/bookings/booking/?q={{ object.user }}">(see all bookings)</a>
-            {% endif %}
-          </td>
-        </tr>
-  {% else %}
+    {# DATE APPEARANCE SECTION #}
 
-        <tr>
-          <th>
-            <label for="id_hear_choices">How did you<br>hear about<br>us?</label>
-          </th>
-          <td>
-            <select id="id_hear_choices" name="hear_choices">
-              <option value="" selected="selected">---------</option>
-              <option value="event">event</option>
-              <option value="facebook">facebook</option>
-              <option value="friends">friends</option>
-              <option value="newspaper">newspaper</option>
-              <option value="search">search</option>
-              <option value="other">other</option>
-            </select>
-        </td></tr>
+    <div class="col-sm-5">
 
-        <tr>
-          <th>
-            <label for="id_hear_other">&nbsp;</label>
-          </th>
-          <td>
-            <span class="helptext">Tell us a story about how you heard about us ...</span><br>
-            <textarea cols="0" id="id_hear_other" name="hear_other" rows="4" width="185"></textarea>
-          </td>
-        </tr>
+      {# CALENDER #}
+      <div class="calendar hidden-print">{% include "bookings/_calendar.html" %}</div>
+      <hr class="hidden-print">
 
-  {% endif %}
+      {# TIME #}
+      <div id="time" class="times"></div>
+    </div>
 
-        <tr class="hidden-print submit-buttons">
-          <th></th>
-          <td>
-            <button type="submit" class="hidden-print btn btn-default btn-lg">
-              <i class="fa fa-save fa-fw"></i>
-              <span class="network-name">Save</span>
-            </button>
-            <button type="reset" class="hidden-print btn btn-default btn-lg" id="remove" value="Cancel">
-              <i class="fa fa-trash fa-fw"></i>
-              <span class="network-name">Cancel</span>
-            </button>
-          </td>
-        </tr>
-      </table>
-    </form>
+    {# PAX #}
+    <div class="paxs col-sm-1 hidden-print">
+      {% include "bookings/_pax.html" %}
+    </div>
+    {# ./DATE APPEARANCE SECTION #}
+
+
+    {% endif %}
+
+    {% include "bookings/_form.html" %}
+
   </div>
-</div>
 
-<ul>
+  <ul>
     {% for obj in object_list %}
     {% include "bookings/_booking_list.html" %}
     {% endfor %}
-</ul>
+  </ul>
 
 
-{% endblock %}
+  {% endblock %}
 
-{% block extra_static %}
-<script>
+  {% block extra_static %}
+  <script>
 
-$(document).ready(function(){
-  $.ajax({
+    $(document).ready(function(){
+    $.ajax({
     url: "/bookings/time/"+$("#id_reserved_date").val()+"/",
     success: function(result){$( "#time" ).html(result);}
-  });
-});
+    });
+    });
 
-$(".date").click(function() {
-  $("#id_reserved_date").val($(this).data("date")).addClass("selected");
-  $(".date").removeClass("selected");
-  $(this).addClass("selected");
-  $.ajax({
+    $(".date").click(function() {
+    $("#id_reserved_date").val($(this).data("date")).addClass("selected");
+    $(".date").removeClass("selected");
+    $(this).addClass("selected");
+    $.ajax({
     url: "/bookings/time"+$(this).data("time"),
     success: function(result){$( "#time" ).html(result);},
     dataType : "html"
-  });
-});
-$(".pax").click(function() {
-  $("#id_party_size").val($(this).data("pax")).addClass("selected");
-  $(".pax").removeClass("selected");
-  $(this).addClass("selected");
-});
-$("#id_phone, #id_name, #id_email, #id_party_size, #id_reserved_date, #id_reserved_time, #id_booking_method, #id_notes").change(function(){
-  $(this).addClass("selected");
-})
-$("#id_party_size").change(function(){
-  $(".pax").removeClass("selected");
-})
-$("#id_reserved_date").change(function(){
-  $(".date").removeClass("selected");
-})
-$("#id_reserved_time").change(function(){
-  $(".time").removeClass("selected");
-})
-$("#remove").click(function() {
-  $(".date").removeClass("selected");
-  $(".time").removeClass("selected");
-  $(".pax").removeClass("selected");
-  $("#id_phone").removeClass("selected");
-  $("#id_name").removeClass("selected");
-  $("#id_email").removeClass("selected");
-  $("#id_party_size").removeClass("selected");
-  $("#id_reserved_date").removeClass("selected");
-  $("#id_reserved_time").removeClass("selected");
-  $("#id_booking_method").removeClass("selected");
-  $("#id_notes").removeClass("selected");
-  $("id_status".val(""))
-})
-$("#id_reservation_time").prop("readonly", true);
+    });
+    });
+    $(".pax").click(function() {
+    $("#id_party_size").val($(this).data("pax")).addClass("selected");
+    $(".pax").removeClass("selected");
+    $(this).addClass("selected");
+    });
+    $("#id_phone, #id_name, #id_email, #id_party_size, #id_reserved_date, #id_reserved_time, #id_booking_method, #id_notes").change(function(){
+    $(this).addClass("selected");
+    })
+    $("#id_party_size").change(function(){
+    $(".pax").removeClass("selected");
+    })
+    $("#id_reserved_date").change(function(){
+    $(".date").removeClass("selected");
+    })
+    $("#id_reserved_time").change(function(){
+    $(".time").removeClass("selected");
+    })
+    $("#remove").click(function() {
+    $(".date").removeClass("selected");
+    $(".time").removeClass("selected");
+    $(".pax").removeClass("selected");
+    $("#id_phone").removeClass("selected");
+    $("#id_name").removeClass("selected");
+    $("#id_email").removeClass("selected");
+    $("#id_party_size").removeClass("selected");
+    $("#id_reserved_date").removeClass("selected");
+    $("#id_reserved_time").removeClass("selected");
+    $("#id_booking_method").removeClass("selected");
+    $("#id_notes").removeClass("selected");
+    $("id_status".val(""))
+    })
+    $("#id_reservation_time").prop("readonly", true);
 
-</script>
+  </script>
 
-<link href="{% static "vendor/clockpicker/clockpicker.css" %}" type="text/css" rel="stylesheet" />
-<script src="{% static "vendor/clockpicker/clockpicker.js" %}" type="text/javascript"></script>
+  <link href="{% static "vendor/clockpicker/clockpicker.css" %}" type="text/css" rel="stylesheet" />
+  <script src="{% static "vendor/clockpicker/clockpicker.js" %}" type="text/javascript"></script>
 
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
   <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
 
-<script>
-  $('#id_reserved_time').clockpicker({donetext: 'done'});
-  $('#id_reserved_date').datepicker({dateFormat: 'dd/mm/yy', minDate: 0});
-</script>
+  <script>
+    $('#id_reserved_time').clockpicker({donetext: 'done'});
+    $('#id_reserved_date').datepicker({dateFormat: 'dd/mm/yy', minDate: 0});
+  </script>
 
-{% endblock %}
+  {% endblock %}
