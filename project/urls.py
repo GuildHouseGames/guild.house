@@ -18,6 +18,9 @@ urlpatterns = [
     # Menu
     url(r'^menus/', include('project.menus.urls')),
 
+    # Vouchers
+    url(r'^vouchers/', include('project.vouchers.urls')),
+
     # Games Library
     url(r'^games/', include('project.library.urls')),
 
