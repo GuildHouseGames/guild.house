@@ -53,6 +53,10 @@
       <ul class="navbar-nav  ml-auto text-white">
 	<li class="nav-item"><a>Logged in: <a href="/admin/">{{ user }}</a> |</a></li>
 	<li class="nav-item"><a href="/admin/">Admin</a> |</li>
+	<li class="nav-item"><a href="{% url 'vouchers:voucher_add' %}">Vouchers</a>:
+          <a href="{% url 'vouchers:voucher_find' %}">Find</a> /
+          <a href="{% url 'vouchers:voucher_add' %}">Add</a>
+          |</li>
 	<li class="nav-item"><a href="{% url 'bookings:booking_list' %}">Bookings</a> |</li>
 	<li class="nav-item"><a href="{% url 'members:member_approval' %}">Members</a> |</li>
 	<li class="nav-item"><a href="{% url 'library:game_home' %}">Games</a> |</li>
