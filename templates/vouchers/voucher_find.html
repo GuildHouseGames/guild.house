@@ -1,0 +1,19 @@
+{% extends 'vouchers/base.html' %}
+
+{% block content %}
+
+<h1>Find Gift Voucher</h1>
+
+<form action="" method="post">{% csrf_token %}
+  <p><label for="id_value">Voucher Number:</label></p>
+  <p><input type="text" name="value" placeholder="0" size="6em"
+            required="" id="id_value" style="font-size: 1.6em; height: 2.5em; padding: .5em 1.5em"></p>
+
+  <button type="submit" class="hidden-print btn btn-default btn-lg">
+    <span class="network-name">Find Voucher</span> &nbsp;
+    <i class="fa fa-gift fa-fw"></i>
+  </button>
+  <br>(Voucher displayed on next screen)<br>
+</form>
+
+{% endblock %}

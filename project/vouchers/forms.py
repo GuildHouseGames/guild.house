@@ -2,6 +2,11 @@ from django import forms
 from .models import GiftVoucher
 
 
+class GiftVoucherFindForm(forms.Form):
+
+    value = forms.CharField()
+
+
 class GiftVoucherRedemptionForm(forms.ModelForm):
 
     class Meta:

@@ -16,6 +16,22 @@ urls = [
     ),
 
     url(
+        r'^find/$',
+        permission_required(PERMISSION_REQUIRED)(
+            views.GiftVoucherFindView.as_view()
+        ),
+        name='voucher_find'
+    ),
+
+    url(
+        r'^find/not/$',
+        permission_required(PERMISSION_REQUIRED)(
+            views.GiftVoucherNotFindView.as_view()
+        ),
+        name='voucher_find_not'
+    ),
+
+    url(
         r'^add/$',
         permission_required(PERMISSION_REQUIRED)(
             views.GiftVoucherCreateView.as_view()
