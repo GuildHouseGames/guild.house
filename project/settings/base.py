@@ -18,8 +18,10 @@ BASE_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))), '..')
 
 
+os.environ['GUILD_DJANGO_SECRET_KEY'] = 'u01s3h50()rxy@s(81f6u(opq17fza*06b$l^qksgnk*%q&&5g'
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ['GUILD_DJANGO_SECRET_KEY']
+
 
 ADMINS = (
     # ('Matt Austin', 'devops@mattaustin.com.au'),
@@ -42,9 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.staticfiles',
 
-
-    'phonenumber_field',
-    'raven.contrib.django.raven_compat',
+    'debug_toolbar',
     'robots',
     'sorl.thumbnail',
     'storages',
@@ -66,6 +66,7 @@ INSTALLED_APPS = [
 MIDDLEWARE_CLASSES = [
     'django.middleware.cache.UpdateCacheMiddleware',
     'django.middleware.http.ConditionalGetMiddleware',
+    'django.middleware.security.SecurityMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -75,7 +76,6 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
     'django.contrib.admindocs.middleware.XViewMiddleware',
     'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
     'django.contrib.redirects.middleware.RedirectFallbackMiddleware',

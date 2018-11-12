@@ -17,11 +17,12 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
 #application = Sentry(get_wsgi_application())
 application = get_wsgi_application()
 
-## def application(environ, start_response):
-##     status = '200 OK'
-##     output = b'Hello World!'
-##     response_headers = [('Content-type', 'text/plain'),
-##                         ('Content-Length', str(len(output)))]
-##     start_response(status, response_headers)
-##     return [output]
- 
+# import sys
+# s = '\n'.join(sys.path)#b'Hello World!'
+# def application(environ, start_response):
+#     status = '200 OK'
+#     output = str.encode(s)
+#     response_headers = [('Content-type', 'text/plain'),
+#                         ('Content-Length', str(len(output)))]
+#     start_response(status, response_headers)
+#     return [output]
