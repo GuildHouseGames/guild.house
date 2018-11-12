@@ -9,8 +9,11 @@
 {% endif %}
 
 <p>Expiry date: <b>{{ object.expire_date }}</b></p>
-<p>Number: #{{ object.number}}<br>
-Name: {{ object.issued_to }}</p>
+<p>
+  Value: ${{ object.value }}<br>
+  Number: #{{ object.number}}<br>
+  Name: {{ object.issued_to }}
+</p>
 
 <p>
   {% if object.notes %}Notes: {{ object.notes }}<br>{% endif %}

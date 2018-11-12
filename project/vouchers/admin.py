@@ -12,7 +12,12 @@ class GiftVoucherAdmin(admin.ModelAdmin):
         'expire_date',
         'added_by',
         'notes',
-        'is_expired',
+        'is_valid'
+    ]
+
+    list_filter = [
+        'is_valid',
+        'added_by'
     ]
 
 
