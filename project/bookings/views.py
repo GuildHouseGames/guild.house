@@ -126,6 +126,7 @@ class TimeMixin(object):
             this_time = this_time + interval
             this_dict = {'pax': 0,
                          'date': this_time,
+                         'future': True,
                          'select_time': time(this_time.hour, this_time.minute),
                          'time': "{}:{:0>2}".format(this_time.hour,
                                                     this_time.minute)}
@@ -147,6 +148,10 @@ class TimeMixin(object):
             # @@TODO get value from settings.HEAT
             if this_dict['pax'] > settings.VENUE_FULL:
                 busy_night = True
+
+            if this_date == now().date():
+                # if this_time
+                this_dict['future'] = None
 
             # Add `service` to dictionary
             for service_time, service in settings.SERVICE_TIMES:
