@@ -45,8 +45,6 @@
 
   <body>
 
-    {% include "_navigation.html" %}
-
     {% if user.is_authenticated %}
     <nav class="navbar navbar-custom navbar-expand-lg" style="margin-top: 71px;">
       <i style="color: white; opacity: 0.3;">(secret staff navigation bar)</i>
@@ -65,6 +63,8 @@
     </nav>
     {% endif %}
 
+    {% include "_navigation.html" %}
+
     <header class="masthead text-center text-white">
       <div class="masthead-content">
         <div class="container">
@@ -76,6 +76,8 @@
 	    <a href="mailto:hello@guild.house">hello@guild.house</a>
 	    &middot; <a href="tel:+61262572727">02 6257 2727</a>
 	  </div>
+          <a href="{% url 'bookings:booking_add' %}"
+             class="btn btn-primary btn-xl rounded-pill mt-5">Make a Booking</a>
         </div>
       </div>
     </header>
