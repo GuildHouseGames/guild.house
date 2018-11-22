@@ -161,7 +161,7 @@ class TimeMixin(object):
         context['date'] = this_date
         context['booking_list'] = self.get_booking_list(this_date)
 
-        # Sadly annotate too unreliable https://code.djangoproject.com/ticket/10060
+        # Sadly annotate too unreliable https://code.djangoproject.com/ticket/10060 # noqa E501
         total_pax = 0
         for booking in self.get_booking_list(this_date):
             total_pax = total_pax + booking.party_size
@@ -345,7 +345,7 @@ class BookingCreateView(BookingFormMixin, CalendarMixin, BookingQueryset,
         obj = form.instance
         obj.save()
         self.send_booking_notice_internal(obj=obj, form=form, change="added")
-        #self.send_booking_notice_customer(obj=obj, form=form)
+        # self.send_booking_notice_customer(obj=obj, form=form)
         return redirect('bookings:booking_success', code=form.instance.code)
 
     def get_context_data(self, *args, **kwargs):
