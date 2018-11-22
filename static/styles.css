@@ -37,8 +37,8 @@ body {
 
 @media (min-width: 993px) {
     .container {
-        width: 900px;
-        max-width: 900px;
+        width: 1000px;
+        max-width: 1000px;
         padding: 3rem 3rem;
     }
 }
@@ -61,9 +61,9 @@ body {
 
 @media (max-width: 576px) {
     .container {
-        width: 100%;
+        width: 95%;
         max-width: 100%;
-        padding: 0;
+        padding: 0.5em;
     }
 }
 
@@ -147,6 +147,13 @@ header.masthead {
     background-attachment: scroll;
     background-size: cover;
     background: url('img/bg.jpg') no-repeat center center;
+}
+
+@media (max-width: 576px) {
+    header.masthead {
+	padding-top: calc(1rem + 72px);
+	padding-bottom: 1rem;
+    }
 }
 
 header.masthead .masthead-content {
