@@ -19,10 +19,9 @@ from .models import Booking
 from .utils import import_revel_bookings
 
 
-MSG_WARNING_BUSY = """Beware! This booking made during a busy time. May conflict. Please check ASAP and contact to discuss options if necessary.
-
-The customer has been warned that this is the case and may be expecting confirmation.
-"""
+MSG_WARNING_BUSY = "Beware! This booking made during a busy time. May conflict. Please check ASAP and contact to discuss options if necessary."  # noqa
+MSG_WARNING_BUSY = MSG_WARNING_BUSY+"\n"
+MSG_WARNING_BUSY = MSG_WARNING_BUSY+"The customer has been warned that this is the case and may be expecting confirmation."  # noqa
 
 MSG_WARNING_BUSY_CUSTOMER = """Beware! As warned at time of booking: you have booked during a busy time it is possible that your booking may have conflicted with another.
 

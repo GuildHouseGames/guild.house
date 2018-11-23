@@ -36,7 +36,7 @@ def import_revel_bookings(scrape):
     # Confident that they'll do an update one day that will break this.
     # -> Happened Aug 2017
 
-    split_string_start = "Reserved On\nReserved For\nOrder ID\nStatus\nParty Size\nWait time\nCustomer\nPhone\nNotes & Preferences\n"
+    split_string_start = "Reserved On\nReserved For\nOrder ID\nStatus\nParty Size\nWait time\nCustomer\nPhone\nNotes & Preferences\n"  # noqa
     split_string_end = "Watch the tutorial"
 
     data_raw = scrape.split(split_string_start)[-1].split(split_string_end)

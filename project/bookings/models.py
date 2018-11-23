@@ -39,6 +39,9 @@ class Booking(models.Model):
 
     is_cancelled = models.BooleanField(default=False)
 
+    service = models.CharField(max_length=50, choices=settings.SERVICE_CHOICE,
+                               blank=True, default='')
+
     area = models.CharField(max_length=50, choices=settings.AREA_CHOICE,
                             default=settings.AREA_CHOICE[0][0])
 
@@ -60,18 +63,10 @@ class Booking(models.Model):
         help_text="Only logged in people can see booking method."
     )
 
-    site = models.ForeignKey('sites.Site', default=get_current_site,
-                             related_name='bookings_booking',
-                             on_delete=models.PROTECT)
-
     reserved_date = models.DateField(db_index=True)
     reserved_time = models.TimeField(db_index=True, default=timezone.now)
 
     booking_duration = models.DurationField(blank=True, null=True)
-
-    service = models.CharField(max_length=50, choices=settings.SERVICE_CHOICE,
-                               blank=True, default=''
-                               )
 
     busy_night = models.BooleanField(default=False)
 
@@ -98,6 +93,10 @@ class Booking(models.Model):
     )
 
     legacy_code = models.CharField(max_length=256, blank=True, null=True)
+
+    site = models.ForeignKey('sites.Site', default=get_current_site,
+                             related_name='bookings_booking',
+                             on_delete=models.PROTECT)
 
     objects = querysets.QuerySet.as_manager()
 
