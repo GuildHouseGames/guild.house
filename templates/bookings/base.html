@@ -2,8 +2,7 @@
 
 {% block box_above %}
 {% if user.is_authenticated %}
-<nav class="hidden-print navbar navbar-custom navbar-expand-lg" style="padding-top: 0; ">
-  <div class="container">
+<nav class="hidden-print navbar navbar-custom navbar-expand-lg">
     <ul class="navbar-nav  ml-auto text-white">
       <li style="display: inline; list-style-type: none; padding-right: 20px">
 	<a href="{% url "bookings:booking_today" %}">Today</a>
@@ -21,7 +20,6 @@
 	<a href="{% url "bookings:booking_default_post" %}">Add</a>
       </li>
     </ul>
-  </div>
 </nav>
 {% endif %}
 {% endblock %}
