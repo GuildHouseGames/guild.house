@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 from .forms import BookingAdminForm
-from .models import Booking, BookingDate
+from .models import Booking
 from django.contrib import admin
 
 
@@ -38,6 +38,3 @@ class BookingAdmin(admin.ModelAdmin):
 
     search_fields = ['name', 'email', 'notes',
                      'reserved_date', 'user__username']
-
-
-admin.site.register(BookingDate)

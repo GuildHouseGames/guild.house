@@ -16,7 +16,7 @@ from django.views import generic
 from . import settings
 from .forms import BookingForm, NewBookingForm, BlankForm
 from .models import Booking
-from .utils import import_revel_bookings, get_future_services_set
+from .utils import import_revel_bookings
 
 
 MSG_WARNING_BUSY = """Beware! This booking made during a busy time. May conflict. Please check ASAP and contact to discuss options if necessary.

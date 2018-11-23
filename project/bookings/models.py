@@ -1,14 +1,11 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-from datetime import datetime, timedelta
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
-from django.utils.timesince import timesince
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.core.exceptions import ValidationError
 from phonenumber_field.modelfields import PhoneNumberField
 
 from project import utils
@@ -23,74 +20,10 @@ def get_current_site():
         pass
 
 
-class BookingDate(models.Model):
-
-    date = models.DateField(db_index=True)
-
-    total_num = models.PositiveIntegerField(default=0, null=True)
-
-    total_pax = models.PositiveIntegerField(default=0, null=True)
-
-    early_num = models.PositiveIntegerField(default=0, null=True)
-
-    early_pax = models.PositiveIntegerField(default=0, null=True)
-
-    lunch_num = models.PositiveIntegerField(default=0, null=True)
-
-    lunch_pax = models.PositiveIntegerField(default=0, null=True)
-
-    afternoon_num = models.PositiveIntegerField(default=0, null=True)
-
-    afternoon_pax = models.PositiveIntegerField(default=0, null=True)
-
-    main_num = models.PositiveIntegerField(default=0, null=True)
-
-    main_pax = models.PositiveIntegerField(default=0, null=True)
-
-    late_num = models.PositiveIntegerField(default=0, null=True)
-
-    late_pax = models.PositiveIntegerField(default=0, null=True)
-
-    objects = querysets.DateQuerySet.as_manager()
-
-    class Meta:
-        ordering = ['date']
-
-    def set_values(self):
-        date_bookings = Booking.objects.active().filter(
-            reserved_date=self.date)
-        pax = date_bookings.aggregate(models.Sum('party_size'))[
-            'party_size__sum']
-        num = date_bookings.count()
-        if not getattr(self, 'total_pax') == pax:
-            setattr(self, 'total_pax', pax)
-            self.save()
-        if not getattr(self, 'total_num') == num:
-            setattr(self, 'total_num', num)
-            self.save()
-
-        for service, human in settings.SERVICE_CHOICE:
-            date_service = date_bookings.filter(service=service)
-            pax = date_service.aggregate(models.Sum('party_size'))[
-                'party_size__sum']
-            num = date_service.count()
-            print(self.date, pax, num)
-
-            if not getattr(self, '{}_pax'.format(service)) == pax:
-                setattr(self, '{}_pax'.format(service), pax)
-                self.save()
-            if not getattr(self, '{}_num'.format(service)) == num:
-                setattr(self, '{}_num'.format(service), num)
-                self.save()
-
-        return self
-
-    def __str__(self):
-        return "{} -- {} {} pax".format(self.date,
-                                        self.total_num, self.total_pax)
 
 
-@python_2_unicode_compatible
+
+
 class Booking(models.Model):
 
     code = models.CharField(max_length=8, blank=True, default='')
