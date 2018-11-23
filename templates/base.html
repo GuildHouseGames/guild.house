@@ -44,47 +44,48 @@
   </head>
 
   <body>
-
     {% if user.is_authenticated %}
-    <nav class="navbar navbar-custom navbar-expand-lg" style="margin-top: 71px;">
-      <i style="color: white; opacity: 0.3;">(secret staff navigation bar)</i>
-      <ul class="navbar-nav  ml-auto text-white">
-	<li class="nav-item"><a>Logged in: <a href="/admin/">{{ user }}</a> |</a></li>
-	<li class="nav-item"><a href="/admin/">Admin</a> |</li>
-	<li class="nav-item"><a href="{% url 'vouchers:voucher_add' %}">Vouchers</a>:
-          <a href="{% url 'vouchers:voucher_find' %}">Find</a> /
-          <a href="{% url 'vouchers:voucher_add' %}">Add</a>
-          |</li>
-	<li class="nav-item"><a href="{% url 'bookings:booking_list' %}">Bookings</a> |</li>
-	<li class="nav-item"><a href="{% url 'members:member_approval' %}">Members</a> |</li>
-	<li class="nav-item"><a href="{% url 'library:game_home' %}">Games</a> |</li>
-	<li class="nav-item"><a href="/admin/logout/">Log out</a></li>
-      </ul>
+    <nav class="hidden-print navbar navbar-custom navbar-expand-lg" style="margin-top: 71px;">
+          <i style="color: white; opacity: 0.3;">(secret staff navigation bar)</i>
+          <ul class="navbar-nav  ml-auto text-white">
+              <li class="nav-item"><a>Logged in: <a href="/admin/">{{ user }}</a> |</a></li>
+	      <li class="nav-item"><a href="/admin/">Admin</a> |</li>
+	      <li class="nav-item"><a href="{% url 'vouchers:voucher_add' %}">Vouchers</a>:
+                  <a href="{% url 'vouchers:voucher_find' %}">Find</a> /
+                  <a href="{% url 'vouchers:voucher_add' %}">Add</a>
+                  |</li>
+	      <li class="nav-item"><a href="{% url 'bookings:booking_list' %}">Bookings</a> |</li>
+	      <li class="nav-item"><a href="{% url 'members:member_approval' %}">Members</a> |</li>
+              <li class="nav-item"><a href="{% url 'library:game_home' %}">Games</a> |</li>
+              <li class="nav-item"><a href="/admin/logout/">Log out</a></li>
+          </ul>
     </nav>
     {% endif %}
 
     {% include "_navigation.html" %}
 
-    <header class="masthead text-center text-white">
-      <div class="masthead-content">
-        <div class="container">
-	  <a href="{% url "site:home" %}">
-            <img class="img-fluid" src="{% static "img/guild_white.png" %}" alt="Guild, Canberra's Board games beer restaurant cafe">
-          </a>
-	  <div class="address-bar">
-	    <span class="light">Board Games &middot; Restaurant &middot; Canberra</span><br>
-	    <a href="mailto:hello@guild.house">hello@guild.house</a>
-	    &middot; <a href="tel:+61262572727">02 6257 2727</a>
-	  </div>
-          <a href="{% url 'bookings:booking_add' %}"
-             class="btn btn-primary btn-xl rounded-pill mt-5">Make a Booking</a>
-	  {% comment %}
-	  <a href="#" class="btn btn-primary btn-l rounded-pill mt-5">Provide Feedback!</a>
-          <a href="{% url 'site:opening_hours' %}" class="btn btn-primary btn-l rounded-pill mt-5">Opening Hours</a>
-	  {% endcomment %}
+    {% block masthead %}
+    <header class="hidden-print masthead text-center text-white">
+        <div class="masthead-content">
+            <div class="container">
+	        <a href="{% url "site:home" %}">
+                    <img class="img-fluid" src="{% static "img/guild_white.png" %}" alt="Guild, Canberra's Board games beer restaurant cafe">
+                </a>
+	        <div class="address-bar">
+	            <span class="light">Board Games &middot; Restaurant &middot; Canberra</span><br>
+	            <a href="mailto:hello@guild.house">hello@guild.house</a>
+	            &middot; <a href="tel:+61262572727">02 6257 2727</a>
+	        </div>
+                <a href="{% url 'bookings:booking_add' %}"
+                   class="btn btn-primary btn-xl rounded-pill mt-5">Make a Booking</a>
+	        {% comment %}
+	        <a href="#" class="btn btn-primary btn-l rounded-pill mt-5">Provide Feedback!</a>
+                <a href="{% url 'site:opening_hours' %}" class="btn btn-primary btn-l rounded-pill mt-5">Opening Hours</a>
+	        {% endcomment %}
+            </div>
         </div>
-      </div>
     </header>
+    {% endblock %}
 
     {% block sub_nav %}
     {% endblock %}
