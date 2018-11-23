@@ -874,3 +874,15 @@ textarea {
 /* /.slick */
 
 /* /.slider */
+
+@media print {
+    .hidden-print {
+        display: none !important;
+    }
+
+    section#main,
+    .container,
+    .row {
+        width: 100% !important;
+    }
+}

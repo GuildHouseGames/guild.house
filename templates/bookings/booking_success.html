@@ -9,7 +9,7 @@
 <div class="row">
 
   <div class="col-md-12">
-
+    <p>
     {% if object.status == "Cancelled" %}
     <div class="btn btn-danger">
       Cancelled
@@ -19,6 +19,7 @@
       Booked!
     </div>
     {% endif %}
+    </p>
 
     <h2>Booking for <em>{{ object.name }}</em></h2>
 
