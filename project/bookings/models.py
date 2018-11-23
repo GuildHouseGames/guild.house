@@ -20,8 +20,11 @@ def get_current_site():
         pass
 
 
+class Table(models.Model):
 
+    number = models.CharField(max_length=8)
 
+    is_active = models.BooleanField(default=True)
 
 
 class Booking(models.Model):
@@ -69,6 +72,17 @@ class Booking(models.Model):
     booking_duration = models.DurationField(blank=True, null=True)
 
     busy_night = models.BooleanField(default=False)
+
+    # Usage fields
+
+    is_arrived = models.BooleanField(default=False)
+
+    table = models.ForeignKey(
+        Table,
+        models.PROTECT,
+        null=True, blank=True)
+
+    # Internal Fields
 
     created_at = models.DateTimeField(auto_now_add=True, editable=True)
 
