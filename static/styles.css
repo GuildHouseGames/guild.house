@@ -488,8 +488,8 @@ button[type=submit] {
 }
 
 .date-inactive {
-    color: #555;
-    border: 1px solid rgba(51, 122, 183, 0.45);
+    color: #bbb;
+    border: 1px solid rgba(51, 122, 183, 0.35);
 }
 
 .date .wkday {

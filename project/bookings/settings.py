@@ -19,7 +19,7 @@ DEFAULT_BOOKING_TIME = getattr(
     settings, 'BOOKINGS_DEFAULT_BOOKING_TIME', "18:00")
 
 DEFAULT_CALENDAR_LENGTH = getattr(
-    settings, 'BOOKINGS_DEFAULT_CALENDAR_LENGTH', 42)
+    settings, 'BOOKINGS_DEFAULT_CALENDAR_LENGTH', 49)
 
 UNKNOWN_EMAIL = getattr(
     settings, 'BOOKINGS_UKNOWN_EMAIL', "unknown@unknown.email")

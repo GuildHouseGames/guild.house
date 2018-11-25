@@ -13,6 +13,7 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.utils.timezone import localtime, now
 from django.views import generic
 
+from project.site.models import OpeningHours
 from . import settings
 from .forms import BookingForm, NewBookingForm, BlankForm
 from .models import Booking
@@ -56,6 +57,9 @@ class CalendarMixin(object):
             this_month.year - 1, this_month.month)
         context['month'] = this_month
         context['calendar'] = self.make_range(y, m)
+        closed_dates = OpeningHours.objects.filter(
+            date__gte=datetime.date.today(), is_closed=True)
+        context['closed_dates'] = [x.date for x in closed_dates]
         return context
 
     def make_range(self, y, m):
