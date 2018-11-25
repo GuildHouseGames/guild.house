@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
-from datetime import date, time, datetime, timedelta
-
-from django.db.models import Max
+from datetime import time, datetime, timedelta
 from django.utils.timezone import make_aware
 
 from .models import Booking
-from .settings import DEFAULT_BOOKING_DURATION, UNKNOWN_EMAIL, SERVICE_CHOICE
+from .settings import DEFAULT_BOOKING_DURATION, UNKNOWN_EMAIL
+
+
+def get_duration(n, per_booking=30):
+    PER_BOOKING = timedelta(minutes=per_booking)
+    MAX_TIME = timedelta(hours=4)
+    duration = PER_BOOKING + (PER_BOOKING*n)
+    if duration > MAX_TIME:
+        return MAX_TIME
+    else:
+        return duration
+
 
 # Synchronising scrape from Revel to bookings system.
 # To be automated daily.
