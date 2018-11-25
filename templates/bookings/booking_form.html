@@ -84,17 +84,19 @@
     <div class="col-sm-5">
 
       {# CALENDER #}
-      <div class="calendar hidden-print">{% include "bookings/_calendar.html" %}</div>
+        <div class="calendar hidden-print">{% include "bookings/_calendar.html" %}</div>
+        <p class="text-right"><small><a id="to_reserved_date" href="#booking_details">Future Date  >></a></small></p>
 
-      <hr class="hidden-print">
+        <hr class="hidden-print">
 
-      {# TIME #}
-      <div id="time" class="times"></div>
+        {# TIME #}
+        <div id="time" class="times"></div>
     </div>
 
     {# PAX #}
     <div class="paxs col-sm-1 hidden-print">
-      {% include "bookings/_pax.html" %}
+        {% include "bookings/_pax.html" %}
+        <p class="text-right"><small><a id="to_party_size" href="#booking_details">Different<br><span style="white-space: nowrap">number >></span></span></small></p>
     </div>
     {# ./DATE APPEARANCE SECTION #}
 
@@ -105,9 +107,9 @@
   </div>
 
   <ul>
-    {% for obj in object_list %}
-    {% include "bookings/_booking_list.html" %}
-    {% endfor %}
+      {% for obj in object_list %}
+      {% include "bookings/_booking_list.html" %}
+      {% endfor %}
   </ul>
 
 
@@ -118,57 +120,66 @@
   <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
   <script>
 
-$(document).ready(function(){
-    $.ajax({
-        url: "/bookings/time/"+$("#id_reserved_date").val()+"/",
-        success: function(result){$( "#time" ).html(result);}
-    });
-});
+   $(document).ready(function(){
+       $.ajax({
+           url: "/bookings/time/"+$("#id_reserved_date").val()+"/",
+           success: function(result){$( "#time" ).html(result);}
+       });
+   });
 
-$(".date").click(function() {
-    $("#id_reserved_date").val($(this).data("date")).addClass("selected");
-    $(".date").removeClass("selected");
-    $(this).addClass("selected");
-    $.ajax({
-        url: "/bookings/time"+$(this).data("time"),
-        success: function(result){$( "#time" ).html(result);},
-        dataType : "html"
-    });
-});
-$(".pax").click(function() {
-    $("#id_party_size").val($(this).data("pax")).addClass("selected");
-    $(".pax").removeClass("selected");
-    $(this).addClass("selected");
-});
-$("#id_phone, #id_name, #id_email, #id_party_size, #id_reserved_date, #id_reserved_time, #id_booking_method, #id_notes").change(function(){
-    $(this).addClass("selected");
-})
-$("#id_party_size").change(function(){
-    $(".pax").removeClass("selected");
-})
-$("#id_reserved_date").change(function(){
-    $(".date").removeClass("selected");
-})
-$("#id_reserved_time").change(function(){
-    $(".time").removeClass("selected");
-})
-$("#remove").click(function() {
-    $(".date").removeClass("selected");
-    $(".time").removeClass("selected");
-    $(".pax").removeClass("selected");
-    $("#id_phone").removeClass("selected");
-    $("#id_name").removeClass("selected");
-    $("#id_email").removeClass("selected");
-    $("#id_party_size").removeClass("selected");
-    $("#id_reserved_date").removeClass("selected");
-    $("#id_reserved_time").removeClass("selected");
-    $("#id_booking_method").removeClass("selected");
-    $("#id_notes").removeClass("selected");
-    $("id_status".val(""))
-})
-$("#id_reservation_time").prop("readonly", true);
+   $(".date").click(function() {
+       $("#id_reserved_date").val($(this).data("date")).addClass("selected");
+       $(".date").removeClass("selected");
+       $(this).addClass("selected");
+       $.ajax({
+           url: "/bookings/time"+$(this).data("time"),
+           success: function(result){$( "#time" ).html(result);},
+           dataType : "html"
+       });
+   });
+   $(".pax").click(function() {
+       $("#id_party_size").val($(this).data("pax")).addClass("selected");
+       $(".pax").removeClass("selected");
+       $(this).addClass("selected");
+   });
+   $("#id_phone, #id_name, #id_email, #id_party_size, #id_reserved_date, #id_reserved_time, #id_booking_method, #id_notes").change(function(){
+       $(this).addClass("selected");
+   })
+   $("#id_party_size").change(function(){
+       $(".pax").removeClass("selected");
+   })
+   $("#id_reserved_date").change(function(){
+       $(".date").removeClass("selected");
+   })
+   $("#id_reserved_time").change(function(){
+       $(".time").removeClass("selected");
+   })
+   $("#remove").click(function() {
+       $(".date").removeClass("selected");
+       $(".time").removeClass("selected");
+       $(".pax").removeClass("selected");
+       $("#id_phone").removeClass("selected");
+       $("#id_name").removeClass("selected");
+       $("#id_email").removeClass("selected");
+       $("#id_party_size").removeClass("selected");
+       $("#id_reserved_date").removeClass("selected");
+       $("#id_reserved_time").removeClass("selected");
+       $("#id_booking_method").removeClass("selected");
+       $("#id_notes").removeClass("selected");
+       $("id_status".val(""))
+   })
+   $("#id_reservation_time").prop("readonly", true);
 
-$("#id_reserved_date, #pick_date").datepicker({dateFormat: 'dd/mm/yy', minDate: 0});
+   $("#id_reserved_date, #pick_date").datepicker({dateFormat: 'dd/mm/yy', minDate: 0});
+
+   $("#to_reserved_date").click(function() {
+       $("#id_reserved_date").addClass("selected").focus();
+   });
+
+   $("#to_party_size").click(function() {
+       $("#id_party_size").addClass("selected").focus();
+   });
+
 
   </script>
   {% endblock %}

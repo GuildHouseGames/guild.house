@@ -24,19 +24,22 @@
     <table id="bookings">
       <thead>
       <tr>
-        <th>Date/Time <i class="fa fa-angle-down"></i></th>
-        <th>Service <i class="fa fa-angle-down"></i></th>
-        <th>Pax <i class="fa fa-angle-down"></i></th>
-        <th>Contact <i class="fa fa-angle-down"></i></th>
-        <th>Status <i class="fa fa-angle-down"></i></th>
+        <th>Date/Time</th>
+        <th>Service</th>
+        <th>Pax</th>
+        <th>Contact</th>
+        <th>Status</th>
+        <th>Notes</th>
       </tr>
       </thead>
       <tbody>
       {% for obj in object_list %}
       {% ifchanged %}
-      <tr><td colspan=7><div style="border-bottom: 1px solid grey;">
-	    <b>{{ obj.reserved_time|time:"H:i" }}</b>
-      </th></tr>
+      <tr>
+          <td colspan="7"><div style="border-bottom: 1px solid grey;">
+	      <b>{{ obj.reserved_time|time:"H:i" }}</b></div>
+          </td>
+      </tr>
       {% endifchanged %}
       {% include "bookings/_booking_list.html" %}
       {% endfor %}
