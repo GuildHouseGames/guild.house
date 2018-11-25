@@ -1,4 +1,4 @@
-<div class="details col-sm-6">
+<div class="bookings details col-sm-6">
   {% if object.code %}
   <h3>{% include "bookings/_booking_list.html" with obj=object %}</h3>
   {% endif %}
@@ -16,14 +16,12 @@
     </div>
   </div>
   <br>
-  <div style="display: none;" class="full-warning btn btn-danger">
+  <p style="display: none;" class="full-warning btn btn-danger">
     Online booking is not available<br>
     as we're getting quite full at this time<br>
     PLEASE EMAIL: <a href="mailto:reservations@guild.house" style="color:white">reservations@guild.house</a>
     <br>to check availability.
-  </div>
-  <br>
-  <br>
+  </p>
     <h4 id="booking_details">Booking details:</h4>
 
   <form action="" method="post" class="bookings">
