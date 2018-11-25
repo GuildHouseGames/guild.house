@@ -35,7 +35,9 @@ class Booking(models.Model):
 
     party_size = models.PositiveIntegerField(
         validators=[MaxValueValidator(100),
-                    MinValueValidator(1)])
+                    MinValueValidator(1)],
+        verbose_name="Number of people",
+    )
 
     status = models.CharField(max_length=50, choices=settings.STATUS_CHOICE,
                               default=settings.STATUS_CHOICE[0][0])
@@ -154,10 +156,6 @@ class Booking(models.Model):
         return self in self.__class__.objects.filter(pk=self.pk).active()
     is_active.boolean = True
     is_active.short_description = 'active'
-
-
-
-
 
     def save(self, *args, **kwargs):
 

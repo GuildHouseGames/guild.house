@@ -31,7 +31,7 @@
         <div class="wkday">{{x.day|date:"D"}}</div>
         {{x.day|date:"j"}}
         <div class="mth">
-            {% if x.day in closed_dates %}<small>closed</small>
+            {% if x.day in closed_dates %}<small><i>closed</i></small>
             {% else %}{{x.day|date:"M"}}
             {% endif %}
         </div>
