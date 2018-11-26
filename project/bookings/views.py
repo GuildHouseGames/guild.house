@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import calendar
-import datetime
-from datetime import time, timedelta, date
+from datetime import date, datetime, time, timedelta
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
@@ -40,13 +39,13 @@ class CalendarMixin(object):
             y = int(yr)
             m = int(mth)
         else:
-            d = datetime.datetime.today()
+            d = datetime.today()
             y = d.year
             m = d.month
-            context['today'] = datetime.date(
+            context['today'] = date(
                 year=d.year, month=d.month, day=d.day)
 
-        this_month = datetime.date(year=y, month=m, day=1)
+        this_month = date(year=y, month=m, day=1)
         next_mth = this_month + relativedelta(months=+1)
         prev_mth = this_month + relativedelta(months=-1)
         context['cal_next_mth'] = '/%s/%02d/' % (next_mth.year, next_mth.month)
@@ -58,22 +57,22 @@ class CalendarMixin(object):
         context['month'] = this_month
         context['calendar'] = self.make_range(y, m)
         closed_dates = OpeningHours.objects.filter(
-            date__gte=datetime.date.today(), is_closed=True)
+            date__gte=date.today(), is_closed=True)
         context['closed_dates'] = [x.date for x in closed_dates]
         return context
 
     def make_range(self, y, m):
-        b = datetime.timedelta(days=settings.DEFAULT_CALENDAR_LENGTH)
+        b = timedelta(days=settings.DEFAULT_CALENDAR_LENGTH)
 
         # e = Booking.objects.filter(date__year=y, date__month=m)
-        start = datetime.date.today() -\
-            datetime.timedelta(datetime.date.today().weekday())
+        start = date.today() -\
+            timedelta(date.today().weekday())
         end = start + b
         date_range = []
         while start < end:
             date_range.append({'day': start})
             # date_range.append({'day':start, 'events':e.filter(date=start)})
-            start = start + datetime.timedelta(days=1)
+            start = start + timedelta(days=1)
         return date_range
 
     def get_context_data(self, *args, **kwargs):
@@ -504,9 +503,9 @@ class BookingTodayArchiveView(generic.RedirectView):
 
     def get_redirect_url(self):
         return reverse('bookings:booking_day', kwargs={
-            'year': datetime.date.today().year,
-            'month': "{:0>2}".format(datetime.date.today().month),
-            'day': "{:0>2}".format(datetime.date.today().day)
+            'year': date.today().year,
+            'month': "{:0>2}".format(date.today().month),
+            'day': "{:0>2}".format(date.today().day)
         })
 
 
