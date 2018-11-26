@@ -301,6 +301,17 @@ class BookingQueryset(object):
         queryset = super(BookingQueryset, self).get_queryset(*args, **kwargs)
         return queryset.active().order_by('reserved_date', 'reserved_time')
 
+    def get_service_totals(self, obj_list):
+        services = []
+        early_list = obj_list.filter(
+            service='early').aggregate(Sum('party_size'))
+        if early_list['party_size__sum']:
+            services.append((('early', 'Early'), early_list))
+        for serv in settings.SERVICE_CHOICE:
+            services.append((serv, (obj_list.filter(service=serv[0])
+                                    .aggregate(Sum('party_size')))))
+        return services
+
     def get_queryset_by_day(self, *args, **kwargs):
         queryset = super(BookingQueryset, self).get_queryset(*args, **kwargs)
         return queryset.active().order_by('reserved_date', 'reserved_time')
@@ -477,19 +488,12 @@ class BookingMonthArchiveView(BookingQueryset, generic.MonthArchiveView):
 class BookingDayArchiveView(BookingQueryset, generic.DayArchiveView):
 
     def get_context_data(self, *args, **kwargs):
-        context_data = super(BookingDayArchiveView, self).get_context_data(*args,
-                                                                           **kwargs)
-        context_data['total'] = kwargs.get('object_list')\
-                                      .aggregate(Sum('party_size'))
-        services = []
-        early_list = kwargs.get('object_list').filter(
-            service='early').aggregate(Sum('party_size'))
-        if early_list['party_size__sum']:
-            services.append((('early', 'Early'), early_list))
-        for serv in settings.SERVICE_CHOICE:
-            services.append((serv, (kwargs.get('object_list').filter(service=serv[0])
-                                    .aggregate(Sum('party_size')))))
-        context_data['services'] = services
+        context_data = super(BookingDayArchiveView,
+                             self).get_context_data(*args, **kwargs)
+
+        obj_list = kwargs.get('object_list')
+        context_data['total'] = obj_list.aggregate(Sum('party_size'))
+        context_data['services'] = self.get_service_totals(obj_list)
         context_data['cancelled_list'] = self.get_dated_queryset()\
                                              .filter(status='Cancelled')\
                                              .order_by('name')
