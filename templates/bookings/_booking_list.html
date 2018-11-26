@@ -1,31 +1,35 @@
 <tr {% if obj.status == "No Show" %}style="color: #666; text-decoration: line-through; "{% endif %}>
-  <td style="white-space:nowrap">
-    {{ obj.reserved_time|time:"H:i" }} </td>
+    <td style="white-space:nowrap; vertical-align: top;">
+        {{ obj.reserved_time|time:"H:i" }} </td>
 
-  <td style="white-space:nowrap; vertical-align: top;">{{ obj.service }}</td>
-  <td style="white-space:nowrap; vertical-align: top;">{{ obj.party_size }} pax</td>
-  <td style="vertical-align: top;">
-      {{ obj.name }}
-      {% if obj.phone != "0000000000" %}{{ obj.phone }}{% endif %}
-      {% if obj.phone and obj.email and not obj.email == "unknown@unknown.email" %}, {% endif %}
-      {% if not obj.email == "unknown@unknown.email" %}{{ obj.email }}{% endif %}
-  </td>
-  <td style="white-space:nowrap; vertical-align: top;">
-    <div class="hidden-print"><a href="{% url "bookings:booking_update" code=obj.code %}" style="white-space:nowrap"><em>{{obj.status}}</em></a></div>
-  </td>
-  <td style="vertical-align: top;">
-      {{ obj.notes }}
-  </td>
-  <td style="vertical-align: top;">
-      <div class="hidden-print">
-    <a target="_blank" href="{% url "bookings:booking_run" obj.code %}"
-       style="white-space:nowrap">
-      <small>(run sheet)</small></a> |
-    <a target="_blank" href="{% url "admin:bookings_booking_change" obj.pk %}"
-       style="white-space:nowrap">
-      <small>(edit)</small>
-    </a>
-  </div>
-  <small style="font-family: monospace; font-size: 0.7em; color: #777;">{{ obj.created_at|date:"d/m/Y" }}</small>
-  </td>
+    <td style="white-space:nowrap; vertical-align: top;">{{ obj.service }}</td>
+    <td style="white-space:nowrap; vertical-align: top;">{{ obj.party_size }} pax</td>
+    <td style="vertical-align: top;">
+        {{ obj.name }}
+        {% if obj.phone != "0000000000" %}{{ obj.phone }}{% endif %}
+        {% if obj.phone and obj.email and not obj.email == "unknown@unknown.email" %}, {% endif %}
+        {% if not obj.email == "unknown@unknown.email" %}{{ obj.email }}{% endif %}
+    </td>
+    <td style="white-space:nowrap; vertical-align: top;">
+        <div class="hidden-print"><a href="{% url "bookings:booking_update" code=obj.code %}" style="white-space:nowrap"><em>{{obj.status}}</em></a></div>
+    </td>
+    <td style="vertical-align: top;">
+        {{ obj.notes }}
+    </td>
+    <td style="vertical-align: top;">
+        <div style="white-space:nowrap">
+            <small style="font-family: monospace; font-size: 0.7em; color: #777;">{{ obj.created_at|date:"d/m/Y" }}</small>
+            <a class="hidden-print" target="_blank" href="{% url "admin:bookings_booking_change" obj.pk %}">
+                <small>| edit</small>
+            </a>
+        </div>
+        {% if obj.party_size > 11 %}
+        <div class="hidden-print">
+            <a target="_blank" href="{% url "bookings:booking_run" obj.code %}"
+               style="white-space:nowrap">
+                <small>run sheet</small></a>
+        </div>
+        {% endif %}
+
+    </td>
 </tr>
