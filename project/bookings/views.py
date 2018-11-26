@@ -93,53 +93,36 @@ class TimeMixin(object):
         This is used to fetch bookings and to `datetime.combine` with
         `datetime.time` to create the necessary range of times.
         """
-        busy_night = False
-        open_bookings, time_list = [], []
-        interval = settings.BOOKING_INTERVAL
-        this_time = datetime.datetime.combine(
-            this_date,
-            settings.BOOKING_TIMES[0]
-        ) - interval
-
-        """Construct bookings
-        Ensure times are constructed first, then iterate through bookings
-        for this day as likely the number of bookings will be fewer than the
-        number of intervals. """
-
         booking_list = self.get_booking_list(this_date)
-        for booking in booking_list:
-            start_time = datetime.datetime.combine(
-                this_date, booking.reserved_time)
-            if booking.booking_duration:
-                end_time = start_time + booking.booking_duration
-            else:
-                h, m, s = settings.DEFAULT_BOOKING_DURATION.split(":")
-                end_time = datetime.datetime.combine(
-                    this_date,
-                    time(hour=int(h), minute=int(m))
-                )
-            open_bookings.append((start_time, end_time, booking.party_size))
+        busy_night = False
+        interval = settings.BOOKING_INTERVAL
+        this_time = datetime.combine(this_date, settings.BOOKING_TIMES[0])
+        end_time = datetime.combine(this_date, settings.BOOKING_TIMES[1])
+        time_list, active_bookings = [], {}
 
-        select_time = datetime.datetime.combine(datetime.date(2000, 1, 1),
-                                                settings.BOOKING_TIMES[0])
-        while this_time <= datetime.datetime.combine(
-                this_date,
-                settings.BOOKING_TIMES[1]) - interval:
-            this_time = this_time + interval
-            this_dict = {'pax': 0,
+        while this_time <= end_time:
+            current_total = 0
+            bookings_at_this_time = booking_list.filter(
+                reserved_time=this_time)
+            if bookings_at_this_time:
+                for booking in bookings_at_this_time:
+                    active_bookings[booking.pk] = {
+                        'q': booking.party_size,
+                        'dur': booking.booking_duration
+                    }
+            print(active_bookings)
+            for pk in active_bookings.keys():
+                if active_bookings[pk]['dur']:
+                    active_bookings[pk]['dur'] = active_bookings[pk]['dur'] - interval  # noqa
+                    current_total = current_total + \
+                        active_bookings[pk]['q']
+
+            this_dict = {'pax': current_total,
                          'date': this_time,
                          'future': True,
                          'select_time': time(this_time.hour, this_time.minute),
                          'time': "{}:{:0>2}".format(this_time.hour,
                                                     this_time.minute)}
-
-            # Add `party_size` totals to data_dict
-            select_time = select_time + interval
-            for start, end, pax in open_bookings:
-                # Add an hour for good luck.
-                if start <= this_time \
-                   and this_time < end + timedelta(minutes=60):
-                    this_dict['pax'] = this_dict['pax'] + pax
 
             for tmp in settings.HEAT.keys():
                 if this_dict['pax'] < tmp:
@@ -153,13 +136,17 @@ class TimeMixin(object):
 
             if this_date == now().date():
                 # if this_time
-                this_dict['future'] = None
+                this_dict['future'] = False
 
             # Add `service` to dictionary
             for service_time, service in settings.SERVICE_TIMES:
                 if time(this_time.hour, this_time.minute) == service_time:
                     this_dict['service'] = service
+
             time_list.append(this_dict)
+
+            this_time = this_time + interval
+
         return time_list, busy_night
 
     def get_time_list(self, context, this_date):

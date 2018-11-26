@@ -17,10 +17,10 @@
         data-full="{% if time.pax > 105 %}full{% endif %}"
         class="time{% if time.heat %} {{ time.heat }}{% endif %}">
     {{ time.time }}
-    <div class="howfull">
-      {% if time.pax > 105 %}<span style="color: red;">&gt;75%</span>
-      {% elif time.pax > 85 %}&gt;65%
-      {% elif time.pax > 60 %}&gt;50%{% else %}
+    <div class="howfull" style="white-space: nowrap">
+      {% if time.pax > 105 %}<span >running out</span>
+      {% elif time.pax > 65 %}limited
+      {% else %}
       &nbsp;
       {% endif %}
     </div>

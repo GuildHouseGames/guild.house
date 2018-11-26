@@ -419,18 +419,22 @@ table#future th {
 }
 
 span.warm { /* 70 pax */
-    background-color: rgba(10, 10, 10, 0.5);
-    color: rgba(240, 240, 240, 0.60);
+    background-color: rgba(10, 10, 10, 0.15);
+    color: rgba(0, 0, 0, 0.55);
 }
 
 span.hot {  /* 85 pax */
-    background-color: rgba(175, 70, 70, 0.25);
-    color: rgba(255, 255, 255, 0.55);
+    background-color: rgba(175, 70, 5, 0.25);
+    color: rgba(0, 0, 0, 0.65);
 }
 
 span.full { /* 115 pax */
-    background-color: rgba(175, 0, 0, 0.15);
-    color: rgba(255, 255, 255, 0.25);
+    background-color: rgba(250, 0, 0, 0.15);
+    color: rgba(0, 0, 0, 0.65);
+}
+
+span.full .howfull span {
+    color: rgba(175, 0, 0, 0.65);
 }
 
 span.helptext {
@@ -504,9 +508,9 @@ button[type=submit] {
 
 .time {
     display: inline-block;
-    height: 38px;
+    height: 40px;
     width: 4em;
-    padding: 7px 0 4px 0;
+    padding: 6px 0 4px 0;
     margin: 5px;
 }
 
