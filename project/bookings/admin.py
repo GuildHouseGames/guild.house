@@ -31,7 +31,8 @@ class BookingAdmin(admin.ModelAdmin):
     form = BookingAdminForm
 
     list_display = ['name', 'party_size', 'reserved_date', 'reserved_time',
-                    'service', 'get_status_display', 'phone', 'email', get_obj_link]
+                    'service', 'get_status_display', 'phone',
+                    'booking_duration', get_obj_link]
 
     list_filter = ['status', 'service', 'reserved_date', 'reserved_time']
 

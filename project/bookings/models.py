@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 - *-
 from __future__ import absolute_import, unicode_literals
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
@@ -18,6 +18,16 @@ def get_current_site():
         return Site.objects.get_current().pk
     except Site.DoesNotExist:
         pass
+
+
+def get_duration(n, per_booking=30):
+    PER_BOOKING = timedelta(minutes=per_booking)
+    MAX_TIME = timedelta(hours=4)
+    duration = PER_BOOKING + (PER_BOOKING*n)
+    if duration > MAX_TIME:
+        return MAX_TIME
+    else:
+        return duration
 
 
 class Table(models.Model):
@@ -194,3 +204,7 @@ class Booking(models.Model):
         if not (self.status == 'cancelled'
                 or self.status == 'no_show') and self.is_cancelled:
             self.is_cancelled = False
+
+        self.booking_duration = get_duration(self.party_size)
+
+        super(Booking, self).save(*args, **kwargs)

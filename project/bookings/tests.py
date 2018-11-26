@@ -3,8 +3,7 @@
 from unittest import TestCase
 from datetime import timedelta
 
-
-from .utils import get_duration
+from .models import get_duration
 
 
 class TestGetDuration(TestCase):
