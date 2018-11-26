@@ -4,7 +4,6 @@ from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 from django.core.validators import MaxValueValidator, MinValueValidator
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -81,7 +80,10 @@ class Booking(models.Model):
     reserved_date = models.DateField(db_index=True)
     reserved_time = models.TimeField(db_index=True, default=timezone.now)
 
-    booking_duration = models.DurationField(blank=True, null=True)
+    booking_duration = models.DurationField(
+        blank=True, null=True,
+        default=timedelta(hours=4)
+    )
 
     busy_night = models.BooleanField(default=False)
 
