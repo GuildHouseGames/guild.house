@@ -131,7 +131,7 @@ class TimeMixin(object):
                     this_dict['heat'] = settings.HEAT[tmp]
 
             # @@TODO get value from settings.HEAT
-            if this_dict['pax'] > settings.VENUE_FULL:
+            if this_dict['pax'] > settings.CAPACITY:
                 busy_night = True
 
             if this_date == now().date():

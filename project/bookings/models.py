@@ -43,7 +43,7 @@ class Booking(models.Model):
     name = models.CharField(max_length=200)
 
     party_size = models.PositiveIntegerField(
-        validators=[MaxValueValidator(100),
+        validators=[MaxValueValidator(settings.CAPACITY),
                     MinValueValidator(1)],
         verbose_name="Number of people",
     )

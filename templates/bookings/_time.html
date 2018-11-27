@@ -18,7 +18,7 @@
         class="time{% if time.heat %} {{ time.heat }}{% endif %}">
     {{ time.time }}
       <div class="howfull" style="white-space: nowrap">
-          {% if time.pax > 105 %}full
+          {% if time.pax > 99 %}full
           {% elif time.pax > 85 %}<span >running out</span>
           {% elif time.pax > 65 %}limited
       {% else %}

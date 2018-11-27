@@ -8,10 +8,11 @@ BOOKINGS_PAGINATE_BY = getattr(settings, 'BOOKINGS_BOOKING_PAGINATE_BY', 100)
 
 BOOKINGS_FEED = getattr(settings, 'BOOKINGS_BOOKING_FEED', 10)
 
-# If a booking is greater or equal to this number it is treated as a larger sized booking.
+# If a booking is greater or equal to this number it is treated as a larger
+# sized booking.
 BIG_BOOKING = getattr(settings, 'BOOKINGS_BIG_BOOKING', 7)
 
-VENUE_FULL = getattr(settings, 'VENUE_FULL', 105)
+CAPACITY = getattr(settings, 'VENUE_FULL', 105)
 
 TIME_ZONE = settings.TIME_ZONE
 
@@ -42,6 +43,11 @@ DEFAULT_BOOKING_METHOD = getattr(settings, 'BOOKINGS_DEFAULT_BOOKING_METHOD',
 AREA_CHOICE = (
     ('inside', 'Inside'),
     ('outside', 'Outside'),
+)
+
+AREA_CAPACITY = (
+    ('inside', 105),
+    ('outside', 22),
 )
 
 METHOD_CHOICE = [
@@ -118,7 +124,7 @@ DURATION_SELECTION = [
 HEAT = {
     50: 'warm',
     75: 'hot',
-    VENUE_FULL: 'full',
+    CAPACITY: 'full',
 }
 
 # Note: hardcoded in booking_form.html
