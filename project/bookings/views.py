@@ -19,10 +19,9 @@ from .models import Booking
 from .utils import import_revel_bookings
 
 
-MSG_WARNING_BUSY = "Beware! This booking made during a busy time. May conflict. Please check ASAP and contact to discuss options if necessary."  # noqa
-MSG_WARNING_BUSY = MSG_WARNING_BUSY+"\n"
+MSG_WARNING_BUSY = "Beware! HERE This booking made during a busy time. May conflict. Please check ASAP and contact to discuss options if necessary."  # noqa
+MSG_WARNING_BUSY = MSG_WARNING_BUSY+"\n\r\n\r"
 MSG_WARNING_BUSY = MSG_WARNING_BUSY+"The customer has been warned that this is the case and may be expecting confirmation."  # noqa
-
 MSG_WARNING_BUSY_CUSTOMER = """Beware! As warned at time of booking: you have booked during a busy time it is possible that your booking may have conflicted with another.
 
 We will contact you ASAP if this is the case. Alternatively you can contact us to double-check.
@@ -355,6 +354,12 @@ class BookingSuccessView(BookingQueryset, generic.DetailView):
 
     def get_object(self):
         return get_object_or_404(Booking, code=self.kwargs.get('code'))
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(BookingSuccessView, self).get_context_data(
+            *args, **kwargs)
+        context['big_booking'] = settings.BIG_BOOKING
+        return context
 
 
 class BookingRunView(LoginRequiredMixin, BookingQueryset, generic.DetailView):

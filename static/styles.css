@@ -67,6 +67,13 @@ body {
     }
 }
 
+blockquote {
+    border: 1px solid #ddd;
+    background-color: #eaeaea;
+    padding: 20px 25px 5px;
+    margin: 10px 0;
+}
+
 .text-white a {
     color: rgba(255,255,255,.5);
 }

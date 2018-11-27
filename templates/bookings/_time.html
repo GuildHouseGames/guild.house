@@ -25,7 +25,7 @@
           {% endif %}
       </div>
     {% if user.is_authenticated %}
-      {{ time.pax }} / {{ time.available }}
+      <b>{{ time.pax }}</b><small>/{{ time.available }} left</small>
     {% endif %}
   </span>
 {% endfor %}
@@ -39,7 +39,11 @@ Total: {% if pax_total %}{{ pax_total }}{% else %}0{% endif %}pax<br>
 <br>
 <div class="hidden-print"><b>All Bookings</b>:</div>
 {% for booking in booking_list %}
-  {{ booking }}<br>
+{{ booking }}
+<a class="hidden-print" target="_blank"
+   href="{% url "admin:bookings_booking_change" booking.pk %}">
+    <small> (edit)</small>
+</a><br>
 {% endfor %}
 {% endif %}
 
