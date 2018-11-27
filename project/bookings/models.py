@@ -89,6 +89,12 @@ class Booking(models.Model):
 
     # Usage fields
 
+    is_paid_deposit = models.BooleanField(default=False)
+
+    deposit_amount_paid = models.DecimalField(
+        max_digits=7, decimal_places=2,
+        null=True, blank=True)
+
     is_arrived = models.BooleanField(default=False)
 
     table = models.ForeignKey(
