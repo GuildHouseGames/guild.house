@@ -8,12 +8,6 @@ BOOKINGS_PAGINATE_BY = getattr(settings, 'BOOKINGS_BOOKING_PAGINATE_BY', 100)
 
 BOOKINGS_FEED = getattr(settings, 'BOOKINGS_BOOKING_FEED', 10)
 
-# If a booking is greater or equal to this number it is treated as a larger
-# sized booking.
-BIG_BOOKING = getattr(settings, 'BOOKINGS_BIG_BOOKING', 7)
-
-CAPACITY = getattr(settings, 'VENUE_FULL', 105)
-
 TIME_ZONE = settings.TIME_ZONE
 
 DEFAULT_BOOKING_TIME = getattr(
@@ -21,6 +15,11 @@ DEFAULT_BOOKING_TIME = getattr(
 
 DEFAULT_CALENDAR_LENGTH = getattr(
     settings, 'BOOKINGS_DEFAULT_CALENDAR_LENGTH', 42)
+
+DEFAULT_DURATION = timedelta(hours=3, minutes=30)
+
+# Used for blocking out time in advance of busy days
+BUFFER_DURATION = timedelta(hours=1, minutes=30)
 
 UNKNOWN_EMAIL = getattr(
     settings, 'BOOKINGS_UKNOWN_EMAIL', "unknown@unknown.email")
@@ -45,8 +44,14 @@ AREA_CHOICE = (
     ('outside', 'Outside'),
 )
 
+# If a booking is greater or equal to this number it is treated as a larger
+# sized booking.
+BIG_BOOKING = getattr(settings, 'BOOKINGS_BIG_BOOKING', 11)
+
+CAPACITY = getattr(settings, 'VENUE_FULL', 100)
+
 AREA_CAPACITY = (
-    ('inside', 105),
+    ('inside', 100),
     ('outside', 22),
 )
 
@@ -122,9 +127,9 @@ DURATION_SELECTION = [
 
 
 HEAT = {
-    50: 'warm',
-    75: 'hot',
-    CAPACITY: 'full',
+    40: 'warm',
+    20: 'hot',
+    0: 'full',
 }
 
 # Note: hardcoded in booking_form.html

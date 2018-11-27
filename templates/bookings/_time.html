@@ -13,19 +13,20 @@
 
 <div> &nbsp; <b>{{ time.service|title }}</b><br>
 {% endif %}
-  <span data-time="{{ time.select_time|time:"H:i" }}:00"
-        data-full="{% if time.pax > 105 %}full{% endif %}"
-        class="time{% if time.heat %} {{ time.heat }}{% endif %}">
-    {{ time.time }}
-      <div class="howfull" style="white-space: nowrap">
-          {% if time.pax > 99 %}full
-          {% elif time.pax > 85 %}<span >running out</span>
-          {% elif time.pax > 65 %}limited
-      {% else %}
-      &nbsp;
-      {% endif %}
-    </div>
-    {% if user.is_authenticated %}{{ time.pax }}{% endif %}
+    <span data-time="{{ time.select_time|time:"H:i" }}:00"
+          data-full="{% if time.available < 1 %}full{% endif %}"
+          class="time{% if time.heat %} {{ time.heat }}{% endif %}">
+        {{ time.time }}
+        <div class="howfull" style="white-space: nowrap">
+          {% if time.available < 1 %}full
+          {% elif time.available < 30 %}<span>only {{ time.available }} left</span>
+          {% else %}
+          &nbsp;
+          {% endif %}
+      </div>
+    {% if user.is_authenticated %}
+      {{ time.pax }} / {{ time.available }}
+    {% endif %}
   </span>
 {% endfor %}
 </div>

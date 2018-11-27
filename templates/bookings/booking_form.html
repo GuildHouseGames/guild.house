@@ -29,22 +29,13 @@
 
 <div class="row">
     {% if form.errors %}
-    <div class="btn btn-danger">
-        Woah! Your booking wasn't saved.</div><br>
-    <br>
-    <div class="featured_text">At a minimum we need: Name, Date/Time, Party size and some contact details.<br> Check below, one of these is incomplete or incorrect.</div>
-    <br>
+    <div class="btn btn-danger"> Woah! Your booking wasn't saved.</div><br><br>
+    <div class="featured_text">At a minimum we need: Name, Date/Time, Party size and some contact details.<br> Check below, one of these is incomplete or incorrect.</div><br>
     <div class="featured_text">
         If you would like to contact us:
-        <ul>
-            <li>call us on 02 6257 2727</li> <i>or</i>
-            <li>email <a href="mailto:hello@guild.house">hello@guild.house</a></li>
-        </ul>
-
-    </div>
-    <br>
-
-    <div>
+        <ul><li>call us on 02 6257 2727</li> <i>or</i><li>email <a href="mailto:hello@guild.house">hello@guild.house</a></li></ul>
+    </div> <br>
+    <div class="booking_ui">
         {% for k, v in form.errors.items %}
         <div class="btn btn-warning">
             {% if k == '__all__' %}
@@ -52,35 +43,27 @@
             {% else %}
             {{ k }} is incomplete.
             {% endif %}
-        </div>
-        <br>
-
+        </div><br>
         {% endfor %}
-        {% endif %}
+    {% endif %}
 
         {% if not update_view %}
+            {# DATE APPEARANCE SECTION #}
+            <div class="col-sm-5">
+                {# CALENDER #}
+                <div class="calendar hidden-print">{% include "bookings/_calendar.html" %}</div>
+                <p class="text-right"><small><a id="to_reserved_date" href="#booking_details">Future Date  >></a></small></p><hr class="hidden-print">
 
-        {# DATE APPEARANCE SECTION #}
+                {# TIME #}
+                <div id="time" class="times"></div>
+            </div>
 
-        <div class="col-sm-5">
-
-            {# CALENDER #}
-            <div class="calendar hidden-print">{% include "bookings/_calendar.html" %}</div>
-            <p class="text-right"><small><a id="to_reserved_date" href="#booking_details">Future Date  >></a></small></p>
-
-            <hr class="hidden-print">
-
-            {# TIME #}
-            <div id="time" class="times"></div>
-        </div>
-
-        {# PAX #}
-        <div class="paxs col-sm-1 hidden-print">
-            {% include "bookings/_pax.html" %}
-            <p class="text-right"><small><a id="to_party_size" href="#booking_details">Different<br><span style="white-space: nowrap">number >></span></span></small></p>
-        </div>
-        {# ./DATE APPEARANCE SECTION #}
-
+            {# PAX #}
+            <div class="paxs col-sm-1 hidden-print">
+                {% include "bookings/_pax.html" %}
+                <p class="text-right"><small><a id="to_party_size" href="#booking_details">Different<br><span style="white-space: nowrap">number >></span></span></small></p>
+            </div>
+            {# ./DATE APPEARANCE SECTION #}
         {% endif %}
 
         {% include "bookings/_form.html" %}

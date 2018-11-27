@@ -94,41 +94,72 @@ class TimeMixin(object):
         `datetime.time` to create the necessary range of times.
         """
         booking_list = self.get_booking_list(this_date)
-        busy_night = False
         interval = settings.BOOKING_INTERVAL
         this_time = datetime.combine(this_date, settings.BOOKING_TIMES[0])
         end_time = datetime.combine(this_date, settings.BOOKING_TIMES[1])
-        time_list, active_bookings = [], {}
+        busy_night = False
+        time_list, active_bookings, buffer_bookings, pax_dict = [], {}, {}, {}
 
+        # create occupancy per time interval
         while this_time <= end_time:
-            current_total = 0
+            active_total, buffer_total = 0, 0
             bookings_at_this_time = booking_list.filter(
                 reserved_time=this_time)
+            pax_dict[this_time] = {}
+
+            # Construct occupancy for this time
             if bookings_at_this_time:
                 for booking in bookings_at_this_time:
                     active_bookings[booking.pk] = {
-                        'q': booking.party_size,
-                        'dur': booking.booking_duration
-                    }
-            print(active_bookings)
+                        'pax': booking.party_size,
+                        'dur': booking.booking_duration}
             for pk in active_bookings.keys():
                 if active_bookings[pk]['dur']:
                     active_bookings[pk]['dur'] = active_bookings[pk]['dur'] - interval  # noqa
-                    current_total = current_total + \
-                        active_bookings[pk]['q']
+                    active_total = active_total + active_bookings[pk]['pax']
+            pax_dict[this_time]['active'] = active_total
 
-            this_dict = {'pax': current_total,
+            # construct occupancy for the purpose of booking buffer
+            # which has constant "duration"
+            if bookings_at_this_time:
+                for booking in bookings_at_this_time:
+                    buffer_bookings[booking.pk] = {
+                        'pax': booking.party_size,
+                        'dur': settings.BUFFER_DURATION}
+            for pk in buffer_bookings.keys():
+                if buffer_bookings[pk]['dur']:
+                    buffer_bookings[pk]['dur'] = buffer_bookings[pk]['dur'] - interval  # noqa
+                    buffer_total = buffer_total + buffer_bookings[pk]['pax']
+            pax_dict[this_time]['buffer'] = buffer_total
+            this_time = this_time + interval
+
+        this_time = datetime.combine(this_date, settings.BOOKING_TIMES[0])
+
+        while this_time <= end_time:
+            active = pax_dict[this_time]['active']
+
+            if this_time+settings.BUFFER_DURATION > end_time:
+                available = settings.CAPACITY - active
+            else:
+                available = settings.CAPACITY - \
+                    (pax_dict[this_time]['active'] +
+                     pax_dict[this_time+settings.BUFFER_DURATION]['buffer'])
+            if available < 0:
+                available = 0
+
+            this_dict = {'pax': active,
+                         'available': available,
                          'date': this_time,
                          'future': True,
                          'select_time': time(this_time.hour, this_time.minute),
                          'time': "{}:{:0>2}".format(this_time.hour,
                                                     this_time.minute)}
 
-            for tmp in settings.HEAT.keys():
-                if this_dict['pax'] < tmp:
+            for temp in settings.HEAT.keys():
+                if this_dict['available'] > temp:
                     break
                 else:
-                    this_dict['heat'] = settings.HEAT[tmp]
+                    this_dict['heat'] = settings.HEAT[temp]
 
             # @@TODO get value from settings.HEAT
             if this_dict['pax'] > settings.CAPACITY:

@@ -21,10 +21,9 @@ def get_current_site():
 
 def get_duration(n, per_booking=30):
     PER_BOOKING = timedelta(minutes=per_booking)
-    MAX_TIME = timedelta(hours=4)
     duration = PER_BOOKING + (PER_BOOKING*n)
-    if duration > MAX_TIME:
-        return MAX_TIME
+    if duration > settings.DEFAULT_DURATION:
+        return settings.DEFAULT_DURATION
     else:
         return duration
 
