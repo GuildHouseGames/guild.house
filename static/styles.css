@@ -37,8 +37,8 @@ body {
 
 @media (min-width: 993px) {
     .container {
-        width: 900px;
-        max-width: 900px;
+        width: 1000px;
+        max-width: 1000px;
         padding: 3rem 3rem;
     }
 }
@@ -61,10 +61,17 @@ body {
 
 @media (max-width: 576px) {
     .container {
-        width: 100%;
+        width: 95%;
         max-width: 100%;
-        padding: 0;
+        padding: 0.5em;
     }
+}
+
+blockquote {
+    border: 1px solid #ddd;
+    background-color: #eaeaea;
+    padding: 20px 25px 5px;
+    margin: 10px 0;
 }
 
 .text-white a {
@@ -147,6 +154,13 @@ header.masthead {
     background-attachment: scroll;
     background-size: cover;
     background: url('img/bg.jpg') no-repeat center center;
+}
+
+@media (max-width: 576px) {
+    header.masthead {
+	padding-top: calc(1rem + 72px);
+	padding-bottom: 1rem;
+    }
 }
 
 header.masthead .masthead-content {
@@ -411,19 +425,27 @@ table#future th {
     border-bottom: 1px solid white;
 }
 
-span.warm { /* 70 pax */
-    background-color: rgba(10, 10, 10, 0.5);
-    color: rgba(240, 240, 240, 0.60);
+.time{
+    background-color: rgba(131, 212, 45, 0.25); /*rgba(10, 10, 10, 0.15);*/
 }
 
-span.hot {  /* 85 pax */
-    background-color: rgba(175, 70, 70, 0.25);
-    color: rgba(255, 255, 255, 0.55);
+span.warm {
+    background-color: rgba(167, 212, 45, 0.15); /*rgba(10, 10, 10, 0.15);*/
+    color: rgba(0, 0, 0, 0.7);
 }
 
-span.full { /* 115 pax */
-    background-color: rgba(175, 0, 0, 0.15);
-    color: rgba(255, 255, 255, 0.25);
+span.hot {
+    background-color: rgba(255, 202, 0, 0.25);
+    color: rgba(0, 0, 0, 0.65);
+}
+
+span.full {
+    background-color: rgba(250, 0, 0, 0.15);
+    color: rgba(0, 0, 0, 0.65);
+}
+
+span.full .howfull span {
+    color: rgba(175, 0, 0, 0.65);
 }
 
 span.helptext {
@@ -481,8 +503,8 @@ button[type=submit] {
 }
 
 .date-inactive {
-    color: #555;
-    border: 1px solid rgba(51, 122, 183, 0.45);
+    color: #bbb;
+    border: 1px solid rgba(51, 122, 183, 0.35);
 }
 
 .date .wkday {
@@ -497,9 +519,9 @@ button[type=submit] {
 
 .time {
     display: inline-block;
-    height: 38px;
+    height: 40px;
     width: 4em;
-    padding: 7px 0 4px 0;
+    padding: 6px 0 4px 0;
     margin: 5px;
 }
 
@@ -521,7 +543,7 @@ button[type=submit] {
 .date:hover,
 .pax:hover,
 .time:hover {
-    background-color: #337ab7;
+    background-color: #337ab7 !important;
 }
 
 .date:active,
@@ -867,3 +889,15 @@ textarea {
 /* /.slick */
 
 /* /.slider */
+
+@media print {
+    .hidden-print {
+        display: none !important;
+    }
+
+    section#main,
+    .container,
+    .row {
+        width: 100% !important;
+    }
+}

@@ -44,6 +44,10 @@ class CopyRegister(generic.ListView):
         return context
 
 
+class MaintenanceRegisterAdd(generic.ListView):
+
+    model = Game
+    template_name = "library/maintenance/game_list.html"
 
     def get_context_object(self, *args, **kwargs):
         context = super(MaintenanceRegister,

@@ -1,4 +1,4 @@
-<div class="details col-sm-6">
+<div class="bookings details col-sm-6">
   {% if object.code %}
   <h3>{% include "bookings/_booking_list.html" with obj=object %}</h3>
   {% endif %}
@@ -16,14 +16,13 @@
     </div>
   </div>
   <br>
-  <div style="display: none;" class="full-warning btn btn-danger">
+  <p style="display: none;" class="full-warning btn btn-danger">
     Online booking is not available<br>
     as we're getting quite full at this time<br>
     PLEASE EMAIL: <a href="mailto:reservations@guild.house" style="color:white">reservations@guild.house</a>
     <br>to check availability.
-  </div>
-  <br>
-  <br>
+  </p>
+    <h4 id="booking_details">Booking details:</h4>
 
   <form action="" method="post" class="bookings">
     {% csrf_token %}
@@ -67,7 +66,7 @@
           <label for="id_hear_other">&nbsp;</label>
         </th>
         <td>
-          <span class="helptext">Tell us a story about how you heard about us ...</span><br>
+          <span class="helptext">Tell us a story about how you heard about us</span>
           <textarea cols="0" id="id_hear_other" name="hear_other" rows="4" width="185"></textarea>
         </td>
       </tr>
@@ -79,7 +78,7 @@
         <td>
           <br>
           <button type="submit" class="hidden-print btn btn-default btn-lg">
-            <span class="network-name">Make Boooking</span> &nbsp;
+            <span class="network-name">Save Boooking</span> &nbsp;
             <i class="fa fa-clock fa-fw"></i>
           </button>
           <br><br>

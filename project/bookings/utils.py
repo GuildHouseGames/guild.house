@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
-from datetime import date, time, datetime, timedelta
-
-from django.db.models import Max
+from datetime import time, datetime, timedelta
 from django.utils.timezone import make_aware
 
-from .models import Booking, BookingDate
-from .settings import DEFAULT_BOOKING_DURATION, UNKNOWN_EMAIL, SERVICE_CHOICE
+from .models import Booking
+from .settings import DEFAULT_BOOKING_DURATION, UNKNOWN_EMAIL
+
 
 # Synchronising scrape from Revel to bookings system.
 # To be automated daily.
@@ -36,7 +35,7 @@ def import_revel_bookings(scrape):
     # Confident that they'll do an update one day that will break this.
     # -> Happened Aug 2017
 
-    split_string_start = "Reserved On\nReserved For\nOrder ID\nStatus\nParty Size\nWait time\nCustomer\nPhone\nNotes & Preferences\n"
+    split_string_start = "Reserved On\nReserved For\nOrder ID\nStatus\nParty Size\nWait time\nCustomer\nPhone\nNotes & Preferences\n"  # noqa
     split_string_end = "Watch the tutorial"
 
     data_raw = scrape.split(split_string_start)[-1].split(split_string_end)
@@ -99,21 +98,3 @@ def import_revel_bookings(scrape):
         else:
             success.append((obj, 'existing: '))
     return success
-
-
-def get_future_services_set():
-    future_dates = Booking.objects.future().aggregate(Max('reserved_date'))
-    if not future_dates['reserved_date__max']:
-        for obj in BookingDate.objects.future():
-            obj.set_values()
-    else:
-        future_range = future_dates['reserved_date__max'] - date.today()
-        days_left = future_range.days
-        this_day = date.today()
-        while days_left >= 0:
-            obj, is_created = BookingDate.objects.get_or_create(date=this_day)
-            obj.set_values()
-            this_day = this_day + timedelta(days=1)
-            days_left = days_left - 1
-
-    return BookingDate.objects.future()

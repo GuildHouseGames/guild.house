@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
 import calendar
-import datetime
-from datetime import time, timedelta, date
+from datetime import date, datetime, time, timedelta
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.mail import send_mail
@@ -13,17 +12,16 @@ from django.shortcuts import redirect, get_object_or_404, render
 from django.utils.timezone import localtime, now
 from django.views import generic
 
+from project.site.models import OpeningHours
 from . import settings
 from .forms import BookingForm, NewBookingForm, BlankForm
 from .models import Booking
-from .utils import import_revel_bookings, get_future_services_set
+from .utils import import_revel_bookings
 
 
-MSG_WARNING_BUSY = """Beware! This booking made during a busy time. May conflict. Please check ASAP and contact to discuss options if necessary.
-
-The customer has been warned that this is the case and may be expecting confirmation.
-"""
-
+MSG_WARNING_BUSY = "Beware! HERE This booking made during a busy time. May conflict. Please check ASAP and contact to discuss options if necessary."  # noqa
+MSG_WARNING_BUSY = MSG_WARNING_BUSY+"\n\r\n\r"
+MSG_WARNING_BUSY = MSG_WARNING_BUSY+"The customer has been warned that this is the case and may be expecting confirmation."  # noqa
 MSG_WARNING_BUSY_CUSTOMER = """Beware! As warned at time of booking: you have booked during a busy time it is possible that your booking may have conflicted with another.
 
 We will contact you ASAP if this is the case. Alternatively you can contact us to double-check.
@@ -40,13 +38,13 @@ class CalendarMixin(object):
             y = int(yr)
             m = int(mth)
         else:
-            d = datetime.datetime.today()
+            d = datetime.today()
             y = d.year
             m = d.month
-            context['today'] = datetime.date(
+            context['today'] = date(
                 year=d.year, month=d.month, day=d.day)
 
-        this_month = datetime.date(year=y, month=m, day=1)
+        this_month = date(year=y, month=m, day=1)
         next_mth = this_month + relativedelta(months=+1)
         prev_mth = this_month + relativedelta(months=-1)
         context['cal_next_mth'] = '/%s/%02d/' % (next_mth.year, next_mth.month)
@@ -57,20 +55,23 @@ class CalendarMixin(object):
             this_month.year - 1, this_month.month)
         context['month'] = this_month
         context['calendar'] = self.make_range(y, m)
+        closed_dates = OpeningHours.objects.filter(
+            date__gte=date.today(), is_closed=True)
+        context['closed_dates'] = [x.date for x in closed_dates]
         return context
 
     def make_range(self, y, m):
-        b = datetime.timedelta(days=settings.DEFAULT_CALENDAR_LENGTH)
+        b = timedelta(days=settings.DEFAULT_CALENDAR_LENGTH)
 
         # e = Booking.objects.filter(date__year=y, date__month=m)
-        start = datetime.date.today() -\
-            datetime.timedelta(datetime.date.today().weekday())
+        start = date.today() -\
+            timedelta(date.today().weekday())
         end = start + b
         date_range = []
         while start < end:
             date_range.append({'day': start})
             # date_range.append({'day':start, 'events':e.filter(date=start)})
-            start = start + datetime.timedelta(days=1)
+            start = start + timedelta(days=1)
         return date_range
 
     def get_context_data(self, *args, **kwargs):
@@ -91,68 +92,91 @@ class TimeMixin(object):
         This is used to fetch bookings and to `datetime.combine` with
         `datetime.time` to create the necessary range of times.
         """
-        busy_night = False
-        open_bookings, time_list = [], []
-        interval = settings.BOOKING_INTERVAL
-        this_time = datetime.datetime.combine(
-            this_date,
-            settings.BOOKING_TIMES[0]
-        ) - interval
-
-        """Construct bookings
-        Ensure times are constructed first, then iterate through bookings
-        for this day as likely the number of bookings will be fewer than the
-        number of intervals. """
-
         booking_list = self.get_booking_list(this_date)
-        for booking in booking_list:
-            start_time = datetime.datetime.combine(
-                this_date, booking.reserved_time)
-            if booking.booking_duration:
-                end_time = start_time + booking.booking_duration
-            else:
-                h, m, s = settings.DEFAULT_BOOKING_DURATION.split(":")
-                end_time = datetime.datetime.combine(
-                    this_date,
-                    time(hour=int(h), minute=int(m))
-                )
-            open_bookings.append((start_time, end_time, booking.party_size))
+        interval = settings.BOOKING_INTERVAL
+        this_time = datetime.combine(this_date, settings.BOOKING_TIMES[0])
+        end_time = datetime.combine(this_date, settings.BOOKING_TIMES[1])
+        busy_night = False
+        time_list, active_bookings, buffer_bookings, pax_dict = [], {}, {}, {}
 
-        select_time = datetime.datetime.combine(datetime.date(2000, 1, 1),
-                                                settings.BOOKING_TIMES[0])
-        while this_time <= datetime.datetime.combine(
-                this_date,
-                settings.BOOKING_TIMES[1]) - interval:
+        # create occupancy per time interval
+        while this_time <= end_time:
+            active_total, buffer_total = 0, 0
+            bookings_at_this_time = booking_list.filter(
+                reserved_time=this_time)
+            pax_dict[this_time] = {}
+
+            # Construct occupancy for this time
+            if bookings_at_this_time:
+                for booking in bookings_at_this_time:
+                    active_bookings[booking.pk] = {
+                        'pax': booking.party_size,
+                        'dur': booking.booking_duration}
+            for pk in active_bookings.keys():
+                if active_bookings[pk]['dur']:
+                    active_bookings[pk]['dur'] = active_bookings[pk]['dur'] - interval  # noqa
+                    active_total = active_total + active_bookings[pk]['pax']
+            pax_dict[this_time]['active'] = active_total
+
+            # construct occupancy for the purpose of booking buffer
+            # which has constant "duration"
+            if bookings_at_this_time:
+                for booking in bookings_at_this_time:
+                    buffer_bookings[booking.pk] = {
+                        'pax': booking.party_size,
+                        'dur': settings.BUFFER_DURATION}
+            for pk in buffer_bookings.keys():
+                if buffer_bookings[pk]['dur']:
+                    buffer_bookings[pk]['dur'] = buffer_bookings[pk]['dur'] - interval  # noqa
+                    buffer_total = buffer_total + buffer_bookings[pk]['pax']
+            pax_dict[this_time]['buffer'] = buffer_total
             this_time = this_time + interval
-            this_dict = {'pax': 0,
+
+        this_time = datetime.combine(this_date, settings.BOOKING_TIMES[0])
+
+        while this_time <= end_time:
+            active = pax_dict[this_time]['active']
+
+            if this_time+settings.BUFFER_DURATION > end_time:
+                available = settings.CAPACITY - active
+            else:
+                available = settings.CAPACITY - \
+                    (pax_dict[this_time]['active'] +
+                     pax_dict[this_time+settings.BUFFER_DURATION]['buffer'])
+            if available < 0:
+                available = 0
+
+            this_dict = {'pax': active,
+                         'available': available,
                          'date': this_time,
+                         'future': True,
                          'select_time': time(this_time.hour, this_time.minute),
                          'time': "{}:{:0>2}".format(this_time.hour,
                                                     this_time.minute)}
 
-            # Add `party_size` totals to data_dict
-            select_time = select_time + interval
-            for start, end, pax in open_bookings:
-                # Add an hour for good luck.
-                if start <= this_time \
-                   and this_time < end + timedelta(minutes=60):
-                    this_dict['pax'] = this_dict['pax'] + pax
-
-            for tmp in settings.HEAT.keys():
-                if this_dict['pax'] < tmp:
+            for temp in settings.HEAT.keys():
+                if this_dict['available'] > temp:
                     break
                 else:
-                    this_dict['heat'] = settings.HEAT[tmp]
+                    this_dict['heat'] = settings.HEAT[temp]
 
             # @@TODO get value from settings.HEAT
-            if this_dict['pax'] > settings.VENUE_FULL:
+            if this_dict['pax'] > settings.CAPACITY:
                 busy_night = True
+
+            if this_date == now().date():
+                # if this_time
+                this_dict['future'] = False
 
             # Add `service` to dictionary
             for service_time, service in settings.SERVICE_TIMES:
                 if time(this_time.hour, this_time.minute) == service_time:
                     this_dict['service'] = service
+
             time_list.append(this_dict)
+
+            this_time = this_time + interval
+
         return time_list, busy_night
 
     def get_time_list(self, context, this_date):
@@ -161,7 +185,7 @@ class TimeMixin(object):
         context['date'] = this_date
         context['booking_list'] = self.get_booking_list(this_date)
 
-        # Sadly annotate too unreliable https://code.djangoproject.com/ticket/10060
+        # Sadly annotate too unreliable https://code.djangoproject.com/ticket/10060 # noqa E501
         total_pax = 0
         for booking in self.get_booking_list(this_date):
             total_pax = total_pax + booking.party_size
@@ -293,6 +317,17 @@ class BookingQueryset(object):
         queryset = super(BookingQueryset, self).get_queryset(*args, **kwargs)
         return queryset.active().order_by('reserved_date', 'reserved_time')
 
+    def get_service_totals(self, obj_list):
+        services = []
+        early_list = obj_list.filter(
+            service='early').aggregate(Sum('party_size'))
+        if early_list['party_size__sum']:
+            services.append((('early', 'Early'), early_list))
+        for serv in settings.SERVICE_CHOICE:
+            services.append((serv, (obj_list.filter(service=serv[0])
+                                    .aggregate(Sum('party_size')))))
+        return services
+
     def get_queryset_by_day(self, *args, **kwargs):
         queryset = super(BookingQueryset, self).get_queryset(*args, **kwargs)
         return queryset.active().order_by('reserved_date', 'reserved_time')
@@ -320,6 +355,12 @@ class BookingSuccessView(BookingQueryset, generic.DetailView):
     def get_object(self):
         return get_object_or_404(Booking, code=self.kwargs.get('code'))
 
+    def get_context_data(self, *args, **kwargs):
+        context = super(BookingSuccessView, self).get_context_data(
+            *args, **kwargs)
+        context['big_booking'] = settings.BIG_BOOKING
+        return context
+
 
 class BookingRunView(LoginRequiredMixin, BookingQueryset, generic.DetailView):
 
@@ -345,7 +386,7 @@ class BookingCreateView(BookingFormMixin, CalendarMixin, BookingQueryset,
         obj = form.instance
         obj.save()
         self.send_booking_notice_internal(obj=obj, form=form, change="added")
-        #self.send_booking_notice_customer(obj=obj, form=form)
+        # self.send_booking_notice_customer(obj=obj, form=form)
         return redirect('bookings:booking_success', code=form.instance.code)
 
     def get_context_data(self, *args, **kwargs):
@@ -469,19 +510,12 @@ class BookingMonthArchiveView(BookingQueryset, generic.MonthArchiveView):
 class BookingDayArchiveView(BookingQueryset, generic.DayArchiveView):
 
     def get_context_data(self, *args, **kwargs):
-        context_data = super(BookingDayArchiveView, self).get_context_data(*args,
-                                                                           **kwargs)
-        context_data['total'] = kwargs.get('object_list')\
-                                      .aggregate(Sum('party_size'))
-        services = []
-        early_list = kwargs.get('object_list').filter(
-            service='early').aggregate(Sum('party_size'))
-        if early_list['party_size__sum']:
-            services.append((('early', 'Early'), early_list))
-        for serv in settings.SERVICE_CHOICE:
-            services.append((serv, (kwargs.get('object_list').filter(service=serv[0])
-                                    .aggregate(Sum('party_size')))))
-        context_data['services'] = services
+        context_data = super(BookingDayArchiveView,
+                             self).get_context_data(*args, **kwargs)
+
+        obj_list = kwargs.get('object_list')
+        context_data['total'] = obj_list.aggregate(Sum('party_size'))
+        context_data['services'] = self.get_service_totals(obj_list)
         context_data['cancelled_list'] = self.get_dated_queryset()\
                                              .filter(status='Cancelled')\
                                              .order_by('name')
@@ -492,9 +526,9 @@ class BookingTodayArchiveView(generic.RedirectView):
 
     def get_redirect_url(self):
         return reverse('bookings:booking_day', kwargs={
-            'year': datetime.date.today().year,
-            'month': "{:0>2}".format(datetime.date.today().month),
-            'day': "{:0>2}".format(datetime.date.today().day)
+            'year': date.today().year,
+            'month': "{:0>2}".format(date.today().month),
+            'day': "{:0>2}".format(date.today().day)
         })
 
 

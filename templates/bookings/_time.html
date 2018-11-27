@@ -13,18 +13,20 @@
 
 <div> &nbsp; <b>{{ time.service|title }}</b><br>
 {% endif %}
-  <span data-time="{{ time.select_time|time:"H:i" }}:00"
-        data-full="{% if time.pax > 105 %}full{% endif %}"
-        class="time{% if time.heat %} {{ time.heat }}{% endif %}">
-    {{ time.time }}
-    <div class="howfull">
-      {% if time.pax > 105 %}<span style="color: red;">&gt;75%</span>
-      {% elif time.pax > 85 %}&gt;65%
-      {% elif time.pax > 60 %}&gt;50%{% else %}
-      &nbsp;
-      {% endif %}
-    </div>
-    {% if user.is_authenticated %}{{ time.pax }}{% endif %}
+    <span data-time="{{ time.select_time|time:"H:i" }}:00"
+          data-full="{% if time.available < 1 %}full{% endif %}"
+          class="time{% if time.heat %} {{ time.heat }}{% endif %}">
+        {{ time.time }}
+        <div class="howfull" style="white-space: nowrap">
+          {% if time.available < 1 %}full
+          {% elif time.available < 30 %}<span>only {{ time.available }} left</span>
+          {% else %}
+          &nbsp;
+          {% endif %}
+      </div>
+    {% if user.is_authenticated %}
+      <b>{{ time.pax }}</b><small>/{{ time.available }} left</small>
+    {% endif %}
   </span>
 {% endfor %}
 </div>
@@ -37,7 +39,11 @@ Total: {% if pax_total %}{{ pax_total }}{% else %}0{% endif %}pax<br>
 <br>
 <div class="hidden-print"><b>All Bookings</b>:</div>
 {% for booking in booking_list %}
-  {{ booking }}<br>
+{{ booking }}
+<a class="hidden-print" target="_blank"
+   href="{% url "admin:bookings_booking_change" booking.pk %}">
+    <small> (edit)</small>
+</a><br>
 {% endfor %}
 {% endif %}
 

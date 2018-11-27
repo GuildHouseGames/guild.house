@@ -9,7 +9,7 @@
 <div class="row">
 
   <div class="col-md-12">
-
+    <p>
     {% if object.status == "Cancelled" %}
     <div class="btn btn-danger">
       Cancelled
@@ -19,10 +19,16 @@
       Booked!
     </div>
     {% endif %}
+    </p>
 
     <h2>Booking for <em>{{ object.name }}</em></h2>
 
-    Thank you, booking was successful.<br><br>
+    {% if user.is_authenticated %}
+    <p><b><i><a href="{% url "admin:bookings_booking_change" object.pk %}">Administration Edit Booking</a></i></b></p>
+    {% endif %}
+
+    <b>Thank you, booking was successful.</b>
+    <br>We've emailed you the details, but it's likely been marked as spam.<br><br>
 {% if object.busy_night %}
 <div class="btn btn-danger">
  Heavily booked on this day.
@@ -53,7 +59,7 @@ If this is the case we will contact you ASAP to discuss options.
         <a href="{% url "bookings:booking_update" code=object.code %}">
       {% endif %}
       <b>{{ object.name }}</b></a><br>
-      {% if user.is_authenticated %}Booked by: <b>{{ object.user }}</b></a><br>{% endif %}
+      {% if user.is_authenticated %}Booked by: <b>{{ object.booking_method }}</b></a><br>{% endif %}
       Contact phone: {{ object.phone }}<br>
       Contact email: {{ object.email }}<br>
     <em>{{object.status}}</em>
@@ -74,35 +80,39 @@ as we want to give as many people as possible the opportunity to spend some time
       <br>
       {% endif %}
       <div>Guild is open 7 days for lunch and dinner so if you're interested in learning something special or a particularly long session by all means come on down on a different night when it'll be quieter and you can have your pick of table and service.
-      {% endif %}
-      {% endif %}
-<br>
-<br>
-<p class="featured_text">
-      <b>What happens now?</b><br>
+          {% endif %}
+          {% endif %}
+
+          {% if object.party_size > big_booking %}
+          <blockquote class="featured_text">
+              <p><b>Large Booking</b></p>
+              <p>With {{ object.party_size }} people your booking is pretty big. Thank you for coming to Guild! We really hope you have a great time with us.</p>
+              <p>We may contact you to confirm your booking and if it's particularly large or during a busy time you may need to provide us with a deposit. </p>
+          </blockquote>
+          {% endif %}
+
+          <p class="featured_text">
+                  <p><b>What happens now?</b></p>
       <div>You should receive a confirmation email. If you don't can't find this email check your spam messages or check that the email address you have provided is correct. If it's incorrect you'll need to contact us. <br><br>
 
         You can come back to this page any time to check your details and the link is included in the email.</div>
       <br>
       <div>If you're new to Guild or just curious checkout out our "<a href="/how-it-works/">how it works</a>" page.</div>
       <br>
-      {% if object.party_size > 7 %}
-      <b>Large Booking</b><br>
-      <div>With {{ object.party_size }} people your booking is pretty big. Thank you for coming to Guild! We really hope you have a great time with us.</div>
-      <div>We may contact you to confirm your booking and if it's particularly large or during a busy time you may need to provide us with a deposit. </div>
-      <br>
-      {% endif %}
+      <div>
+          If you would like to contact us, please feel free to for any reason at:
+          <ul>
+              <li>call us on 02 6257 2727</li> <i>or</i>
+              <li>email <a href="mailto:hello@guild.house">hello@guild.house</a></li>
+          </ul>
+      </div>
 
-
-<div><br>
-      If you would like to contact us, please feel free to for any reason at:
-      <ul>
-        <li>call us on 02 6257 2727</li> <i>or</i>
-        <li>email <a href="mailto:hello@guild.house">hello@guild.house</a></li>
-      </ul>
-</div>
-
+      </div>
   </div>
-</div>
+
+  {% if user.is_authenticated %}
+  <p><b><i><a href="{% url "admin:bookings_booking_change" object.pk %}">Administration Edit Booking</a></i></b></p>
+  {% endif %}
+
 
 {% endblock %}

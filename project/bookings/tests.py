@@ -1,3 +1,35 @@
+# -*- coding: utf-8 -*-
+#from django.test import TestCase
+from unittest import TestCase
+from datetime import timedelta
+
+from .models import get_duration
+
+
+class TestGetDuration(TestCase):
+
+    def test_get_duration_1(self):
+        self.assertEqual(get_duration(1), timedelta(minutes=60))
+
+    def test_get_duration_2(self):
+        self.assertEqual(get_duration(2), timedelta(minutes=90))
+
+    def test_get_duration_3(self):
+        self.assertEqual(get_duration(3), timedelta(minutes=120))
+
+    def test_get_duration_4(self):
+        self.assertEqual(get_duration(4), timedelta(minutes=150))
+
+    def test_get_duration_5(self):
+        self.assertEqual(get_duration(5), timedelta(hours=3))
+
+    def test_get_duration_8(self):
+        self.assertEqual(get_duration(8), timedelta(hours=4))
+
+    def test_get_duration_20(self):
+        self.assertEqual(get_duration(20), timedelta(hours=4))
+
+
 """
 from .forms import AUPhoneNumberField
 

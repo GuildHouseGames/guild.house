@@ -13,17 +13,19 @@
       {% nav_menu %}
       {% for item in nav_items %}
       <li class="nav-item">
-        <a class="nav-link" href="{{ item.url }}">{{ item.title }}</a>
+          <a class="nav-link" href="{{ item.url }}">
+              <span style="white-space: nowrap">{{ item.title }}</span>
+          </a>
       </li>
       {% endfor %}
       <li class="nav-item">
-        <a class="nav-link" href="{% url 'site:opening_hours' %}">
-          Opening Hours <i class="fas fa-clock"></i>
-        </a>
+          <a class="nav-link" href="{% url 'site:opening_hours' %}">
+              <span style="white-space: nowrap">Opening Hours <i class="fas fa-clock"></i></span>
+          </a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#location" class="page-scroll">
-          Find Us <i class="fa fa-map-marker"></i>
+          <a class="nav-link" href="#location" class="page-scroll">
+              <span style="white-space: nowrap">Find Us <i class="fa fa-map-marker"></i></span>
         </a>
       </li>
       <li class="nav-item">

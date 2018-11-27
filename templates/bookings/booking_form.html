@@ -3,180 +3,83 @@
 
 {% block title %}{{ homepage.title }} - {{ block.super }}{% endblock %}
 
-
 {% block content %}
-
 <style>
-
-  form.bookings textarea,
-  form.bookings input {
-  width: 90%;
-  }
-
-  h2, h5 {
-    padding-left: 10px;
-  }
-
-  div.times, div.calendar {
-    padding-left: 10px;
-  }
-  div.paxs {
-    padding-left: 15px;
-  }
-
-  .details {
-    padding-left: 25px;
-  }
-
+ form.bookings textarea,
+ form.bookings input {width: 90%;}
+ h2, h5 {padding-left: 10px;}
+ div.times, div.calendar {padding-left: 10px;}
+ div.paxs {padding-left: 15px;}
+ .details {padding-left: 25px; margin-top: -25px;}
 </style>
 
 {% if user.is_authenticated %}
 <h2 style="opacity: 0.7; text-align: right;" class="hidden-print">
-  Logged in as: {{user}}
+    Logged in as: {{user}}
 </h2>
 {% endif %}
 
 {% if not object.code %}
 <div class="row">
-  <div class="col-sm-12">
-    <h2 class="hidden-print">New Booking</h2>
-  </div>
+    <div class="col-sm-12">
+        <h2 class="hidden-print">New Booking</h2>
+    </div>
 </div>
 {% endif %}
 
 <div class="row">
-  {% if form.errors %}
-  <div class="btn btn-danger">
-    Woah! Your booking wasn't saved.</div><br>
-  <br>
-  <div class="featured_text">At a minimum we need: Name, Date/Time, Party size and some contact details.<br> Check below, one of these is incomplete or incorrect.</div>
-  <br>
-  <div class="featured_text">
-    If you would like to contact us:
+    {% if form.errors %}
+    <div class="btn btn-danger"> Woah! Your booking wasn't saved.</div><br><br>
+    <div class="featured_text">At a minimum we need: Name, Date/Time, Party size and some contact details.<br> Check below, one of these is incomplete or incorrect.</div><br>
+    <div class="featured_text">
+        If you would like to contact us:
+        <ul><li>call us on 02 6257 2727</li> <i>or</i><li>email <a href="mailto:hello@guild.house">hello@guild.house</a></li></ul>
+    </div> <br>
+    <div class="booking_ui">
+        {% for k, v in form.errors.items %}
+        <div class="btn btn-warning">
+            {% if k == '__all__' %}
+            Please supply both email address and phone number.
+            {% else %}
+            {{ k }} is incomplete.
+            {% endif %}
+        </div><br>
+        {% endfor %}
+    {% endif %}
+
+        {% if not update_view %}
+            {# DATE APPEARANCE SECTION #}
+            <div class="col-sm-5">
+                {# CALENDER #}
+                <div class="calendar hidden-print">{% include "bookings/_calendar.html" %}</div>
+                <p class="text-right"><small><a id="to_reserved_date" href="#booking_details">Future Date  >></a></small></p><hr class="hidden-print">
+
+                {# TIME #}
+                <div id="time" class="times"></div>
+            </div>
+
+            {# PAX #}
+            <div class="paxs col-sm-1 hidden-print">
+                {% include "bookings/_pax.html" %}
+                <p class="text-right"><small><a id="to_party_size" href="#booking_details">Different<br><span style="white-space: nowrap">number >></span></span></small></p>
+            </div>
+            {# ./DATE APPEARANCE SECTION #}
+        {% endif %}
+
+        {% include "bookings/_form.html" %}
+
+    </div>
+
     <ul>
-      <li>call us on 02 6257 2727</li> <i>or</i>
-      <li>email <a href="mailto:hello@guild.house">hello@guild.house</a></li>
+        {% for obj in object_list %}
+        {% include "bookings/_booking_list.html" %}
+        {% endfor %}
     </ul>
-
-  </div>
-  <br>
-
-  <div>
-    {% for k, v in form.errors.items %}
-    <div class="btn btn-warning">
-      {% if k == '__all__' %}
-      Please supply both email address and phone number.
-      {% else %}
-      {{ k }} is incomplete.
-      {% endif %}
-    </div>
-    <br>
+    {% endblock %}
 
 
-    {% endfor %}
-    {% endif %}
-
-    {% if not update_view %}
-
-
-    {# DATE APPEARANCE SECTION #}
-
-    <div class="col-sm-5">
-
-      {# CALENDER #}
-      <div class="calendar hidden-print">{% include "bookings/_calendar.html" %}</div>
-      <hr class="hidden-print">
-
-      {# TIME #}
-      <div id="time" class="times"></div>
-    </div>
-
-    {# PAX #}
-    <div class="paxs col-sm-1 hidden-print">
-      {% include "bookings/_pax.html" %}
-    </div>
-    {# ./DATE APPEARANCE SECTION #}
-
-
-    {% endif %}
-
-    {% include "bookings/_form.html" %}
-
-  </div>
-
-  <ul>
-    {% for obj in object_list %}
-    {% include "bookings/_booking_list.html" %}
-    {% endfor %}
-  </ul>
-
-
-  {% endblock %}
-
-  {% block extra_static %}
-  <script>
-
-    $(document).ready(function(){
-    $.ajax({
-    url: "/bookings/time/"+$("#id_reserved_date").val()+"/",
-    success: function(result){$( "#time" ).html(result);}
-    });
-    });
-
-    $(".date").click(function() {
-    $("#id_reserved_date").val($(this).data("date")).addClass("selected");
-    $(".date").removeClass("selected");
-    $(this).addClass("selected");
-    $.ajax({
-    url: "/bookings/time"+$(this).data("time"),
-    success: function(result){$( "#time" ).html(result);},
-    dataType : "html"
-    });
-    });
-    $(".pax").click(function() {
-    $("#id_party_size").val($(this).data("pax")).addClass("selected");
-    $(".pax").removeClass("selected");
-    $(this).addClass("selected");
-    });
-    $("#id_phone, #id_name, #id_email, #id_party_size, #id_reserved_date, #id_reserved_time, #id_booking_method, #id_notes").change(function(){
-    $(this).addClass("selected");
-    })
-    $("#id_party_size").change(function(){
-    $(".pax").removeClass("selected");
-    })
-    $("#id_reserved_date").change(function(){
-    $(".date").removeClass("selected");
-    })
-    $("#id_reserved_time").change(function(){
-    $(".time").removeClass("selected");
-    })
-    $("#remove").click(function() {
-    $(".date").removeClass("selected");
-    $(".time").removeClass("selected");
-    $(".pax").removeClass("selected");
-    $("#id_phone").removeClass("selected");
-    $("#id_name").removeClass("selected");
-    $("#id_email").removeClass("selected");
-    $("#id_party_size").removeClass("selected");
-    $("#id_reserved_date").removeClass("selected");
-    $("#id_reserved_time").removeClass("selected");
-    $("#id_booking_method").removeClass("selected");
-    $("#id_notes").removeClass("selected");
-    $("id_status".val(""))
-    })
-    $("#id_reservation_time").prop("readonly", true);
-
-  </script>
-
-  <link href="{% static "vendor/clockpicker/clockpicker.css" %}" type="text/css" rel="stylesheet" />
-  <script src="{% static "vendor/clockpicker/clockpicker.js" %}" type="text/javascript"></script>
-
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
-  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
-
-  <script>
-    $('#id_reserved_time').clockpicker({donetext: 'done'});
-    $('#id_reserved_date').datepicker({dateFormat: 'dd/mm/yy', minDate: 0});
-  </script>
-
-  {% endblock %}
+    {% block extra_static %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+    <script src="{% static 'bookings.js' %}"></script>
+    {% endblock %}

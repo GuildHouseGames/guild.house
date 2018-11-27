@@ -1,14 +1,11 @@
-# -*- coding: utf-8 -*-
+# -*- coding: utf-8 - *-
 from __future__ import absolute_import, unicode_literals
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
-from django.utils.timesince import timesince
 from django.core.validators import MaxValueValidator, MinValueValidator
-from django.core.exceptions import ValidationError
 from phonenumber_field.modelfields import PhoneNumberField
 
 from project import utils
@@ -23,74 +20,22 @@ def get_current_site():
         pass
 
 
-class BookingDate(models.Model):
-
-    date = models.DateField(db_index=True)
-
-    total_num = models.PositiveIntegerField(default=0, null=True)
-
-    total_pax = models.PositiveIntegerField(default=0, null=True)
-
-    early_num = models.PositiveIntegerField(default=0, null=True)
-
-    early_pax = models.PositiveIntegerField(default=0, null=True)
-
-    lunch_num = models.PositiveIntegerField(default=0, null=True)
-
-    lunch_pax = models.PositiveIntegerField(default=0, null=True)
-
-    afternoon_num = models.PositiveIntegerField(default=0, null=True)
-
-    afternoon_pax = models.PositiveIntegerField(default=0, null=True)
-
-    main_num = models.PositiveIntegerField(default=0, null=True)
-
-    main_pax = models.PositiveIntegerField(default=0, null=True)
-
-    late_num = models.PositiveIntegerField(default=0, null=True)
-
-    late_pax = models.PositiveIntegerField(default=0, null=True)
-
-    objects = querysets.DateQuerySet.as_manager()
-
-    class Meta:
-        ordering = ['date']
-
-    def set_values(self):
-        date_bookings = Booking.objects.active().filter(
-            reserved_date=self.date)
-        pax = date_bookings.aggregate(models.Sum('party_size'))[
-            'party_size__sum']
-        num = date_bookings.count()
-        if not getattr(self, 'total_pax') == pax:
-            setattr(self, 'total_pax', pax)
-            self.save()
-        if not getattr(self, 'total_num') == num:
-            setattr(self, 'total_num', num)
-            self.save()
-
-        for service, human in settings.SERVICE_CHOICE:
-            date_service = date_bookings.filter(service=service)
-            pax = date_service.aggregate(models.Sum('party_size'))[
-                'party_size__sum']
-            num = date_service.count()
-            print(self.date, pax, num)
-
-            if not getattr(self, '{}_pax'.format(service)) == pax:
-                setattr(self, '{}_pax'.format(service), pax)
-                self.save()
-            if not getattr(self, '{}_num'.format(service)) == num:
-                setattr(self, '{}_num'.format(service), num)
-                self.save()
-
-        return self
-
-    def __str__(self):
-        return "{} -- {} {} pax".format(self.date,
-                                        self.total_num, self.total_pax)
+def get_duration(n, per_booking=30):
+    PER_BOOKING = timedelta(minutes=per_booking)
+    duration = PER_BOOKING + (PER_BOOKING*n)
+    if duration > settings.DEFAULT_DURATION:
+        return settings.DEFAULT_DURATION
+    else:
+        return duration
 
 
-@python_2_unicode_compatible
+class Table(models.Model):
+
+    number = models.CharField(max_length=8)
+
+    is_active = models.BooleanField(default=True)
+
+
 class Booking(models.Model):
 
     code = models.CharField(max_length=8, blank=True, default='')
@@ -98,13 +43,20 @@ class Booking(models.Model):
     name = models.CharField(max_length=200)
 
     party_size = models.PositiveIntegerField(
-        validators=[MaxValueValidator(100),
-                    MinValueValidator(1)])
+        validators=[MaxValueValidator(settings.CAPACITY),
+                    MinValueValidator(1)],
+        verbose_name="Number of people",
+    )
 
     status = models.CharField(max_length=50, choices=settings.STATUS_CHOICE,
                               default=settings.STATUS_CHOICE[0][0])
 
     is_cancelled = models.BooleanField(default=False)
+
+    is_confirmed = models.BooleanField(default=False)
+
+    service = models.CharField(max_length=50, choices=settings.SERVICE_CHOICE,
+                               blank=True, default='')
 
     area = models.CharField(max_length=50, choices=settings.AREA_CHOICE,
                             default=settings.AREA_CHOICE[0][0])
@@ -127,20 +79,32 @@ class Booking(models.Model):
         help_text="Only logged in people can see booking method."
     )
 
-    site = models.ForeignKey('sites.Site', default=get_current_site,
-                             related_name='bookings_booking',
-                             on_delete=models.PROTECT)
-
     reserved_date = models.DateField(db_index=True)
     reserved_time = models.TimeField(db_index=True, default=timezone.now)
 
-    booking_duration = models.DurationField(blank=True, null=True)
-
-    service = models.CharField(max_length=50, choices=settings.SERVICE_CHOICE,
-                               blank=True, default=''
-                               )
+    booking_duration = models.DurationField(
+        blank=True, null=True,
+        default=timedelta(hours=4)
+    )
 
     busy_night = models.BooleanField(default=False)
+
+    # Usage fields
+
+    is_paid_deposit = models.BooleanField(default=False)
+
+    deposit_amount_paid = models.DecimalField(
+        max_digits=7, decimal_places=2,
+        null=True, blank=True)
+
+    is_arrived = models.BooleanField(default=False)
+
+    table = models.ForeignKey(
+        Table,
+        models.PROTECT,
+        null=True, blank=True)
+
+    # Internal Fields
 
     created_at = models.DateTimeField(auto_now_add=True, editable=True)
 
@@ -165,6 +129,10 @@ class Booking(models.Model):
     )
 
     legacy_code = models.CharField(max_length=256, blank=True, null=True)
+
+    site = models.ForeignKey('sites.Site', default=get_current_site,
+                             related_name='bookings_booking',
+                             on_delete=models.PROTECT)
 
     objects = querysets.QuerySet.as_manager()
 
@@ -209,10 +177,6 @@ class Booking(models.Model):
     is_active.boolean = True
     is_active.short_description = 'active'
 
-
-
-
-
     def save(self, *args, **kwargs):
 
         # Automatically make code if doesn't already have one.
@@ -250,43 +214,7 @@ class Booking(models.Model):
         if not (self.status == 'cancelled'
                 or self.status == 'no_show') and self.is_cancelled:
             self.is_cancelled = False
-        try:
-            # Find the Booking and BookingDate objects relating to the
-            # booking before modification
-            previous_booking = Booking.objects.get(code=self.code)
-            previous_booking_date = BookingDate.objects.get(
-                date=previous_booking.reserved_date)
 
-            # Save the new values for the booking
-            super(Booking, self).save(*args, **kwargs)
+        self.booking_duration = get_duration(self.party_size)
 
-            # Check if there are no Booking objects relating to the previous
-            # BookingDate object
-            bookings_on_previous_date = Booking.objects.filter(
-                reserved_date=previous_booking.reserved_date)
-
-            # Delete the previous BookingDate if there are no bookings
-            if not bookings_on_previous_date:
-                previous_booking_date.delete()
-            # Update the previous BookingDate with the removed information
-            else:
-                previous_booking_date.set_values()
-        # When creating a booking on a date with no bookings
-        except (Booking.DoesNotExist, BookingDate.DoesNotExist):
-            # Just save, create and update the BookingDate object with the
-            # new Booking
-            super(Booking, self).save(*args, **kwargs)
-            booking_date, is_created = BookingDate.objects.get_or_create(
-                date=self.reserved_date)
-            booking_date.set_values()
-
-    def delete(self):
-        super(Booking, self).delete()
-        booking_date, is_created = BookingDate.objects.get_or_create(
-            date=self.reserved_date)
-        bookings_on_date = Booking.objects.filter(
-            reserved_date=self.reserved_date)
-        if not bookings_on_date:
-            booking_date.delete()
-        else:
-            booking_date.set_values()
+        super(Booking, self).save(*args, **kwargs)

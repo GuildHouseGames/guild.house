@@ -24,10 +24,17 @@
     <a class="event_a" href="/events/{{x.day|date:'Y/m/d/'}}{% if x.events|length == 1 %}{% for event in x.events %}{{event.event.slug}}/{% endfor %}{% endif %}">
       {% endif %}
 
-      <div class="date {% if object.reserved_date == x.day %} selected{% endif %} {% if x.day >= today %}" data-time="{{x.day|date:'/Y/m/d/'}}" data-date="{{x.day|date:'d/m/Y'}}"{% else %}date-inactive{% endif %}">
+        <div class="date {% if x.day in closed_dates %} date-inactive{% endif %}
+                    {% if object.reserved_date == x.day %} selected{% endif %}
+                    {% if x.day < today %} date-inactive{% endif %}"
+             {% if x.day >= today and not x.day in closed_dates %} data-time="{{x.day|date:'/Y/m/d/'}}" data-date="{{x.day|date:'d/m/Y'}}"{% endif %}">
         <div class="wkday">{{x.day|date:"D"}}</div>
         {{x.day|date:"j"}}
-        <div class="mth">{{x.day|date:"M"}}</div>
+        <div class="mth">
+            {% if x.day in closed_dates %}<small><i>closed</i></small>
+            {% else %}{{x.day|date:"M"}}
+            {% endif %}
+        </div>
       </div>
 
     {% if x.events %}
@@ -40,4 +47,5 @@
     </td>
 {% cycle '' '' '' '' '' '' '  <tr>' %}
 {% endfor %}
+
 </table>
