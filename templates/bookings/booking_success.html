@@ -46,13 +46,10 @@ If this is the case we will contact you ASAP to discuss options.
 <br>
 {% endif %}
 
-    <p>
+<p>
     Number of people: {{ object.party_size }} pax<br>
-    Date: <b>{{ object.reserved_date|date:"l" }}</b>, {% if user.is_authenticated %}<a href="{% url 'bookings:booking_day' year=object.reserved_date.year month=object.reserved_date|date:"m" day=object.reserved_date|date:"d" %}">{% endif %}
-{{ object.reserved_date|date:"F j, Y" }}</a><br>
-    Booking duration: {{ object.booking_duration }}<br>
-    Area: {{ object.area }}<br>
-    Time: {{ object.reserved_time|time:"P" }} ({{ object.service }})<br>{# "H:i" #}
+    <b>{{ object.reserved_time|time:"P" }} {{ object.reserved_date|date:"l" }}, {% if user.is_authenticated %}<a href="{% url 'bookings:booking_day' year=object.reserved_date.year month=object.reserved_date|date:"m" day=object.reserved_date|date:"d" %}">{% endif %}
+        {{ object.reserved_date|date:"F j, Y" }}</a></b><br>
     </p>
 
       {% if user.is_authenticated %}
