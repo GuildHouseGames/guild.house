@@ -1,5 +1,6 @@
 # -*- coding: utf-8 - *-
 from __future__ import absolute_import, unicode_literals
+from datetime import timedelta
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import reverse
 from django.db import models
