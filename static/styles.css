@@ -418,17 +418,21 @@ table#future th {
     border-bottom: 1px solid white;
 }
 
-span.warm { /* 70 pax */
-    background-color: rgba(10, 10, 10, 0.15);
-    color: rgba(0, 0, 0, 0.55);
+.time{
+    background-color: rgba(131, 212, 45, 0.25); /*rgba(10, 10, 10, 0.15);*/
 }
 
-span.hot {  /* 85 pax */
-    background-color: rgba(175, 70, 5, 0.25);
+span.warm {
+    background-color: rgba(167, 212, 45, 0.15); /*rgba(10, 10, 10, 0.15);*/
+    color: rgba(0, 0, 0, 0.7);
+}
+
+span.hot {
+    background-color: rgba(255, 202, 0, 0.25);
     color: rgba(0, 0, 0, 0.65);
 }
 
-span.full { /* 115 pax */
+span.full {
     background-color: rgba(250, 0, 0, 0.15);
     color: rgba(0, 0, 0, 0.65);
 }
@@ -532,7 +536,7 @@ button[type=submit] {
 .date:hover,
 .pax:hover,
 .time:hover {
-    background-color: #337ab7;
+    background-color: #337ab7 !important;
 }
 
 .date:active,
