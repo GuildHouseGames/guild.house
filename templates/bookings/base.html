@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
+{% if user.is_authenticated %}
 {% block masthead %}{% endblock %}
+{% endif %}
 
 {% block box_above %}
 {% if user.is_authenticated %}
@@ -20,7 +22,7 @@
         </li>
         <li style="display: inline; list-style-type: none; padding-right: 20px">
 	    <a href="{% url "bookings:booking_default_post" %}">Add</a>
-      </li>
+        </li>
     </ul>
 </nav>
 {% endif %}
