@@ -15,7 +15,7 @@
             <div class="cal_day {% if month.month != x.day.month %}non_month{% endif %}">
 	        <div {% if x.day == today %}id="today"{% endif %}>
                     <a href="#{{ x.day|date:"ymd" }}"><div class="date{% if x.day in closed_dates %} date-inactive{% endif %} {% if x.day < today %} date-inactive{% endif %}
-                                {% if x.day >= today and not x.day in closed_dates %} data-time="{{x.day|date:'/Y/m/d/'}}" data-date="{{x.day|date:'d/m/Y'}}"{% endif %}" style="height: fit-content; font-size: 0.95em">
+                                {% if x.day >= today and not x.day in closed_dates %} data-time="{{x.day|date:'/Y/m/d/'}}" data-date="{{x.day|date:'d/m/Y'}}"{% endif %}" style="height: auto; font-size: 0.95em">
                         <div style="white-space:nowrap""><span class="wkday">{{x.day|date:"D"}}</span> {{x.day|date:"j"}}
                             <span class="mth">
                                 {% if x.day in closed_dates %}<small><i>closed</i></small>
