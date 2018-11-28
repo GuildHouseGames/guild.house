@@ -6,46 +6,43 @@
 
 {% block container %}
 <section id="main" style="width: 95%">
-    <div class="container" style="width: 95%; max-width: 95%">
-        <div class="row">
+  <div class="container" style="width: 95%; max-width: 95%">
+    <div class="row">
+      {% if not show_all %}
+      {% for obj in object_list %}
+      {% if forloop.first%}
+      <h1>Bookings for {{ obj.reserved_date|date:"l F-j-Y" }}</h1>
+      {% endif %}
+      {% endfor %}
+      {% else %}
+      <h1>Bookings</h1>
+      {% endif %}
 
-            {% if not show_all %}
-            {% for obj in object_list %}
-            {% if forloop.first%}
-            <h1>Bookings for {{ obj.reserved_date|date:"l F-j-Y" }}</h1>
-            {% endif %}
-            {% endfor %}
-            {% else %}
-            <h1>Bookings</h1>
-            {% endif %}
-
-        </div>
-        <div class="row">
-            <div>
-                {% include "bookings/_bookings_summary.html" %}
-                <br>
-                <hr>
-                <br>
-                <table id="future">
-
-                    {% regroup future_list|dictsort:"reserved_date" by reserved_date as date_list  %}
-                    {% for day, future_list in date_list %}
-
-                    <th colspan=8 id="{{ day|date:"ymd" }}">
-                        <br>
-                        {{ day|date:"l" }}
-                        <a href="{% url 'bookings:booking_day' year=day.year month=day|date:"m" day=day|date:"d" %}">
-                            {{ day|date:"j M Y" }}
-                        </a> -- Total: {{ future_list|pax_total }}
-                    </th>
-
-                    {% for obj in future_list %}
-                    {% include "bookings/_booking_list.html" %}
-                    {% endfor %}
-                    {% endfor %}
-                </table>
-            </div>
-        </div>
     </div>
+    <div class="row">
+      <div>
+        {% include "bookings/_bookings_summary.html" %}
+        <br>
+        <hr>
+        <br>
+        <table id="future">
+          {% regroup future_list|dictsort:"reserved_date" by reserved_date as date_list  %}
+          {% for day, future_list in date_list %}
+          <th colspan=8 id="{{ day|date:"ymd" }}">
+            <br>
+            {{ day|date:"l" }}
+            <a href="{% url 'bookings:booking_day' year=day.year month=day|date:"m" day=day|date:"d" %}">
+              {{ day|date:"j M Y" }}
+            </a> -- Total: {{ future_list|pax_total }}
+          </th>
+
+          {% for obj in future_list %}
+          {% include "bookings/_booking_list.html" %}
+          {% endfor %}
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+  </div>
 </section>
 {% endblock %}

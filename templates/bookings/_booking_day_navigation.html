@@ -1,10 +1,9 @@
-    {% if previous_day %}
+{% if previous_day %}
+<a href="{% url 'bookings:booking_day' previous_day.year previous_day|date:"m" previous_day|date:"d" %}" >Previous << {{ previous_day }}</a>
+{% endif %}
 
-    <a href="{% url 'bookings:booking_day' previous_day.year previous_day|date:"m" previous_day|date:"d" %}" ><< {{ previous_day }}</a> Previous
+{% if previous_day and next_day %} &nbsp; || &nbsp; {% endif %}
 
-    {% endif %}
-    {% if previous_day and next_day %} -- {% endif %}
-    {% if next_day %}
-    Next <a href="{% url 'bookings:booking_day' year=next_day.year month=next_day|date:"m" day=next_day|date:"d" %}" >{{ next_day }} >></a>
-
-    {% endif %}
+{% if next_day %}
+<a href="{% url 'bookings:booking_day' year=next_day.year month=next_day|date:"m" day=next_day|date:"d" %}" >{{ next_day }} >> Next</a>
+{% endif %}
