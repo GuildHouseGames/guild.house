@@ -384,7 +384,7 @@ class BookingCreateView(BookingFormMixin, CalendarMixin, BookingQueryset,
         obj = form.instance
         obj.save()
         self.send_booking_notice_internal(obj=obj, form=form, change="added")
-        # self.send_booking_notice_customer(obj=obj, form=form)
+        self.send_booking_notice_customer(obj=obj, form=form)
         return redirect('bookings:booking_success', code=form.instance.code)
 
     def get_context_data(self, *args, **kwargs):
