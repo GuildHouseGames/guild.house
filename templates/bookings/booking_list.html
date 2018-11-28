@@ -16,27 +16,22 @@
             {% endif %}
             {% endfor %}
             {% else %}
-            <h1>All Future Bookings</h1>
+            <h1>Bookings</h1>
             {% endif %}
 
         </div>
         <div class="row">
             <div>
                 {% include "bookings/_bookings_summary.html" %}
-                <h3>All Future Bookings</h3>
-
-                {% include "bookings/_bookings_date.html" %}
-
+                <br>
                 <hr>
                 <br>
-                <br>
-
                 <table id="future">
 
                     {% regroup future_list|dictsort:"reserved_date" by reserved_date as date_list  %}
                     {% for day, future_list in date_list %}
 
-                    <th colspan=8>
+                    <th colspan=8 id="{{ day|date:"ymd" }}">
                         <br>
                         {{ day|date:"l" }}
                         <a href="{% url 'bookings:booking_day' year=day.year month=day|date:"m" day=day|date:"d" %}">

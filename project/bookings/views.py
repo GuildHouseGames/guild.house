@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
-import calendar
 from datetime import date, datetime, time, timedelta
 from dateutil.relativedelta import relativedelta
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -32,8 +31,8 @@ class CalendarMixin(object):
     """ @TD: Fri Jun 24 11:46:48 AEST 2016: This is overkill, but was
     useful in a past time. Needs major clean up."""
 
-    def get_calendar(self, context, yr=None, mth=None, day=None):
-
+    def get_calendar(self, context, yr=None, mth=None, day=None,
+                     length=settings.DEFAULT_CALENDAR_LENGTH):
         if yr and mth:
             y = int(yr)
             m = int(mth)
@@ -54,14 +53,14 @@ class CalendarMixin(object):
         context['cal_prev_yr'] = '/%s/%02d/' % (
             this_month.year - 1, this_month.month)
         context['month'] = this_month
-        context['calendar'] = self.make_range(y, m)
+        context['calendar'] = self.make_range(y, m, length)
         closed_dates = OpeningHours.objects.filter(
             date__gte=date.today(), is_closed=True)
         context['closed_dates'] = [x.date for x in closed_dates]
         return context
 
-    def make_range(self, y, m):
-        b = timedelta(days=settings.DEFAULT_CALENDAR_LENGTH)
+    def make_range(self, y, m, length):
+        b = timedelta(days=length)
 
         # e = Booking.objects.filter(date__year=y, date__month=m)
         start = date.today() -\
@@ -160,7 +159,6 @@ class TimeMixin(object):
                 else:
                     this_dict['heat'] = settings.HEAT[temp]
 
-            # @@TODO get value from settings.HEAT
             if this_dict['pax'] > settings.CAPACITY:
                 busy_night = True
 
@@ -451,7 +449,7 @@ class BookingUpdateView(LoginRequiredMixin, BookingFormMixin, CalendarMixin,
         return context_data
 
 
-class BookingListView(BookingQueryset, generic.ListView):
+class BookingListView(BookingQueryset, CalendarMixin, generic.ListView):
 
     def get(self, *args, **kwargs):
         page = self.kwargs.get('page', None)
@@ -462,6 +460,15 @@ class BookingListView(BookingQueryset, generic.ListView):
     def get_context_data(self, *args, **kwargs):
         context_data = super(BookingListView, self).get_context_data(*args,
                                                                      **kwargs)
+
+        context_data = self.get_calendar(context_data)
+
+        qs = self.get_queryset().future()
+        calendar = context_data['calendar']
+        for x in calendar:
+            x['services'] = self.get_service_totals(
+                qs.filter(reserved_date=x['day']))
+
         context_data['show_all'] = True
         return context_data
 
@@ -516,9 +523,9 @@ class BookingDayArchiveView(BookingQueryset, generic.DayArchiveView):
         obj_list = kwargs.get('object_list')
         context_data['total'] = obj_list.aggregate(Sum('party_size'))
         context_data['services'] = self.get_service_totals(obj_list)
-        context_data['cancelled_list'] = self.get_dated_queryset()\
-                                             .filter(status='Cancelled')\
-                                             .order_by('name')
+        context_data['cancelled_list'] = self.get_dated_queryset() \
+            .filter(status='Cancelled') \
+            .order_by('name')
         return context_data
 
 
@@ -557,7 +564,6 @@ def post_view(request):
     if request.method == 'POST':
         form = BlankForm(request.POST)
         if form.is_valid():
-            print(request.POST)
             context_data['success_obj'] = import_revel_bookings(
                 request.POST['input_data'])
 
