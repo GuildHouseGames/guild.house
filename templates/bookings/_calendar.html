@@ -2,26 +2,23 @@
 <h5>Select Date:</h5>
 {% endif %}
 <table id="calendar" border="0" cellpadding="0" cellspacing="0">
-  <tr><td colspan="7"> &nbsp; Today: <b>{{today|date:"D"}}</b> {{today|date:"j M Y"}}</td></tr>
-  <tr id="days_th">
-    <th scope="col" class="day_title">M</th>
-    <th scope="col" class="day_title">T</th>
-    <th scope="col" class="day_title">W</th>
-    <th scope="col" class="day_title">T</th>
-    <th scope="col" class="day_title">F</th>
-    <th scope="col" class="day_title">S</th>
-    <th scope="col" class="day_title">S</th>
-  </tr>
-{% for x in calendar %}
-{% cycle '  <tr>' '' '' '' '' '' '' %}
-    <td width="20" align="center" class="date-td">
-    <div class="cal_day {% if month.month != x.day.month %}non_month{% endif %}">
-	<div {% if x.day == today %}id="today"{% endif %} >
-
-        <div class="date {% if x.day in closed_dates %} date-inactive{% endif %}
-                    {% if object.reserved_date == x.day %} selected{% endif %}
-                    {% if x.day < today %} date-inactive{% endif %}"
-             {% if x.day >= today and not x.day in closed_dates %} data-time="{{x.day|date:'/Y/m/d/'}}" data-date="{{x.day|date:'d/m/Y'}}"{% endif %}">
+    <tr><td colspan="7"> &nbsp; Today: <b>{{today|date:"D"}}</b> {{ now  }}</td></tr>
+    <tr id="days_th">
+        <th scope="col" class="day_title">M</th>
+        <th scope="col" class="day_title">T</th>
+        <th scope="col" class="day_title">W</th>
+        <th scope="col" class="day_title">T</th>
+        <th scope="col" class="day_title">F</th>
+        <th scope="col" class="day_title">S</th>
+        <th scope="col" class="day_title">S</th>
+    </tr>
+    {% for x in calendar %}
+    {% cycle '  <tr>' '' '' '' '' '' '' %}
+        <td width="20" align="center" class="date-td">
+            <div class="cal_day {% if month.month != x.day.month %}non_month{% endif %}">
+	        <div {% if x.day == today %}id="today"{% endif %} >
+                    <div class="date {% if x.day in closed_dates %} date-inactive{% endif %}{% if x.day < today %} date-inactive{% endif %}{% if x.day == today %}{% if now|date:"H" > '15' %} date-inactive{% endif %}{% endif %}{% if object.reserved_date == x.day %} selected{% endif %}"
+                        {% if x.day >= today and not x.day in closed_dates %} data-time="{{x.day|date:'/Y/m/d/'}}" data-date="{{x.day|date:'d/m/Y'}}"{% endif %}">
         <div class="wkday">{{x.day|date:"D"}}</div>
         {{x.day|date:"j"}}
         <div class="mth">

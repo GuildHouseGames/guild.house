@@ -392,6 +392,7 @@ class BookingCreateView(BookingFormMixin, CalendarMixin, BookingQueryset,
             *args, **kwargs)
         context = self.get_calendar(context)
         context['today'] = date.today()
+        context['now'] = now
         context = self.get_time_list(context, this_date=date.today())
         return context
 

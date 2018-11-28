@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, unicode_literals
+from datetime import time
 from django import forms
+from django.utils.timezone import localtime, now
 from tinymce.widgets import TinyMCE
 from phonenumber_field.formfields import PhoneNumberField
 from .models import Booking
@@ -50,6 +52,10 @@ class BookingForm(forms.ModelForm):
         if not cleaned_data.get('email') and not cleaned_data.get('phone'):
             raise forms.ValidationError(
                 'Both a phone number and an email address are necessary for online bookings.')  # noqa
+        if cleaned_data.get('reserved_date') == localtime(now()).date() and \
+           localtime(now()).time() > time(16, 0):
+            raise forms.ValidationError(
+                'Sorry! Bookings on the same day are not allowed after 4pm.')
         return super(BookingForm, self).clean(*args, **kwargs)
 
 
