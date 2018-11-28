@@ -425,6 +425,18 @@ table#future th {
     border-bottom: 1px solid white;
 }
 
+.serv-lunch {
+    background-color: rgba(255, 217, 69, 0.1);
+}
+
+.serv-afternoon {
+    background-color: rgba(255, 69, 69, 0.05);
+}
+
+.serv-main {
+    background-color: rgba(69, 142, 255, 0.1);
+}
+
 .time{
     background-color: rgba(131, 212, 45, 0.25); /*rgba(10, 10, 10, 0.15);*/
 }

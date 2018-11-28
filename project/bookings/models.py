@@ -53,8 +53,6 @@ class Booking(models.Model):
 
     is_cancelled = models.BooleanField(default=False)
 
-    is_confirmed = models.BooleanField(default=False)
-
     service = models.CharField(max_length=50, choices=settings.SERVICE_CHOICE,
                                blank=True, default='')
 
@@ -90,8 +88,6 @@ class Booking(models.Model):
     busy_night = models.BooleanField(default=False)
 
     # Usage fields
-
-    is_paid_deposit = models.BooleanField(default=False)
 
     deposit_amount_paid = models.DecimalField(
         max_digits=7, decimal_places=2,

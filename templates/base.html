@@ -65,7 +65,7 @@
     {% include "_navigation.html" %}
 
     {% block masthead %}
-    <header class="hidden-print masthead text-center text-white">
+    <header class="hidden-print masthead text-center text-white" {% if user.is_authenticated %}style="height: 140px; padding: 0"{% endif %}>
         <div class="masthead-content">
             <div class="container">
 	        <a href="{% url "site:home" %}">

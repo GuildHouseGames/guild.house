@@ -36,21 +36,23 @@
 <br>
 <br>
 <div class="featured_text">
-It is possible that the booking you make through the
-automated booking system may occur at a time where
-we are already booked out.<br><br>
-This probably won't happen, but is technically possible (for example if someone else is making a booking for the same time <i>right now</i>)
-so we want to warn you about it.
-If this is the case we will contact you ASAP to discuss options.
+    It is possible that the booking you make through the
+    automated booking system may occur at a time where
+    we are already booked out.<br><br>
+    This probably won't happen, but is technically possible (for example if someone else is making a booking for the same time <i>right now</i>)
+    so we want to warn you about it.
+    If this is the case we will contact you ASAP to discuss options.
 </div>
 <br>
 {% endif %}
 
 <p>
-    Number of people: {{ object.party_size }} pax<br>
-    <b>{{ object.reserved_time|time:"P" }} {{ object.reserved_date|date:"l" }}, {% if user.is_authenticated %}<a href="{% url 'bookings:booking_day' year=object.reserved_date.year month=object.reserved_date|date:"m" day=object.reserved_date|date:"d" %}">{% endif %}
+    <b>{{ object.party_size }} people<br>
+        {{ object.reserved_time|time:"P" }} {{ object.reserved_date|date:"l" }}, {% if user.is_authenticated %}<a href="{% url 'bookings:booking_day' year=object.reserved_date.year month=object.reserved_date|date:"m" day=object.reserved_date|date:"d" %}">{% endif %}
         {{ object.reserved_date|date:"F j, Y" }}</a></b><br>
-    </p>
+</p>
+
+      {% if object.notes %}<p>Booking notes: "{{ object.notes }}"</p>{% endif %}
 
       {% if user.is_authenticated %}
         <a href="{% url "bookings:booking_update" code=object.code %}">

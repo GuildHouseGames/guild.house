@@ -315,15 +315,34 @@ class BookingQueryset(object):
         queryset = super(BookingQueryset, self).get_queryset(*args, **kwargs)
         return queryset.active().order_by('reserved_date', 'reserved_time')
 
+    def get_heat(self, qty):
+        if not qty:
+            return ''
+        if qty < 0:
+            qty = 0
+        tmp = ''
+        for temp in settings.HEAT.keys():
+            if settings.CAPACITY-qty > temp:
+                return tmp
+            else:
+                tmp = settings.HEAT[temp]
+        return tmp
+
     def get_service_totals(self, obj_list):
         services = []
-        early_list = obj_list.filter(
-            service='early').aggregate(Sum('party_size'))
-        if early_list['party_size__sum']:
-            services.append((('early', 'Early'), early_list))
+
+        early_pax = obj_list.filter(
+            service='early').aggregate(Sum('party_size'))['party_size__sum']
+        if early_pax:
+            services.append({'service': 'early',
+                             'pax': early_pax,
+                             'heat': self.get_heat(early_pax)})
         for serv in settings.SERVICE_CHOICE:
-            services.append((serv, (obj_list.filter(service=serv[0])
-                                    .aggregate(Sum('party_size')))))
+            pax = obj_list.filter(service=serv[0]).aggregate(
+                Sum('party_size'))['party_size__sum']
+            services.append({'service': serv[0],
+                             'pax': pax,
+                             'heat': self.get_heat(pax)})
         return services
 
     def get_queryset_by_day(self, *args, **kwargs):
@@ -384,7 +403,7 @@ class BookingCreateView(BookingFormMixin, CalendarMixin, BookingQueryset,
         obj = form.instance
         obj.save()
         self.send_booking_notice_internal(obj=obj, form=form, change="added")
-        # self.send_booking_notice_customer(obj=obj, form=form)
+        self.send_booking_notice_customer(obj=obj, form=form)
         return redirect('bookings:booking_success', code=form.instance.code)
 
     def get_context_data(self, *args, **kwargs):
@@ -392,6 +411,7 @@ class BookingCreateView(BookingFormMixin, CalendarMixin, BookingQueryset,
             *args, **kwargs)
         context = self.get_calendar(context)
         context['today'] = date.today()
+        context['now'] = now
         context = self.get_time_list(context, this_date=date.today())
         return context
 

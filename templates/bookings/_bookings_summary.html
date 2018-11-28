@@ -22,7 +22,11 @@
                                 {% else %}{{x.day|date:"M"}}
                                 {% endif %}
                             </span></div>
-                        {% if x.day not in closed_dates %}{% for service in x.services %} {{ service.0.1 }}: <b>{% if service.1.party_size__sum %}{{ service.1.party_size__sum }}{% else %}-{% endif %}</b><br> {% endfor %}{% endif %}
+                        {% if x.day not in closed_dates %}
+                        {% for service in x.services %}
+                        {% include "bookings/_services.html" %}
+                        {% endfor %}
+                        {% endif %}
                     </div></a>
                 </div>
             </div>

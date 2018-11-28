@@ -14,11 +14,11 @@
 <div class="hidden-print">
   {% include "bookings/_booking_day_navigation.html" %}
 </div>
-    <h4>Total: {{ total.party_size__sum }}</h4>
+<h4>Total: {{ total.party_size__sum }}</h4>
 
-    {% for service in services %}
-    {{ service.0.1 }}: <b>{% if service.1.party_size__sum %}{{ service.1.party_size__sum }}{% else %}-{% endif %}</b><br>
-    {% endfor %}
+{% for service in services %}
+{% include "bookings/_services.html" %}
+{% endfor %}
 
     <h4>Active Bookings</h4>
     <table id="bookings">
