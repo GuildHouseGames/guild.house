@@ -12,11 +12,11 @@
     </td>
     <td style="white-space:nowrap; vertical-align: top;">
         <div class="hidden-print">
-            <a href="{% url "bookings:booking_update" code=obj.code %}" style="white-space:nowrap">
+            <a target="_blank" href="{% url "admin:bookings_booking_change" obj.pk %}" style="white-space:nowrap">
                 <em>
-                <select>
-                    <option value="">{{obj.status}}</option>
-                </select>
+                    <select>
+                        <option value="">{{obj.status}}</option>
+                    </select>
                 </em>
             </a>
         </div>
