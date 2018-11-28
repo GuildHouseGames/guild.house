@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 
-{% if user.is_authenticated %}
-{% block masthead %}{% endblock %}
-{% endif %}
-
 {% block box_above %}
 {% if user.is_authenticated %}
 <nav class="hidden-print navbar navbar-custom navbar-expand-lg">
