@@ -31,6 +31,8 @@ TO_EMAILS = getattr(settings, 'BOOKINGS_TO_EMAILS')
 STATUS_CHOICE = [
     ('booked', 'Booked'),
     ('confirmed', 'Confirmed'),
+    ('deposit_required', 'Deposit Required'),
+    ('deposit_paid', 'Deposit Paid'),
     ('numbers_confirmed', 'Numbers Confirmed'),
     ('no_show', 'No Show'),
     ('cancelled', 'Cancelled'),
