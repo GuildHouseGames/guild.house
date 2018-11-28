@@ -16,13 +16,7 @@
 {% cycle '  <tr>' '' '' '' '' '' '' %}
     <td width="20" align="center" class="date-td">
     <div class="cal_day {% if month.month != x.day.month %}non_month{% endif %}">
-	<div {% if x.day == today %}id="today"{% endif %}
-             {% if x.events %}class="event_on"{% endif %}
-             title='{% for event in x.events %}{{event.event.time|time:"fA"|lower}} {{event.event}}{% if not forloop.last %}, {% endif %}{% endfor %}'>
-
-    {% if x.events %}
-    <a class="event_a" href="/events/{{x.day|date:'Y/m/d/'}}{% if x.events|length == 1 %}{% for event in x.events %}{{event.event.slug}}/{% endfor %}{% endif %}">
-      {% endif %}
+	<div {% if x.day == today %}id="today"{% endif %} >
 
         <div class="date {% if x.day in closed_dates %} date-inactive{% endif %}
                     {% if object.reserved_date == x.day %} selected{% endif %}
@@ -36,11 +30,6 @@
             {% endif %}
         </div>
       </div>
-
-    {% if x.events %}
-    </a>
-    {% endif %}
-
         </div>
     </div>
 
