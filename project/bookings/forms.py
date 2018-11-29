@@ -35,7 +35,7 @@ class BookingForm(forms.ModelForm):
                 attrs={'rows': 4,  'width': 185, 'cols': 0}),
             'email': forms.TextInput(attrs={'placeholder': '**', }),
             'name': forms.TextInput(attrs={'placeholder': '**'}),
-            'party_size': forms.TextInput(
+            'party_size': forms.NumberInput(
                 attrs={'placeholder': '**', 'style': 'width: 4.5em'}),
             'hear_other': forms.Textarea(
                 attrs={'rows': 4,  'width': 185, 'cols': 0}),
