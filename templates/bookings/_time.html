@@ -14,6 +14,7 @@
 <div> &nbsp; <b>{{ time.service|title }}</b><br>
 {% endif %}
     <span data-time="{{ time.select_time|time:"H:i" }}:00"
+          data-available="{{ time.available }}"
           data-full="{% if time.available < 1 %}full{% endif %}"
           class="time{% if time.heat %} {{ time.heat }}{% endif %}">
         {{ time.time }}
@@ -44,41 +45,43 @@ Total: {% if pax_total %}{{ pax_total }}{% else %}0{% endif %}pax<br>
    href="{% url "admin:bookings_booking_change" booking.pk %}">
     <small> (edit)</small>
 </a><br>
+
 {% endfor %}
 {% endif %}
 
 
 <script>
-$(".time").click(function() {
-  $("#id_reserved_time").val($(this).data("time")).addClass("selected");
-  if($(this).data("full")=="full"){
-    $(".full-warning").show();
-    $(".submit-buttons").hide();
+ $(".time").click(function() {
+     $("#id_reserved_time").val($(this).data("time")).addClass("selected");
+     $("#id_party_size").attr({"max": Number($(this).data("available"))})
+     if($(this).data("full")=="full"){
+         $(".full-warning").show();
+         $(".submit-buttons").hide();
 
-  } else {
-    $(".time").removeClass("selected");
-    $(this).removeClass("hot");
-    $(this).removeClass("warm");
-    $(this).removeClass("full");
-    $(this).addClass("selected");
-    $(".full-warning").hide();
-    $(".submit-buttons").show();
-  };
-});
+     } else {
+         $(".time").removeClass("selected");
+         $(this).removeClass("hot");
+         $(this).removeClass("warm");
+         $(this).removeClass("full");
+         $(this).addClass("selected");
+         $(".full-warning").hide();
+         $(".submit-buttons").show();
+     };
+ });
 
-{% if date|date:"D" == "Fri" or date|date:"D" == "Sat" %}
-  $("#id_booking_duration").parents("tr").show();
-  $("#id_booking_duration").val("02:30:00");
-{% endif %}
+ {% if date|date:"D" == "Fri" or date|date:"D" == "Sat" %}
+ $("#id_booking_duration").parents("tr").show();
+ $("#id_booking_duration").val("02:30:00");
+ {% endif %}
 
-{% if busy_night %}
-$(".booking-warning").show();
-$("#id_busy_night").val("True");
-$("#id_private_notes").val("Warned, maybe full.");
-$("#id_booking_duration").parents("tr").show();
-{% else %}
-$(".booking-warning").hide().css("display: None");
-$("#id_private_notes").val("");
-$("#id_booking_duration").parents("tr").hide();
-{% endif %}
+ {% if busy_night %}
+ $(".booking-warning").show();
+ $("#id_busy_night").val("True");
+ $("#id_private_notes").val("Warned, maybe full.");
+ $("#id_booking_duration").parents("tr").show();
+ {% else %}
+ $(".booking-warning").hide().css("display: None");
+ $("#id_private_notes").val("");
+ $("#id_booking_duration").parents("tr").hide();
+ {% endif %}
 </script>
